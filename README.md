@@ -1,2 +1,2 @@
-# xfg-frame-archetype - DDD 脚手架
+# xfg-frame-archetype - DDD Big-Market-project
 
