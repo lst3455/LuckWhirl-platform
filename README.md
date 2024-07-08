@@ -1,2 +1,2 @@
-# xfg-frame-archetype - DDD Big-Market-project
+# Big-Market-project
 
