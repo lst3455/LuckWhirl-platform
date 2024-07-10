@@ -23,13 +23,13 @@ public class StrategyAward {
     private Long awardRemain;
     /** award rate */
     private BigDecimal awardRate;
-
+    /** sort */
     private Integer sort;
-
+    /** create time */
     private Date createTime;
-
+    /** update time */
     private Date updateTime;
-
+    /** rule model */
     private String ruleModel;
 
 }
