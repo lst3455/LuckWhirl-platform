@@ -8,11 +8,16 @@ import org.example.infrastructure.persistent.dao.IStrategyAwardDao;
 import org.example.infrastructure.persistent.po.StrategyAward;
 import org.example.infrastructure.persistent.redis.IRedisService;
 import org.example.types.common.Constants;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Repository
 public class StrategyRepository implements IStrategyRepository {
 
     @Resource
@@ -44,5 +49,22 @@ public class StrategyRepository implements IStrategyRepository {
         /** put data into cache*/
         iRedisService.setValue(cacheKey,strategyAwardEntities);
         return strategyAwardEntities;
+    }
+
+    @Override
+    public void storeStrategyAwardTable(Long strategyId, BigDecimal awardRateRange, HashMap<Long, Long> shuffleStrategyAwardTable) {
+        iRedisService.setValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + strategyId,awardRateRange.intValue());
+        Map<Long,Long> cacheStrategyAwardTable = iRedisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + strategyId);
+        cacheStrategyAwardTable.putAll(shuffleStrategyAwardTable);
+    }
+
+    @Override
+    public Integer getRateRange(Long strategyId) {
+        return iRedisService.getValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + strategyId);
+    }
+
+    @Override
+    public Long getStrategyAwardId(Long strategyId, Long rateKey) {
+        return iRedisService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + strategyId,rateKey);
     }
 }

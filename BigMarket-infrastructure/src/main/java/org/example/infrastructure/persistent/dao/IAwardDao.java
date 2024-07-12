@@ -9,4 +9,6 @@ import java.util.List;
 public interface IAwardDao {
 
     List<Award> queryAwardList();
+
+    List<Award> queryAwardListById();
 }
