@@ -12,6 +12,8 @@ public class Strategy {
     private Long id;
     /** describe of raffle strategy */
     private String strategyDesc;
+    /** describe of raffle strategy */
+    private String ruleModel;
     /** create time */
     private Date createTime;
     /** update time */

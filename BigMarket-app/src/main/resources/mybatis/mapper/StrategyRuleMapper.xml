@@ -4,7 +4,7 @@
 
     <resultMap id="dataMap" type="org.example.infrastructure.persistent.po.StrategyRule">
         <id column="id" property="id"/>
-        <result column="strategy_id" property="strategy_id"/>
+        <result column="strategy_id" property="strategyId"/>
         <result column="award_id" property="awardId"/>
         <result column="rule_type" property="ruleType"/>
         <result column="rule_model" property="ruleModel"/>
@@ -19,5 +19,9 @@
         FROM strategy_rule
         limit 10
     </select>
-
+    <select id="queryStrategyRule" parameterType="org.example.infrastructure.persistent.po.StrategyRule" resultMap="dataMap">
+        SELECT *
+        FROM strategy_rule
+        where strategy_id = #{strategyId} and rule_model = #{ruleModel}
+    </select>
 </mapper>

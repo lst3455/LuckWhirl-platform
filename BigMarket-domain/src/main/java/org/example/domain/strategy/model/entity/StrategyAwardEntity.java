@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StrategyAwardEntity {
-    /** auto increase key */
-    private Long id;
     /** raffle strategy id */
     private Long strategyId;
     /** award id */

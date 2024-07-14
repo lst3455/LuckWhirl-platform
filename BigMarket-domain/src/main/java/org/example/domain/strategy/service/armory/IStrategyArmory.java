@@ -1,7 +1,9 @@
 package org.example.domain.strategy.service.armory;
 
 public interface IStrategyArmory {
-    void assembleRaffleStrategy(Long strategyId);
 
     Long getRandomAwardId(Long strategyId);
+
+    Long getRandomAwardId(Long strategyId, Long raffleTimes);
+
 }

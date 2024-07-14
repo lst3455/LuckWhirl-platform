@@ -9,7 +9,7 @@ public class StrategyRule {
     /** auto increase id */
     private Long id;
     /** raffle strategy id */
-    private Long strategy_id;
+    private Long strategyId;
     /** award id */
     private Long awardId;
     /** rule type(1. raffle rule 2. award rule) */
