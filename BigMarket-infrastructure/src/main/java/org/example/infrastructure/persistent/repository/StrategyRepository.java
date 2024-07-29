@@ -38,6 +38,8 @@ public class StrategyRepository implements IStrategyRepository {
     @Resource
     private IStrategyRuleDao iStrategyRuleDao;
 
+
+
     @Override
     public List<StrategyAwardEntity> getStrategyAwardList(Long strategyId) {
         String cacheKey = Constants.RedisKey.STRATEGY_AWARD_KEY + strategyId;
@@ -119,5 +121,15 @@ public class StrategyRepository implements IStrategyRepository {
         /** put data into cache*/
         iRedisService.setValue(cacheKey,strategyRuleEntity);
         return strategyRuleEntity;
+    }
+
+    @Override
+    public String queryStrategyRuleValue(Long strategyId, Long awardId, String ruleModel) {
+        StrategyRule strategyRule = new StrategyRule();
+        strategyRule.setStrategyId(strategyId);
+        strategyRule.setAwardId(awardId);
+        strategyRule.setRuleModel(ruleModel);
+        return iStrategyRuleDao.queryStrategyRuleValue(strategyRule);
+
     }
 }

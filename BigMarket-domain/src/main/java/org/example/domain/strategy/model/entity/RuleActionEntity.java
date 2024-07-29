@@ -32,6 +32,6 @@ public class RuleActionEntity <T extends RuleActionEntity.RaffleEntity>{
 
         private String ruleWeightValueKey;
 
-        private Integer awardId;
+        private Long awardId;
     }
 }

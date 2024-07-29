@@ -4,6 +4,7 @@ public class Constants {
 
     public final static String SPLIT_COMMA = ",";
     public final static String SPLIT_SPACE = " ";
+    public final static String SPLIT_COLON = ":";
 
     public static class RedisKey {
         public static String STRATEGY_KEY = "big_market_strategy_key_";
