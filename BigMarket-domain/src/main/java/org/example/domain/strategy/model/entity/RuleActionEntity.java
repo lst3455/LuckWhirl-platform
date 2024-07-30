@@ -3,6 +3,8 @@ package org.example.domain.strategy.model.entity;
 import lombok.*;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 
+import java.util.Set;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -30,8 +32,10 @@ public class RuleActionEntity <T extends RuleActionEntity.RaffleEntity>{
 
         private Long strategyId;
 
-        private String ruleWeightValueKey;
+        private Set<Long> ruleWeightValueKey;
 
         private Long awardId;
+
+        private Long userRaffleTimes;
     }
 }

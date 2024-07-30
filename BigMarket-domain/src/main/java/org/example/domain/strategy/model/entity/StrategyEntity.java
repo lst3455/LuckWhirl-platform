@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.example.types.common.Constants;
 
 @Data
@@ -16,11 +17,11 @@ public class StrategyEntity {
     /** describe of raffle strategy */
     private String strategyDesc;
     /** describe of raffle strategy */
-    private String ruleModel;
+    private String ruleModels;
 
     public String[] getRuleModels(){
-        if (ruleModel.isEmpty()) return null;
-        return ruleModel.split(Constants.SPLIT_COMMA);
+        if (StringUtils.isBlank(ruleModels)) return null;
+        return ruleModels.split(Constants.SPLIT_COMMA);
     }
 
     public String getWeightModelFromRuleModels(){

@@ -13,7 +13,7 @@ public class Strategy {
     /** describe of raffle strategy */
     private String strategyDesc;
     /** describe of raffle strategy */
-    private String ruleModel;
+    private String ruleModels;
     /** create time */
     private Date createTime;
     /** update time */

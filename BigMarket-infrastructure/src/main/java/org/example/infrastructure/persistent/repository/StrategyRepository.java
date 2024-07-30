@@ -92,7 +92,7 @@ public class StrategyRepository implements IStrategyRepository {
         strategyEntity = StrategyEntity.builder()
                 .strategyId(strategy.getStrategyId())
                 .strategyDesc(strategy.getStrategyDesc())
-                .ruleModel(strategy.getRuleModel())
+                .ruleModels(strategy.getRuleModels())
                 .build();
         /** put data into cache*/
         iRedisService.setValue(cacheKey,strategyEntity);
@@ -130,6 +130,23 @@ public class StrategyRepository implements IStrategyRepository {
         strategyRule.setAwardId(awardId);
         strategyRule.setRuleModel(ruleModel);
         return iStrategyRuleDao.queryStrategyRuleValue(strategyRule);
+    }
+
+    @Override
+    public StrategyEntity queryStrategyEntityByStrategyId(Long strategyId) {
+        /** get data from cache */
+        String cacheKey = Constants.RedisKey.STRATEGY_KEY + strategyId;
+        StrategyEntity strategyEntity = iRedisService.getValue(cacheKey);
+        if (null != strategyEntity) return strategyEntity;
+        /** get data from database */
+        Strategy strategy = iStrategyDao.queryStrategyByStrategyId(strategyId);
+        strategyEntity = StrategyEntity.builder()
+                .strategyId(strategy.getStrategyId())
+                .strategyDesc(strategy.getStrategyDesc())
+                .ruleModels(strategy.getRuleModels())
+                .build();
+        iRedisService.setValue(cacheKey, strategyEntity);
+        return strategyEntity;
 
     }
 }

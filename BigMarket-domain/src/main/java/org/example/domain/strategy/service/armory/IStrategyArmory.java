@@ -2,8 +2,7 @@ package org.example.domain.strategy.service.armory;
 
 public interface IStrategyArmory {
 
-    Long getRandomAwardId(Long strategyId);
-
-    Long getRandomAwardId(Long strategyId, Long raffleTimes);
+    /** assemble the raffle strategy for corresponding strategyId */
+    boolean assembleRaffleStrategy(Long strategyId);
 
 }
