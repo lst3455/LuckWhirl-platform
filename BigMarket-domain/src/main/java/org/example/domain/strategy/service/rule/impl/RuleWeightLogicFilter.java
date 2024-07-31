@@ -34,7 +34,7 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
 
 
         /** ruleValue sample => 4000:102,103,104,105 5000:102,103,104,105,106 6000:102,103,104,105,106,107 */
-        Map<Integer,Set<Long>> ruleValueMap = getRuleValueMap(ruleValue,ruleModel);
+        Map<Long,Set<Long>> ruleValueMap = getRuleValueMap(ruleValue,ruleModel);
         /** if ruleValueMap is empty or error in initialization, allow to pass filter engine */
         if (ruleValueMap == null || ruleValueMap.isEmpty()) {
             return RuleActionEntity.<RuleActionEntity.RaffleBeforeEntity>builder()
@@ -43,9 +43,9 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
                     .build();
         }
 
-        List<Integer> ruleValueKeyMap = new ArrayList<>(ruleValueMap.keySet());
+        List<Long> ruleValueKeyMap = new ArrayList<>(ruleValueMap.keySet());
         /** binary search a biggest key smaller than userRaffleTimes */
-        Integer validKey = binarySearchKey(ruleValueKeyMap,userRaffleTimes);
+        Long validKey = binarySearchKey(ruleValueKeyMap,userRaffleTimes);
 
         /** if can find valid key, should be caught by filter engine */
         if (validKey != null) {
@@ -54,7 +54,7 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
                     .data(RuleActionEntity.RaffleBeforeEntity.builder()
                             .strategyId(ruleMatterEntity.getStrategyId())
                             .ruleWeightValueKey(ruleValueMap.get(validKey))
-                            .userRaffleTimes(userRaffleTimes)
+                            .userRaffleTimes(validKey)
                             .build())
                     .code(RuleLogicCheckTypeVO.TAKE_OVER.getCode())
                     .info(RuleLogicCheckTypeVO.TAKE_OVER.getInfo())
@@ -67,16 +67,16 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
                 .build();
     }
 
-    private Map<Integer, Set<Long>> getRuleValueMap(String ruleValue, String ruleModel){
+    private Map<Long, Set<Long>> getRuleValueMap(String ruleValue, String ruleModel){
         /** data sample: 4000:102,103,104,105 5000:102,103,104,105,106 6000:102,103,104,105,106,107 */
-        Map<Integer, Set<Long>> ruleValueMap = new HashMap<>();
+        Map<Long, Set<Long>> ruleValueMap = new HashMap<>();
         if (!"rule_weight".equals(ruleModel)) return null;
         String[] configs = ruleValue.split(Constants.SPLIT_SPACE);
         for (String config : configs) {
             int colonIndex = config.indexOf(":");
             /** wrong ruleValue data format */
             if (colonIndex == -1) return null;
-            Integer key = Integer.valueOf(config.substring(0,colonIndex));
+            Long key = Long.valueOf(config.substring(0,colonIndex));
             long[] valueArray = Arrays.stream(config.substring(colonIndex + 1).split(Constants.SPLIT_COMMA))
                     .mapToLong(x -> Long.valueOf(x))
                     .toArray();
@@ -87,11 +87,11 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
             ruleValueMap.put(key,valueSet);
         }
         /** sort map by key in ascending order using TreeMap */
-        Map<Integer, Set<Long>> ruleValueMapSortedByKey = new TreeMap<>((key1,key2) -> Integer.compare(key1,key2));
+        Map<Long, Set<Long>> ruleValueMapSortedByKey = new TreeMap<>((key1,key2) -> Long.compare(key1,key2));
         ruleValueMapSortedByKey.putAll(ruleValueMap);
         return ruleValueMapSortedByKey;
     }
-    private Integer binarySearchKey(List<Integer> ruleValueKeyMap,Long target){
+    private Long binarySearchKey(List<Long> ruleValueKeyMap,Long target){
         int left = -1;
         int right = ruleValueKeyMap.size();
         int mid;

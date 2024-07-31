@@ -27,33 +27,36 @@ public class RaffleStrategyTest {
 
     @Before
     public void setUp() {
-        ReflectionTestUtils.setField(ruleWeightLogicFilter, "userRaffleTimes", 40500L);
+        ReflectionTestUtils.setField(ruleWeightLogicFilter, "userRaffleTimes", 3000L);
     }
 
     @Test
     public void test_performRaffle() {
         RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("xiaofuge")
+                .userId("test_user_1")
                 .strategyId(10001L)
                 .build();
 
-        RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
-
-        log.info("请求参数：{}", JSON.toJSONString(raffleFactorEntity));
-        log.info("测试结果：{}", JSON.toJSONString(raffleAwardEntity));
+        for (int i = 0; i < 1; i++) {
+            RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
+            log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
+            log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
+        }
     }
 
     @Test
     public void test_performRaffle_blacklist() {
         RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("user003")  // 黑名单用户 user001,user002,user003
+                .userId("user003")  // blacklist user: user001,user002,user003
                 .strategyId(10001L)
                 .build();
 
-        RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
+        for (int i = 0; i < 50; i++) {
+            RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
 
-        log.info("请求参数：{}", JSON.toJSONString(raffleFactorEntity));
-        log.info("测试结果：{}", JSON.toJSONString(raffleAwardEntity));
+            log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
+            log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
+        }
     }
 
 

@@ -36,9 +36,9 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
             throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(),ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
         }
         /** ruleValueMap sample: {4000=[102, 103, 104, 105], 6000=[102, 103, 104, 105, 106, 107], 5000=[102, 103, 104, 105, 106]} */
-        Map<Integer, Set<Long>> ruleValueMap = strategyRuleEntity.getRuleValueMap();
-        for (Map.Entry<Integer, Set<Long>> entry : ruleValueMap.entrySet()) {
-            int raffleTimes = entry.getKey();
+        Map<Long, Set<Long>> ruleValueMap = strategyRuleEntity.getRuleValueMap();
+        for (Map.Entry<Long, Set<Long>> entry : ruleValueMap.entrySet()) {
+            Long raffleTimes = entry.getKey();
             Set<Long> AvailableAwards = entry.getValue();
             List<StrategyAwardEntity> strategyAwardEntitiesClone = new ArrayList<>(strategyAwardEntities);
             strategyAwardEntitiesClone.removeIf(strategyAwardEntity -> !AvailableAwards.contains(strategyAwardEntity.getAwardId()));

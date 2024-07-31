@@ -27,16 +27,16 @@ public class StrategyRuleEntity {
     /** rule describe */
     private String ruleDesc;
 
-    public Map<Integer, Set<Long>> getRuleValueMap(){
+    public Map<Long, Set<Long>> getRuleValueMap(){
         /** data sample: 4000:102,103,104,105 5000:102,103,104,105,106 6000:102,103,104,105,106,107 */
         if (!"rule_weight".equals(ruleModel)) return null;
-        Map<Integer, Set<Long>> ruleValueMap = new HashMap<>();
+        Map<Long, Set<Long>> ruleValueMap = new HashMap<>();
         String[] configs = ruleValue.split(Constants.SPLIT_SPACE);
         for (String config : configs) {
             int colonIndex = config.indexOf(":");
             /** wrong ruleValue data format */
             if (colonIndex == -1) return null;
-            Integer key = Integer.valueOf(config.substring(0,colonIndex));
+            Long key = Long.valueOf(config.substring(0,colonIndex));
             long[] valueArray = Arrays.stream(config.substring(colonIndex + 1).split(Constants.SPLIT_COMMA))
                     .mapToLong(x -> Long.valueOf(x))
                     .toArray();
