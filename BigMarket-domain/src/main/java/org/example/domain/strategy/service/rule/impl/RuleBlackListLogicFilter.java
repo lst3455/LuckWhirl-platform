@@ -28,7 +28,7 @@ public class RuleBlackListLogicFilter implements ILogicFilter<RuleActionEntity.R
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(ruleMatterEntity.getStrategyId(), ruleMatterEntity.getAwardId(), ruleMatterEntity.getRuleModel());
         String[] splitRuleValue = ruleValue.split(Constants.SPLIT_COLON);
         Long awardId = Long.parseLong(splitRuleValue[0]);
-        /** data sample => 101:user001,user002,user003 */
+        /** data sample => 100:user001,user002,user003 */
         /** filter other rules */
         String[] userBlackListIds = splitRuleValue[1].split(Constants.SPLIT_COMMA);
         for (String userBlackListId : userBlackListIds) {
