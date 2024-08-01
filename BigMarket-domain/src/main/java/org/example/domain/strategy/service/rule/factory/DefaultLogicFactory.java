@@ -36,13 +36,20 @@ public class DefaultLogicFactory {
     @AllArgsConstructor
     public enum LogicModel {
 
-        RULE_WEIGHT("rule_weight","[rule before raffle] depend on the raffleTimes to return available key"),
-        RULE_BLACKLIST("rule_blacklist","[rule before raffle] if userId inside blacklist, return blacklist lucky award"),
-
+        RULE_WEIGHT("rule_weight","[rule before raffle] depend on the raffleTimes to return available key","before"),
+        RULE_BLACKLIST("rule_blacklist","[rule before raffle] if userId inside blacklist, return blacklist lucky award","before"),
+        RULE_LOCK("rule_lock","[rule during raffle] depend on the raffleTimes to return available award","centre"),
+        RULE_LUCKY("rule_lucky","[rule before raffle] award remain is none, return the lucky award","after"),
+        RULE_RANDOM("rule_random","[rule before raffle] normal random award","after")
         ;
 
         private final String code;
         private final String info;
+        private final String type;
+
+        public static boolean isCenter(String code){
+            return "centre".equals(LogicModel.valueOf(code.toUpperCase()).type);
+        }
 
     }
 

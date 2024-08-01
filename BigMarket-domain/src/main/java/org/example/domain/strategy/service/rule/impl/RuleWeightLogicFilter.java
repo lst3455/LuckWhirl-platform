@@ -22,6 +22,7 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
     @Resource
     private IStrategyRepository iStrategyRepository;
 
+
     private Long userRaffleTimes = 4500L;
 
     @Override

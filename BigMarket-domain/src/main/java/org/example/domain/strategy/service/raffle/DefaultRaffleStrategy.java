@@ -31,6 +31,12 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy{
 
     @Override
     protected RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels) {
+        if (ruleModels == null || ruleModels.length == 0) {
+            return RuleActionEntity.<RuleActionEntity.RaffleBeforeEntity>builder()
+                    .code(RuleLogicCheckTypeVO.ALLOW.getCode())
+                    .info(RuleLogicCheckTypeVO.ALLOW.getInfo())
+                    .build();
+        }
 
         Map<String, ILogicFilter<RuleActionEntity.RaffleBeforeEntity>> logicFilterGroup = defaultLogicFactory.openLogicFilter();
 
@@ -73,6 +79,33 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy{
             if (!RuleLogicCheckTypeVO.ALLOW.getCode().equals(ruleActionEntity.getCode())) return ruleActionEntity;
         }
 
+        return ruleActionEntity;
+    }
+
+    @Override
+    protected RuleActionEntity<RuleActionEntity.RaffleCentreEntity> doCheckRaffleCentreLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels) {
+        if (ruleModels == null || ruleModels.length == 0) {
+            return RuleActionEntity.<RuleActionEntity.RaffleCentreEntity>builder()
+                    .code(RuleLogicCheckTypeVO.ALLOW.getCode())
+                    .info(RuleLogicCheckTypeVO.ALLOW.getInfo())
+                    .build();
+        }
+
+        Map<String, ILogicFilter<RuleActionEntity.RaffleCentreEntity>> logicFilterGroup = defaultLogicFactory.openLogicFilter();
+
+        RuleActionEntity<RuleActionEntity.RaffleCentreEntity> ruleActionEntity = null;
+        for (String ruleModel : ruleModels) {
+            ILogicFilter<RuleActionEntity.RaffleCentreEntity> logicFilter = logicFilterGroup.get(ruleModel);
+            RuleMatterEntity ruleMatterEntity = new RuleMatterEntity();
+            ruleMatterEntity.setUserId(raffleFactorEntity.getUserId());
+            ruleMatterEntity.setAwardId(ruleMatterEntity.getAwardId());
+            ruleMatterEntity.setStrategyId(raffleFactorEntity.getStrategyId());
+            ruleMatterEntity.setRuleModel(ruleModel);
+            ruleActionEntity = logicFilter.filter(ruleMatterEntity);
+            /** go into all filter */
+            log.info("[rule during raffle] userId: {} ruleModel: {} code: {} info: {}", raffleFactorEntity.getUserId(), ruleModel, ruleActionEntity.getCode(), ruleActionEntity.getInfo());
+            if (!RuleLogicCheckTypeVO.ALLOW.getCode().equals(ruleActionEntity.getCode())) return ruleActionEntity;
+        }
         return ruleActionEntity;
     }
 }

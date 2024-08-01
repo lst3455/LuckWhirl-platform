@@ -27,7 +27,7 @@ public class RaffleStrategyTest {
 
     @Before
     public void setUp() {
-        ReflectionTestUtils.setField(ruleWeightLogicFilter, "userRaffleTimes", 3000L);
+        ReflectionTestUtils.setField(ruleWeightLogicFilter, "userRaffleTimes", 0L);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class RaffleStrategyTest {
                 .strategyId(10001L)
                 .build();
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 50; i++) {
             RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
             log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
             log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
@@ -58,6 +58,21 @@ public class RaffleStrategyTest {
             log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
         }
     }
+    @Test
+    public void test_performRaffle_lock() {
+        RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
+                .userId("user004")  // blacklist user: user001,user002,user003
+                .strategyId(10002L)
+                .build();
+
+        for (int i = 0; i < 500; i++) {
+            RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
+
+            log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
+            log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
+        }
+    }
+
 
 
 }

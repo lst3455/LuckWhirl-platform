@@ -38,4 +38,20 @@ public class RuleActionEntity <T extends RuleActionEntity.RaffleEntity>{
 
         private Long userRaffleTimes;
     }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RaffleCentreEntity extends RaffleEntity {
+
+        private Long strategyId;
+
+        private Set<Long> ruleWeightValueKey;
+
+        private Long awardId;
+
+        private Long userRaffleTimes;
+    }
 }

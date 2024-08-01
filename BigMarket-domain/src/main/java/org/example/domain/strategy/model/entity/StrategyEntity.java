@@ -20,7 +20,7 @@ public class StrategyEntity {
     private String ruleModels;
 
     public String[] getRuleModels(){
-        if (StringUtils.isBlank(ruleModels)) return null;
+        if (StringUtils.isBlank(ruleModels)) return new String[0];
         return ruleModels.split(Constants.SPLIT_COMMA);
     }
 

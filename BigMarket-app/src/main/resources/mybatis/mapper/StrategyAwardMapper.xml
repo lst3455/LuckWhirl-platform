@@ -27,5 +27,9 @@
         FROM strategy_award
         WHERE strategy_id = #{strategyId}
     </select>
-
+    <select id="queryStrategyAwardRuleModel" parameterType="org.example.infrastructure.persistent.po.StrategyAward" resultType="java.lang.String">
+        SELECT rule_model
+        FROM strategy_award
+        WHERE strategy_id = #{strategyId} and award_id = #{awardId}
+    </select>
 </mapper>

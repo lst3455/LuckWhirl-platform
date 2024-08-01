@@ -4,6 +4,7 @@ import lombok.val;
 import org.example.domain.strategy.model.entity.StrategyAwardEntity;
 import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.model.entity.StrategyRuleEntity;
+import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.infrastructure.persistent.dao.IStrategyAwardDao;
@@ -148,5 +149,14 @@ public class StrategyRepository implements IStrategyRepository {
         iRedisService.setValue(cacheKey, strategyEntity);
         return strategyEntity;
 
+    }
+
+    @Override
+    public StrategyAwardRuleModelVO queryStrategyAwardRuleModel(Long strategyId, Long awardId) {
+        StrategyAward strategyAward = new StrategyAward();
+        strategyAward.setStrategyId(strategyId);
+        strategyAward.setAwardId(awardId);
+        String ruleModels = iStrategyAwardDao.queryStrategyAwardRuleModel(strategyAward);
+        return StrategyAwardRuleModelVO.builder().ruleModels(ruleModels).build();
     }
 }
