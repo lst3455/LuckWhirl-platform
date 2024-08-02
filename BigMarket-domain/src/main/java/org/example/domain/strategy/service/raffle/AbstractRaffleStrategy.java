@@ -68,9 +68,10 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         /** outside filter, go default raffle */
         Long awardId = iStrategyDispatch.getRandomAwardId(strategyId);
 
-
         /** check award rule */
         StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModel(strategyId,awardId);
+
+
 
         /** filter during raffle */
         RuleActionEntity<RuleActionEntity.RaffleCentreEntity> ruleActionCentreEntity = this.doCheckRaffleCentreLogic(RaffleFactorEntity.builder()

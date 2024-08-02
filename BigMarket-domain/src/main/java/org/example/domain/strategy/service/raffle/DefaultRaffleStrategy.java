@@ -98,7 +98,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy{
             ILogicFilter<RuleActionEntity.RaffleCentreEntity> logicFilter = logicFilterGroup.get(ruleModel);
             RuleMatterEntity ruleMatterEntity = new RuleMatterEntity();
             ruleMatterEntity.setUserId(raffleFactorEntity.getUserId());
-            ruleMatterEntity.setAwardId(ruleMatterEntity.getAwardId());
+            ruleMatterEntity.setAwardId(raffleFactorEntity.getAwardId());
             ruleMatterEntity.setStrategyId(raffleFactorEntity.getStrategyId());
             ruleMatterEntity.setRuleModel(ruleModel);
             ruleActionEntity = logicFilter.filter(ruleMatterEntity);
