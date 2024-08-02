@@ -27,11 +27,11 @@ public class StrategyArmoryDispatchTest {
 
     @Before
     public void test_strategyArmory(){
-        strategyArmoryDispatch.assembleRaffleStrategy(10003L);
+        strategyArmoryDispatch.assembleRaffleStrategy(10001L);
         log.info("awardTable size: {} - int",iRedisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10001L).size());
-        Map<Long,Long> map = iRedisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10003L);
+        Map<Long,Long> map = iRedisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10001L);
         System.out.println(map.get(1L));
-        Long awardId = iRedisService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10003L,1L);
+        Long awardId = iRedisService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10001L,1L);
         log.info("awardId: {} - awardId",awardId);
         /*log.info("awardId: {} - awardId",String.valueOf(iRedisService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10001L,1L)));*/
     }
@@ -39,7 +39,7 @@ public class StrategyArmoryDispatchTest {
     @Test
     public void test_getRandomAwardId(){
         for (int i = 0; i < 500; i++) {
-            log.info("test result: {} - awardId", strategyArmoryDispatch.getRandomAwardId(10003L));
+            log.info("test result: {} - awardId", strategyArmoryDispatch.getRandomAwardId(10001L));
         }
     }
 

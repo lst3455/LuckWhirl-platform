@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
 import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 import org.example.domain.strategy.service.IRaffleStrategy;
-import org.example.domain.strategy.service.rule.impl.RuleLockLogicFilter;
-import org.example.domain.strategy.service.rule.impl.RuleWeightLogicFilter;
+import org.example.domain.strategy.service.rule.filter.impl.RuleLockLogicFilter;
+import org.example.domain.strategy.service.rule.filter.impl.RuleWeightLogicFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +31,7 @@ public class RaffleStrategyTest {
 
     @Before
     public void setUp_weight() {
-        ReflectionTestUtils.setField(ruleWeightLogicFilter, "userRaffleTimes", 0L);
+        ReflectionTestUtils.setField(ruleWeightLogicFilter, "userRaffleTimes", 1L);
     }
     @Before
     public void setUp_lock() {
@@ -46,7 +46,7 @@ public class RaffleStrategyTest {
                 .build();
 
         for (int i = 0; i < 50; i++) {
-            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffle(raffleFactorEntity);
+            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffleLogicFilter(raffleFactorEntity);
             log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
             log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
         }
@@ -60,7 +60,7 @@ public class RaffleStrategyTest {
                 .build();
 
         for (int i = 0; i < 50; i++) {
-            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffle(raffleFactorEntity);
+            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffleLogicFilter(raffleFactorEntity);
 
             log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
             log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
@@ -75,7 +75,7 @@ public class RaffleStrategyTest {
                 .build();
 
         for (int i = 0; i < 500; i++) {
-            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffle(raffleFactorEntity);
+            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffleLogicFilter(raffleFactorEntity);
 
             log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
             log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));

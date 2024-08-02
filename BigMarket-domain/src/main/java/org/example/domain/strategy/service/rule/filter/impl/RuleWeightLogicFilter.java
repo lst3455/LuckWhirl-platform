@@ -1,4 +1,4 @@
-package org.example.domain.strategy.service.rule.impl;
+package org.example.domain.strategy.service.rule.filter.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.model.entity.RuleActionEntity;
@@ -6,8 +6,8 @@ import org.example.domain.strategy.model.entity.RuleMatterEntity;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.annotation.LogicStrategy;
-import org.example.domain.strategy.service.rule.ILogicFilter;
-import org.example.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import org.example.domain.strategy.service.rule.filter.ILogicFilter;
+import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import org.example.types.common.Constants;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,6 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
 
     @Resource
     private IStrategyRepository iStrategyRepository;
-
 
     private Long userRaffleTimes = 4500L;
 

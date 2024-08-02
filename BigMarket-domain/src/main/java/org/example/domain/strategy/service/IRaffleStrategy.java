@@ -5,5 +5,6 @@ import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 
 public interface IRaffleStrategy {
 
-    RaffleAwardEntity performRaffle(RaffleFactorEntity raffleFactorEntity);
+    RaffleAwardEntity performRaffleLogicFilter(RaffleFactorEntity raffleFactorEntity);
+    RaffleAwardEntity performRaffleLogicChain(RaffleFactorEntity raffleFactorEntity);
 }

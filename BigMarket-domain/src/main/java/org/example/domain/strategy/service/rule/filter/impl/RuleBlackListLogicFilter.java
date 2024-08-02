@@ -1,4 +1,4 @@
-package org.example.domain.strategy.service.rule.impl;
+package org.example.domain.strategy.service.rule.filter.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.model.entity.RuleActionEntity;
@@ -6,8 +6,8 @@ import org.example.domain.strategy.model.entity.RuleMatterEntity;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.annotation.LogicStrategy;
-import org.example.domain.strategy.service.rule.ILogicFilter;
-import org.example.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import org.example.domain.strategy.service.rule.filter.ILogicFilter;
+import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import org.example.types.common.Constants;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +26,12 @@ public class RuleBlackListLogicFilter implements ILogicFilter<RuleActionEntity.R
         log.info("rule filter blacklist userId:{} strategyId:{} ruleModel:{}",ruleMatterEntity.getUserId(), ruleMatterEntity.getStrategyId(), ruleMatterEntity.getRuleModel());
         String userId = ruleMatterEntity.getUserId();
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(ruleMatterEntity.getStrategyId(), ruleMatterEntity.getAwardId(), ruleMatterEntity.getRuleModel());
+
         String[] splitRuleValue = ruleValue.split(Constants.SPLIT_COLON);
         Long awardId = Long.parseLong(splitRuleValue[0]);
         /** data sample => 100:user001,user002,user003 */
-        /** filter other rules */
         String[] userBlackListIds = splitRuleValue[1].split(Constants.SPLIT_COMMA);
+
         for (String userBlackListId : userBlackListIds) {
             if (userId.equals(userBlackListId)) {
                 return RuleActionEntity.<RuleActionEntity.RaffleBeforeEntity>builder()
