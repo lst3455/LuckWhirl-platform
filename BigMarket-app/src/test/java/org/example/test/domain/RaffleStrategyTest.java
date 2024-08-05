@@ -75,7 +75,7 @@ public class RaffleStrategyTest {
                 .build();
 
         for (int i = 0; i < 500; i++) {
-            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffleLogicFilter(raffleFactorEntity);
+            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffleLogicChain(raffleFactorEntity);
 
             log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
             log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
