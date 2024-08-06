@@ -30,7 +30,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
 
         DefaultTreeFactory.StrategyAwardData strategyAwardData = null;
         /** get root node of the tree */
-        String curTreeNode = ruleTreeVO.getRuleNodeTreeRoot();
+        String curTreeNode = ruleTreeVO.getRuleTreeRootNode();
         /** get root node map of the tree */
         Map<String, RuleTreeNodeVO> treeNodeMap = ruleTreeVO.getTreeNodeMap();
 

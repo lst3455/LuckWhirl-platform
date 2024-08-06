@@ -77,7 +77,7 @@ public class LogicTreeTest {
         ruleTreeVO.setTreeId(100000001);
         ruleTreeVO.setTreeName("strategy tree rule；test name");
         ruleTreeVO.setTreeDesc("strategy tree rule；test describe");
-        ruleTreeVO.setRuleNodeTreeRoot("rule_lock");
+        ruleTreeVO.setRuleTreeRootNode("rule_lock");
 
         ruleTreeVO.setTreeNodeMap(new HashMap<String, RuleTreeNodeVO>() {{
             put("rule_lock", rule_lock);

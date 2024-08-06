@@ -19,7 +19,7 @@ public class RuleTreeVO {
     /** rule tree describe */
     private String treeDesc;
     /** rule tree root */
-    private String ruleNodeTreeRoot;
+    private String ruleTreeRootNode;
     /** rule tree node */
     private Map<String, RuleTreeNodeVO> treeNodeMap;
 
