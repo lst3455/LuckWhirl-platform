@@ -3,6 +3,7 @@ package org.example.domain.strategy.repository;
 import org.example.domain.strategy.model.entity.StrategyAwardEntity;
 import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.model.entity.StrategyRuleEntity;
+import org.example.domain.strategy.model.vo.RuleTreeVO;
 import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
 
 import java.math.BigDecimal;
@@ -29,7 +30,8 @@ public interface IStrategyRepository {
 
     StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
 
-
     StrategyAwardRuleModelVO queryStrategyAwardRuleModel(Long strategyId, Long awardId);
+
+    RuleTreeVO queryRuleTreeByTreeId(String treeId);
 }
 

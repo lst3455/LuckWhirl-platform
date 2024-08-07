@@ -7,4 +7,5 @@ public interface IRaffleStrategy {
 
     RaffleAwardEntity performRaffleLogicFilter(RaffleFactorEntity raffleFactorEntity);
     RaffleAwardEntity performRaffleLogicChain(RaffleFactorEntity raffleFactorEntity);
+    RaffleAwardEntity performRaffleLogicChainWithRuleTree(RaffleFactorEntity raffleFactorEntity);
 }

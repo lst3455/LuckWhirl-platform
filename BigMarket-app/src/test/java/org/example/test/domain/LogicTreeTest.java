@@ -26,13 +26,13 @@ public class LogicTreeTest {
     public void test_tree_rule(){
         // 构建参数
         RuleTreeNodeVO rule_lock = RuleTreeNodeVO.builder()
-                .treeId(100000001)
+                .treeId("tree_lock")
                 .ruleKey("rule_lock")
                 .ruleDesc("unlock if user raffle times greater than N")
                 .ruleValue("1")
                 .treeNodeLineVOList(new ArrayList<RuleTreeNodeLineVO>() {{
                     add(RuleTreeNodeLineVO.builder()
-                            .treeId(100000001)
+                            .treeId("tree_lock")
                             .ruleNodeFrom("rule_lock")
                             .ruleNodeTo("rule_lucky")
                             .ruleLimitType(RuleLimitTypeVO.EQUAL)
@@ -40,7 +40,7 @@ public class LogicTreeTest {
                             .build());
 
                     add(RuleTreeNodeLineVO.builder()
-                            .treeId(100000001)
+                            .treeId("tree_lock")
                             .ruleNodeFrom("rule_lock")
                             .ruleNodeTo("rule_stock")
                             .ruleLimitType(RuleLimitTypeVO.EQUAL)
@@ -50,7 +50,7 @@ public class LogicTreeTest {
                 .build();
 
         RuleTreeNodeVO rule_lucky = RuleTreeNodeVO.builder()
-                .treeId(100000001)
+                .treeId("tree_lock")
                 .ruleKey("rule_lucky")
                 .ruleDesc("unlock if user raffle times greater than N")
                 .ruleValue("1")
@@ -58,13 +58,13 @@ public class LogicTreeTest {
                 .build();
 
         RuleTreeNodeVO rule_stock = RuleTreeNodeVO.builder()
-                .treeId(100000001)
+                .treeId("tree_lock")
                 .ruleKey("rule_stock")
                 .ruleDesc("depend on the stock to handle")
                 .ruleValue(null)
                 .treeNodeLineVOList(new ArrayList<RuleTreeNodeLineVO>() {{
                     add(RuleTreeNodeLineVO.builder()
-                            .treeId(100000001)
+                            .treeId("tree_lock")
                             .ruleNodeFrom("rule_lock")
                             .ruleNodeTo("rule_lucky")
                             .ruleLimitType(RuleLimitTypeVO.EQUAL)
@@ -74,7 +74,7 @@ public class LogicTreeTest {
                 .build();
 
         RuleTreeVO ruleTreeVO = new RuleTreeVO();
-        ruleTreeVO.setTreeId(100000001);
+        ruleTreeVO.setTreeId("tree_lock");
         ruleTreeVO.setTreeName("strategy tree rule；test name");
         ruleTreeVO.setTreeDesc("strategy tree rule；test describe");
         ruleTreeVO.setRuleTreeRootNode("rule_lock");

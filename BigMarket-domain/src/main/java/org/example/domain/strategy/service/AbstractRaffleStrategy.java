@@ -31,6 +31,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         this.defaultLogicChainFactory = defaultLogicChainFactory;
     }
 
+    /** performRaffleLogicFilter has been deprecated */
     @Override
     public RaffleAwardEntity performRaffleLogicFilter(RaffleFactorEntity raffleFactorEntity) {
 
@@ -95,6 +96,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
     }
 
+    /** performRaffleLogicChain has been deprecated */
     @Override
     public RaffleAwardEntity performRaffleLogicChain(RaffleFactorEntity raffleFactorEntity) {
         /** verify parameters */
@@ -131,6 +133,32 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
                 .awardId(awardId)
                 .build();
 
+    }
+
+    @Override
+    public RaffleAwardEntity performRaffleLogicChainWithRuleTree(RaffleFactorEntity raffleFactorEntity){
+        /** verify parameters */
+        String userId = raffleFactorEntity.getUserId();
+        Long strategyId = raffleFactorEntity.getStrategyId();
+        if (strategyId == null || StringUtils.isBlank(userId)) {
+            throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
+        }
+
+        /** open rule chain filter */
+        ILogicChain iLogicChain = defaultLogicChainFactory.openLogicChain(strategyId);
+        /** pass all chain filter and return awardId*/
+        Long awardId = iLogicChain.logic(userId,strategyId);
+
+
+        /** check award rule */
+        StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModel(strategyId,awardId);
+
+
+
+        log.info("[temporary log] pass all rule filter, execute normal raffle");
+        return RaffleAwardEntity.builder()
+                .awardId(awardId)
+                .build();
     }
 
 

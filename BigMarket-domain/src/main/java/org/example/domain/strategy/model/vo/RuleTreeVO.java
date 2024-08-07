@@ -13,7 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class RuleTreeVO {
     /** rule tree id */
-    private Integer treeId;
+    private String treeId;
     /** rule tree name */
     private String treeName;
     /** rule tree describe */
