@@ -40,6 +40,6 @@ public class DefaultLogicTreeFactory {
     @NoArgsConstructor
     public static class StrategyAwardVO{
         private Long awardId;
-        private String awardRuleValue;
+        private String ruleModel;
     }
 }

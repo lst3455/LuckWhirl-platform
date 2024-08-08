@@ -57,7 +57,7 @@ public class BlackListLogicChain extends AbstractLogicChain {
                 log.info("raffle rule chain take over - blacklist userId: {} strategyId: {} ruleModel: {} awardId: {}",userId,strategyId,ruleModel(),awardId);
                 return DefaultLogicChainFactory.StrategyAwardVO.builder()
                         .awardId(awardId)
-                        .logicModel(ruleModel())
+                        .ruleModel(ruleModel())
                         .build();
             }
         }

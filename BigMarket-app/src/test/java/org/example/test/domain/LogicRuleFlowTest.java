@@ -41,8 +41,24 @@ public class LogicRuleFlowTest {
     }
 
     @Test
-    public void test_performRaffle_lock() {
+    public void test_performRaffle_weight() {
         ReflectionTestUtils.setField(ruleWeightLogicChain, "userRaffleTimes", 5000L);
+        RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
+                .userId("user004")  // blacklist user: user001,user002,user003
+                .strategyId(10004L)
+                .build();
+
+        for (int i = 0; i < 1; i++) {
+            RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffleLogicChainWithRuleTree(raffleFactorEntity);
+
+            log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
+            log.info("test result：{}", JSON.toJSONString(raffleAwardEntity));
+        }
+    }
+
+    @Test
+    public void test_performRaffle_lucky() {
+        ReflectionTestUtils.setField(ruleWeightLogicChain, "userRaffleTimes", 0L);
         RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
                 .userId("user004")  // blacklist user: user001,user002,user003
                 .strategyId(10004L)

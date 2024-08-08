@@ -152,11 +152,11 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
         /** before raffle filter, go through rule chain */
         DefaultLogicChainFactory.StrategyAwardVO strategyChainAwardVO = raffleLogicChain(userId, strategyId);
-        if(!DefaultLogicChainFactory.LogicModel.RULE_DEFAULT.getCode().equals(strategyChainAwardVO.getLogicModel())){
+        if(!DefaultLogicChainFactory.LogicModel.RULE_DEFAULT.getCode().equals(strategyChainAwardVO.getRuleModel())){
             /*log.info("take over by raffle strategy[rule-chain(blacklist,weight)] useId:{} strategyId:{} awardId:{} ruleModel:{}",userId,strategyId,strategyChainAwardVO.getAwardId(),strategyChainAwardVO.getLogicModel());*/
             return RaffleAwardEntity.builder()
                     .awardId(strategyChainAwardVO.getAwardId())
-                    .awardConfig(strategyChainAwardVO.getLogicModel())
+                    .awardConfig(strategyChainAwardVO.getRuleModel())
                     .build();
         }
         /*log.info("pass raffle strategy[rule-chain(blacklist,weight)] useId:{} strategyId:{} awardId:{}",userId,strategyId,strategyChainAwardVO.getAwardId());*/
@@ -166,7 +166,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
         return RaffleAwardEntity.builder()
                 .awardId(strategyTreeAwardVO.getAwardId())
-                .awardConfig(strategyTreeAwardVO.getAwardRuleValue())
+                .awardConfig(strategyTreeAwardVO.getRuleModel())
                 .build();
     }
 
