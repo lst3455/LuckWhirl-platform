@@ -1,7 +1,7 @@
 package org.example.domain.strategy.service.rule.chain.factory;
 
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.repository.IStrategyRepository;
@@ -48,4 +48,31 @@ public class DefaultLogicChainFactory {
         /** return first chain node */
         return iLogicChain;
     }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StrategyAwardVO {
+        /** awardId */
+        private Long awardId;
+        /** get by which rule model */
+        private String logicModel;
+    }
+
+
+    @Getter
+    @AllArgsConstructor
+    public enum LogicModel {
+
+        RULE_DEFAULT("rule_default", "default"),
+        RULE_BLACKLIST("rule_blacklist", "blacklist"),
+        RULE_WEIGHT("rule_weight", "weight"),
+        ;
+
+        private final String code;
+        private final String info;
+
+    }
+
 }

@@ -1,6 +1,7 @@
 package org.example.domain.strategy.service;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
 import org.example.domain.strategy.model.entity.RaffleFactorEntity;
@@ -13,6 +14,8 @@ import org.example.domain.strategy.service.armory.IStrategyDispatch;
 import org.example.domain.strategy.service.rule.chain.ILogicChain;
 import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
+import org.example.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
+import org.example.domain.strategy.service.rule.tree.factory.engine.impl.DecisionTreeEngine;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 
@@ -23,12 +26,17 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
     protected IStrategyDispatch iStrategyDispatch;
 
-    private DefaultLogicChainFactory defaultLogicChainFactory;
+    protected DefaultLogicChainFactory defaultLogicChainFactory;
 
-    public AbstractRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory) {
+    protected DefaultTreeFactory defaultTreeFactory;
+
+    protected DefaultLogicFactory defaultLogicFactory;
+
+    public AbstractRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultTreeFactory defaultTreeFactory) {
         this.iStrategyRepository = iStrategyRepository;
         this.iStrategyDispatch = iStrategyDispatch;
         this.defaultLogicChainFactory = defaultLogicChainFactory;
+        this.defaultTreeFactory = defaultTreeFactory;
     }
 
     /** performRaffleLogicFilter has been deprecated */
@@ -72,7 +80,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         Long awardId = iStrategyDispatch.getRandomAwardId(strategyId);
 
         /** check award rule */
-        StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModel(strategyId,awardId);
+        StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModelVO(strategyId,awardId);
 
 
 
@@ -113,7 +121,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
 
         /** check award rule */
-        StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModel(strategyId,awardId);
+        StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModelVO(strategyId,awardId);
 
         /** filter during raffle */
         RuleActionEntity<RuleActionEntity.RaffleCentreEntity> ruleActionCentreEntity = this.doCheckRaffleCentreLogic(RaffleFactorEntity.builder()
@@ -144,25 +152,32 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
 
-        /** open rule chain filter */
-        ILogicChain iLogicChain = defaultLogicChainFactory.openLogicChain(strategyId);
-        /** pass all chain filter and return awardId*/
-        Long awardId = iLogicChain.logic(userId,strategyId);
+        /** before raffle filter, go through rule chain */
+        DefaultLogicChainFactory.StrategyAwardVO strategyChainAwardVO = raffleLogicChain(userId, strategyId);
+        if(!DefaultLogicChainFactory.LogicModel.RULE_DEFAULT.getCode().equals(strategyChainAwardVO.getLogicModel())){
+            /*log.info("take over by raffle strategy[rule-chain(blacklist,weight)] useId:{} strategyId:{} awardId:{} ruleModel:{}",userId,strategyId,strategyChainAwardVO.getAwardId(),strategyChainAwardVO.getLogicModel());*/
+            return RaffleAwardEntity.builder()
+                    .awardId(strategyChainAwardVO.getAwardId())
+                    .awardConfig(strategyChainAwardVO.getLogicModel())
+                    .build();
+        }
+        /*log.info("pass raffle strategy[rule-chain(blacklist,weight)] useId:{} strategyId:{} awardId:{}",userId,strategyId,strategyChainAwardVO.getAwardId());*/
+        /** centre raffle filter, go through rule tree */
+        DefaultTreeFactory.StrategyAwardVO strategyTreeAwardVO = raffleLogicTree(userId,strategyId,strategyChainAwardVO.getAwardId());
+        /*log.info("take over by raffle strategy[rule-tree(lock,lucky)] useId:{} strategyId:{} awardId:{} ruleModel:{}",userId,strategyId,strategyTreeAwardVO.getAwardId(),strategyTreeAwardVO.getAwardRuleValue());*/
 
-
-        /** check award rule */
-        StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModel(strategyId,awardId);
-
-
-
-        log.info("[temporary log] pass all rule filter, execute normal raffle");
         return RaffleAwardEntity.builder()
-                .awardId(awardId)
+                .awardId(strategyTreeAwardVO.getAwardId())
+                .awardConfig(strategyTreeAwardVO.getAwardRuleValue())
                 .build();
     }
 
+    public abstract DefaultLogicChainFactory.StrategyAwardVO raffleLogicChain(String userId,Long StrategyId);
+    public abstract DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId,Long StrategyId, Long awardId);
 
-
+    /** doCheckRaffleBeforeLogic has been deprecated */
     protected abstract RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels);
+    /** doCheckRaffleCentreLogic has been deprecated */
     protected abstract RuleActionEntity<RuleActionEntity.RaffleCentreEntity> doCheckRaffleCentreLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels);
+
 }

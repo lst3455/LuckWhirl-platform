@@ -6,15 +6,19 @@ import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 import org.example.domain.strategy.model.entity.RuleActionEntity;
 import org.example.domain.strategy.model.entity.RuleMatterEntity;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
+import org.example.domain.strategy.model.vo.RuleTreeVO;
+import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.AbstractRaffleStrategy;
 import org.example.domain.strategy.service.armory.IStrategyDispatch;
+import org.example.domain.strategy.service.rule.chain.ILogicChain;
 import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.example.domain.strategy.service.rule.filter.ILogicFilter;
 import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
+import org.example.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
+import org.example.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,18 +28,36 @@ import java.util.stream.Collectors;
 @Service
 public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
 
-    @Resource
-    private DefaultLogicFactory defaultLogicFactory;
 
-    @Resource
-    private DefaultLogicChainFactory defaultLogicChainFactory;
-
-    public DefaultRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultLogicFactory defaultLogicFactory) {
-        super(iStrategyRepository, iStrategyDispatch, defaultLogicChainFactory);
-        this.defaultLogicFactory = defaultLogicFactory;
-        this.defaultLogicChainFactory = defaultLogicChainFactory;
+    public DefaultRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultTreeFactory defaultTreeFactory) {
+        super(iStrategyRepository, iStrategyDispatch, defaultLogicChainFactory, defaultTreeFactory);
     }
 
+
+    @Override
+    public DefaultLogicChainFactory.StrategyAwardVO raffleLogicChain(String userId, Long strategyId) {
+        ILogicChain iLogicChain = defaultLogicChainFactory.openLogicChain(strategyId);
+        return iLogicChain.treeVersionLogic(userId,strategyId);
+    }
+
+    @Override
+    public DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Long awardId) {
+        StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModelVO(strategyId, awardId);
+        if (strategyAwardRuleModelVO == null) {
+            return DefaultTreeFactory.StrategyAwardVO.builder()
+                    .awardId(awardId)
+                    .build();
+        }
+        RuleTreeVO ruleTreeVO = iStrategyRepository.queryRuleTreeByTreeId(strategyAwardRuleModelVO.getRuleModels());
+        if (ruleTreeVO == null) {
+            throw new RuntimeException("can't find ruleTreeVO base on the provide ruleModel, please check database strategy_award and rule_tree, wrong tree_id: " + strategyAwardRuleModelVO.getRuleModels());
+        }
+        IDecisionTreeEngine iDecisionTreeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
+        return iDecisionTreeEngine.process(userId,strategyId,awardId);
+    }
+
+
+    /** doCheckRaffleBeforeLogic has been deprecated */
     @Override
     protected RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels) {
         if (ruleModels == null || ruleModels.length == 0) {
@@ -88,7 +110,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
 
         return ruleActionEntity;
     }
-
+    /** doCheckRaffleCentreLogic has been deprecated */
     @Override
     protected RuleActionEntity<RuleActionEntity.RaffleCentreEntity> doCheckRaffleCentreLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels) {
         if (ruleModels == null || ruleModels.length == 0) {

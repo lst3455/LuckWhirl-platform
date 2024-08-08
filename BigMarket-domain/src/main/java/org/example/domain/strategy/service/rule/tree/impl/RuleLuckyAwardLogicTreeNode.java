@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component("rule_lucky")
 public class RuleLuckyAwardLogicTreeNode implements ILogicTreeNode {
     @Override
-    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId) {
+    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId) {
         return DefaultTreeFactory.TreeActionEntity.builder()
                 .ruleLogicCheckTypeVO(RuleLogicCheckTypeVO.TAKE_OVER)
-                .strategyAwardData(DefaultTreeFactory.StrategyAwardData.builder()
+                .strategyAwardVO(DefaultTreeFactory.StrategyAwardVO.builder()
                         .awardId(101L)
                         .awardRuleValue("1,100")
                         .build())

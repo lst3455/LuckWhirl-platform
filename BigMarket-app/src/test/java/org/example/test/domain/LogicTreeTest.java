@@ -87,7 +87,7 @@ public class LogicTreeTest {
 
         IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
 
-        DefaultTreeFactory.StrategyAwardData data = treeEngine.process("user004", 10001L, 100);
+        DefaultTreeFactory.StrategyAwardVO data = treeEngine.process("user004", 10001L, 100L);
         log.info("test result：{}", JSON.toJSONString(data));
     }
 }

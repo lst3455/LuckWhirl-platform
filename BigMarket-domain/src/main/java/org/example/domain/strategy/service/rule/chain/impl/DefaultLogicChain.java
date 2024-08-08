@@ -3,6 +3,7 @@ package org.example.domain.strategy.service.rule.chain.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.service.armory.IStrategyDispatch;
 import org.example.domain.strategy.service.rule.chain.AbstractLogicChain;
+import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,7 +23,17 @@ public class DefaultLogicChain extends AbstractLogicChain {
     }
 
     @Override
+    public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId) {
+        Long awardId = iStrategyDispatch.getRandomAwardId(strategyId);
+        log.info("raffle rule chain - default userId: {} strategyId: {} ruleModel: {} awardId: {}",userId,strategyId,ruleModel(),awardId);
+        return DefaultLogicChainFactory.StrategyAwardVO.builder()
+                .awardId(awardId)
+                .logicModel(ruleModel())
+                .build();
+    }
+
+    @Override
     protected String ruleModel() {
-        return "default";
+        return DefaultLogicChainFactory.LogicModel.RULE_DEFAULT.getCode();
     }
 }

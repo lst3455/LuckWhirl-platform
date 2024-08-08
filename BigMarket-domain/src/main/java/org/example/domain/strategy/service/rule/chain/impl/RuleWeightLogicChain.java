@@ -6,6 +6,7 @@ import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.armory.IStrategyDispatch;
 import org.example.domain.strategy.service.rule.chain.AbstractLogicChain;
+import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import org.example.types.common.Constants;
 import org.springframework.stereotype.Component;
@@ -53,8 +54,38 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
     }
 
     @Override
+    public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId) {
+        log.info("raffle rule chain start - weight userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        String ruleValue = iStrategyRepository.queryStrategyRuleValue(strategyId, ruleModel());
+
+        /** ruleValue sample => 4000:102,103,104,105 5000:102,103,104,105,106 6000:102,103,104,105,106,107 */
+        Map<Long, Set<Long>> ruleValueMap = getRuleValueMap(ruleValue,ruleModel());
+        /** if ruleValueMap is empty or error in initialization, allow to pass filter engine */
+        if (ruleValueMap == null || ruleValueMap.isEmpty()) return next().treeVersionLogic(userId,strategyId);
+
+        List<Long> ruleValueKeyMap = new ArrayList<>(ruleValueMap.keySet());
+        /** binary search a biggest key smaller than userRaffleTimes */
+        Long validKey = binarySearchKey(ruleValueKeyMap,userRaffleTimes);
+
+        /** if can find valid key, should be caught by filter engine */
+        if (validKey != null) {
+            Long userRaffleTimes = validKey;
+            Long awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleTimes);
+            log.info("raffle rule chain take over - weight userId: {} strategyId: {} ruleModel: {} awardId:{}",userId,strategyId,ruleModel(),awardId);
+            return DefaultLogicChainFactory.StrategyAwardVO.builder()
+                    .awardId(awardId)
+                    .logicModel(ruleModel())
+                    .build();
+        }
+
+        /** if can't find valid key, pass filter engine */
+        log.info("raffle rule chain pass - weight userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        return next().treeVersionLogic(userId,strategyId);
+    }
+
+    @Override
     protected String ruleModel() {
-        return "rule_weight";
+        return DefaultLogicChainFactory.LogicModel.RULE_WEIGHT.getCode();
     }
 
     private Map<Long, Set<Long>> getRuleValueMap(String ruleValue, String ruleModel){

@@ -26,9 +26,9 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
     }
 
     @Override
-    public DefaultTreeFactory.StrategyAwardData process(String userId, Long strategyId, Integer awardId) {
+    public DefaultTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Long awardId) {
 
-        DefaultTreeFactory.StrategyAwardData strategyAwardData = null;
+        DefaultTreeFactory.StrategyAwardVO strategyAwardVO = null;
         /** get root node of the tree */
         String curTreeNode = ruleTreeVO.getRuleTreeRootNode();
         /** get root node map of the tree */
@@ -45,8 +45,8 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
             /** handle through cur tree node logic, return TAKE_OVER or ALLOW */
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = treeActionEntity.getRuleLogicCheckTypeVO();
             /** get strategyAwardData after cur tree node logic */
-            strategyAwardData = treeActionEntity.getStrategyAwardData();
-            log.info("strategyTree engine [{}] treeId:{} treeNode:{} code:{}",ruleTreeVO.getTreeName(),ruleTreeVO.getTreeId(),curTreeNode,ruleLogicCheckTypeVO);
+            strategyAwardVO = treeActionEntity.getStrategyAwardVO();
+            log.info("raffle rule tree engine [{}] treeId:{} treeNode:{} code:{}",ruleTreeVO.getTreeName(),ruleTreeVO.getTreeId(),curTreeNode,ruleLogicCheckTypeVO);
 
             /** get next tree node key */
             curTreeNode = nextNode(ruleLogicCheckTypeVO.getCode(), ruleTreeNodeVO.getTreeNodeLineVOList());
@@ -56,7 +56,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         }
 
         /** return final strategyAwardData after all tree node logic */
-        return strategyAwardData;
+        return strategyAwardVO;
     }
 
     private String nextNode(String matterValue, List<RuleTreeNodeLineVO> ruleTreeNodeLineVOList) {
