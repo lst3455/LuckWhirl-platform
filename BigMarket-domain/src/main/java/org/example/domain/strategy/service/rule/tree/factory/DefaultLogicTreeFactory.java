@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.lock.qual.NewObject;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 import org.example.domain.strategy.model.vo.RuleTreeVO;
 import org.example.domain.strategy.service.rule.tree.ILogicTreeNode;
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class DefaultTreeFactory {
+public class DefaultLogicTreeFactory {
     private final Map<String, ILogicTreeNode> logicTreeNodeMap;
 
-    public DefaultTreeFactory(Map<String, ILogicTreeNode> logicTreeNodeMap) {
+    public DefaultLogicTreeFactory(Map<String, ILogicTreeNode> logicTreeNodeMap) {
         this.logicTreeNodeMap = logicTreeNodeMap;
     }
 

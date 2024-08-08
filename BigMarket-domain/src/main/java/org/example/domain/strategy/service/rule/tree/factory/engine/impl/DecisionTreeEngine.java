@@ -1,13 +1,12 @@
 package org.example.domain.strategy.service.rule.tree.factory.engine.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 import org.example.domain.strategy.model.vo.RuleTreeNodeLineVO;
 import org.example.domain.strategy.model.vo.RuleTreeNodeVO;
 import org.example.domain.strategy.model.vo.RuleTreeVO;
 import org.example.domain.strategy.service.rule.tree.ILogicTreeNode;
-import org.example.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
+import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFactory;
 import org.example.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 
 import java.util.List;
@@ -26,9 +25,9 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
     }
 
     @Override
-    public DefaultTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Long awardId) {
+    public DefaultLogicTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Long awardId) {
 
-        DefaultTreeFactory.StrategyAwardVO strategyAwardVO = null;
+        DefaultLogicTreeFactory.StrategyAwardVO strategyAwardVO = null;
         /** get root node of the tree */
         String curTreeNode = ruleTreeVO.getRuleTreeRootNode();
         /** get root node map of the tree */
@@ -41,7 +40,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
             ILogicTreeNode iLogicTreeNode = logicTreeNodeMap.get(ruleTreeNodeVO.getRuleKey());
 
             /** handle through cur tree node logic, return TreeActionEntity */
-            DefaultTreeFactory.TreeActionEntity treeActionEntity = iLogicTreeNode.logic(userId, strategyId, awardId);
+            DefaultLogicTreeFactory.TreeActionEntity treeActionEntity = iLogicTreeNode.logic(userId, strategyId, awardId);
             /** handle through cur tree node logic, return TAKE_OVER or ALLOW */
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = treeActionEntity.getRuleLogicCheckTypeVO();
             /** get strategyAwardData after cur tree node logic */

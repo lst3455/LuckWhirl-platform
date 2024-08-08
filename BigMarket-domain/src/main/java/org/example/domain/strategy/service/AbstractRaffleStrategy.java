@@ -1,7 +1,6 @@
 package org.example.domain.strategy.service;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
 import org.example.domain.strategy.model.entity.RaffleFactorEntity;
@@ -14,8 +13,7 @@ import org.example.domain.strategy.service.armory.IStrategyDispatch;
 import org.example.domain.strategy.service.rule.chain.ILogicChain;
 import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
-import org.example.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
-import org.example.domain.strategy.service.rule.tree.factory.engine.impl.DecisionTreeEngine;
+import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFactory;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 
@@ -28,15 +26,15 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
     protected DefaultLogicChainFactory defaultLogicChainFactory;
 
-    protected DefaultTreeFactory defaultTreeFactory;
+    protected DefaultLogicTreeFactory defaultLogicTreeFactory;
 
     protected DefaultLogicFactory defaultLogicFactory;
 
-    public AbstractRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultTreeFactory defaultTreeFactory) {
+    public AbstractRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultLogicTreeFactory defaultLogicTreeFactory) {
         this.iStrategyRepository = iStrategyRepository;
         this.iStrategyDispatch = iStrategyDispatch;
         this.defaultLogicChainFactory = defaultLogicChainFactory;
-        this.defaultTreeFactory = defaultTreeFactory;
+        this.defaultLogicTreeFactory = defaultLogicTreeFactory;
     }
 
     /** performRaffleLogicFilter has been deprecated */
@@ -163,7 +161,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         }
         /*log.info("pass raffle strategy[rule-chain(blacklist,weight)] useId:{} strategyId:{} awardId:{}",userId,strategyId,strategyChainAwardVO.getAwardId());*/
         /** centre raffle filter, go through rule tree */
-        DefaultTreeFactory.StrategyAwardVO strategyTreeAwardVO = raffleLogicTree(userId,strategyId,strategyChainAwardVO.getAwardId());
+        DefaultLogicTreeFactory.StrategyAwardVO strategyTreeAwardVO = raffleLogicTree(userId,strategyId,strategyChainAwardVO.getAwardId());
         /*log.info("take over by raffle strategy[rule-tree(lock,lucky)] useId:{} strategyId:{} awardId:{} ruleModel:{}",userId,strategyId,strategyTreeAwardVO.getAwardId(),strategyTreeAwardVO.getAwardRuleValue());*/
 
         return RaffleAwardEntity.builder()
@@ -173,7 +171,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
     }
 
     public abstract DefaultLogicChainFactory.StrategyAwardVO raffleLogicChain(String userId,Long StrategyId);
-    public abstract DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId,Long StrategyId, Long awardId);
+    public abstract DefaultLogicTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long StrategyId, Long awardId);
 
     /** doCheckRaffleBeforeLogic has been deprecated */
     protected abstract RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels);

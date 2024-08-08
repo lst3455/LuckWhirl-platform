@@ -15,7 +15,7 @@ import org.example.domain.strategy.service.rule.chain.ILogicChain;
 import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.example.domain.strategy.service.rule.filter.ILogicFilter;
 import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
-import org.example.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
+import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFactory;
 import org.example.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
 
 
-    public DefaultRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultTreeFactory defaultTreeFactory) {
-        super(iStrategyRepository, iStrategyDispatch, defaultLogicChainFactory, defaultTreeFactory);
+    public DefaultRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultLogicTreeFactory defaultLogicTreeFactory) {
+        super(iStrategyRepository, iStrategyDispatch, defaultLogicChainFactory, defaultLogicTreeFactory);
     }
 
 
@@ -41,10 +41,10 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
     }
 
     @Override
-    public DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Long awardId) {
+    public DefaultLogicTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Long awardId) {
         StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModelVO(strategyId, awardId);
         if (strategyAwardRuleModelVO == null) {
-            return DefaultTreeFactory.StrategyAwardVO.builder()
+            return DefaultLogicTreeFactory.StrategyAwardVO.builder()
                     .awardId(awardId)
                     .build();
         }
@@ -52,7 +52,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
         if (ruleTreeVO == null) {
             throw new RuntimeException("can't find ruleTreeVO base on the provide ruleModel, please check database strategy_award and rule_tree, wrong tree_id: " + strategyAwardRuleModelVO.getRuleModels());
         }
-        IDecisionTreeEngine iDecisionTreeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
+        IDecisionTreeEngine iDecisionTreeEngine = defaultLogicTreeFactory.openLogicTree(ruleTreeVO);
         return iDecisionTreeEngine.process(userId,strategyId,awardId);
     }
 

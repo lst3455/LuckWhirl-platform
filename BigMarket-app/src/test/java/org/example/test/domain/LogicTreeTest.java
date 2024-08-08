@@ -3,7 +3,7 @@ package org.example.test.domain;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.model.vo.*;
-import org.example.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
+import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFactory;
 import org.example.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class LogicTreeTest {
 
     @Resource
-    private DefaultTreeFactory defaultTreeFactory;
+    private DefaultLogicTreeFactory defaultLogicTreeFactory;
 
     @Test
     public void test_tree_rule(){
@@ -85,9 +85,9 @@ public class LogicTreeTest {
             put("rule_lucky", rule_lucky);
         }});
 
-        IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
+        IDecisionTreeEngine treeEngine = defaultLogicTreeFactory.openLogicTree(ruleTreeVO);
 
-        DefaultTreeFactory.StrategyAwardVO data = treeEngine.process("user004", 10001L, 100L);
+        DefaultLogicTreeFactory.StrategyAwardVO data = treeEngine.process("user004", 10001L, 100L);
         log.info("test result：{}", JSON.toJSONString(data));
     }
 }

@@ -42,9 +42,9 @@ public class LogicRuleFlowTest {
 
     @Test
     public void test_performRaffle_lock() {
-        ReflectionTestUtils.setField(ruleWeightLogicChain, "userRaffleTimes", 0L);
+        ReflectionTestUtils.setField(ruleWeightLogicChain, "userRaffleTimes", 5000L);
         RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("user003")  // blacklist user: user001,user002,user003
+                .userId("user004")  // blacklist user: user001,user002,user003
                 .strategyId(10004L)
                 .build();
 
