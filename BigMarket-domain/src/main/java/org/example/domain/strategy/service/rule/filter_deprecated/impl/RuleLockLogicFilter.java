@@ -1,4 +1,4 @@
-package org.example.domain.strategy.service.rule.filter.impl;
+package org.example.domain.strategy.service.rule.filter_deprecated.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.model.entity.RuleActionEntity;
@@ -6,8 +6,8 @@ import org.example.domain.strategy.model.entity.RuleMatterEntity;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.annotation.LogicStrategy;
-import org.example.domain.strategy.service.rule.filter.ILogicFilter;
-import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
+import org.example.domain.strategy.service.rule.filter_deprecated.ILogicFilter;
+import org.example.domain.strategy.service.rule.filter_deprecated.factory.DefaultLogicFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

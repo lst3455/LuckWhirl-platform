@@ -1,4 +1,4 @@
-package org.example.domain.strategy.service.rule.filter.factory;
+package org.example.domain.strategy.service.rule.filter_deprecated.factory;
 
 import com.alibaba.fastjson2.util.AnnotationUtils;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.model.entity.RuleActionEntity;
 import org.example.domain.strategy.service.annotation.LogicStrategy;
-import org.example.domain.strategy.service.rule.filter.ILogicFilter;
+import org.example.domain.strategy.service.rule.filter_deprecated.ILogicFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

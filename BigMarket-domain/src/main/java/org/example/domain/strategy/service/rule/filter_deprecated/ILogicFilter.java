@@ -1,4 +1,4 @@
-package org.example.domain.strategy.service.rule.filter;
+package org.example.domain.strategy.service.rule.filter_deprecated;
 
 import org.example.domain.strategy.model.entity.RuleActionEntity;
 import org.example.domain.strategy.model.entity.RuleMatterEntity;

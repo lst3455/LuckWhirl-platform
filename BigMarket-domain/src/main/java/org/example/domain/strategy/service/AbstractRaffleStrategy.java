@@ -12,7 +12,7 @@ import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.armory.IStrategyDispatch;
 import org.example.domain.strategy.service.rule.chain.ILogicChain;
 import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
-import org.example.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
+import org.example.domain.strategy.service.rule.filter_deprecated.factory.DefaultLogicFactory;
 import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFactory;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
@@ -153,16 +153,13 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         /** before raffle filter, go through rule chain */
         DefaultLogicChainFactory.StrategyAwardVO strategyChainAwardVO = raffleLogicChain(userId, strategyId);
         if(!DefaultLogicChainFactory.LogicModel.RULE_DEFAULT.getCode().equals(strategyChainAwardVO.getRuleModel())){
-            /*log.info("take over by raffle strategy[rule-chain(blacklist,weight)] useId:{} strategyId:{} awardId:{} ruleModel:{}",userId,strategyId,strategyChainAwardVO.getAwardId(),strategyChainAwardVO.getLogicModel());*/
             return RaffleAwardEntity.builder()
                     .awardId(strategyChainAwardVO.getAwardId())
                     .awardConfig(strategyChainAwardVO.getRuleModel())
                     .build();
         }
-        /*log.info("pass raffle strategy[rule-chain(blacklist,weight)] useId:{} strategyId:{} awardId:{}",userId,strategyId,strategyChainAwardVO.getAwardId());*/
         /** centre raffle filter, go through rule tree */
         DefaultLogicTreeFactory.StrategyAwardVO strategyTreeAwardVO = raffleLogicTree(userId,strategyId,strategyChainAwardVO.getAwardId());
-        /*log.info("take over by raffle strategy[rule-tree(lock,lucky)] useId:{} strategyId:{} awardId:{} ruleModel:{}",userId,strategyId,strategyTreeAwardVO.getAwardId(),strategyTreeAwardVO.getAwardRuleValue());*/
 
         return RaffleAwardEntity.builder()
                 .awardId(strategyTreeAwardVO.getAwardId())

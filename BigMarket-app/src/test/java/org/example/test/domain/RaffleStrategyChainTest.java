@@ -2,11 +2,10 @@ package org.example.test.domain;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.domain.strategy.service.rule.chain.ILogicChain;
 import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.example.domain.strategy.service.rule.chain.impl.RuleWeightLogicChain;
-import org.example.domain.strategy.service.rule.filter.impl.RuleLockLogicFilter;
+import org.example.domain.strategy.service.rule.filter_deprecated.impl.RuleLockLogicFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
