@@ -24,7 +24,16 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
 
     @Override
     public boolean assembleRaffleStrategy(Long strategyId) {
+        /** get the raffle config */
         List<StrategyAwardEntity> strategyAwardEntities = iStrategyRepository.getStrategyAwardList(strategyId);
+
+        /** store the award stock data in cache */
+        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities){
+            Long awardId = strategyAwardEntity.getAwardId();
+            Long awardAmount = strategyAwardEntity.getAwardAmount();
+            iStrategyRepository.storeStrategyAwardAmount(strategyId,awardId,awardAmount);
+        }
+
         assembleRaffleStrategy(String.valueOf(strategyId), strategyAwardEntities);
 
         StrategyEntity strategyEntity = iStrategyRepository.getStrategyEntityByStrategyId(strategyId);
