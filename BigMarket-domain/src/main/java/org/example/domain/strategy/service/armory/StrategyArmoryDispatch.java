@@ -5,6 +5,7 @@ import org.example.domain.strategy.model.entity.StrategyAwardEntity;
 import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.model.entity.StrategyRuleEntity;
 import org.example.domain.strategy.repository.IStrategyRepository;
+import org.example.types.common.Constants;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 import org.springframework.stereotype.Service;
@@ -106,5 +107,11 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         String key = String.valueOf(strategyId).concat("_").concat(String.valueOf(raffleTimes));
         Integer rateRange = iStrategyRepository.getRateRange(key);
         return iStrategyRepository.getStrategyAwardId(key,(long) new SecureRandom().nextInt(rateRange));
+    }
+
+    @Override
+    public Boolean subtractAwardStock(Long strategyId, Long awardId) {
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_KEY + strategyId + "_" + awardId;
+        return iStrategyRepository.subtractAwardStock(cacheKey);
     }
 }

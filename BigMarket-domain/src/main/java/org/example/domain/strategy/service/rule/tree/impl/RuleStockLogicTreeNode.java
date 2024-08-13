@@ -20,7 +20,7 @@ public class RuleStockLogicTreeNode implements ILogicTreeNode {
     @Override
     public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId) {
 
-        iStrategyDispatch.
+        boolean status = iStrategyDispatch.subtractAwardStock(strategyId,awardId);
 
         return DefaultLogicTreeFactory.TreeActionEntity.builder()
                 .ruleLogicCheckTypeVO(RuleLogicCheckTypeVO.TAKE_OVER)

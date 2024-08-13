@@ -6,4 +6,5 @@ public interface IStrategyDispatch {
 
     Long getRandomAwardId(Long strategyId);
 
+    Boolean subtractAwardStock(Long strategyId, Long awardId);
 }
