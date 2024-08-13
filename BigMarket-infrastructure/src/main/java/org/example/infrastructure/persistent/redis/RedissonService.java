@@ -156,5 +156,10 @@ public class RedissonService implements IRedisService {
         return redissonClient.getBloomFilter(key);
     }
 
+    @Override
+    public Long getAtomicLong(String cacheKey) {
+        return 0;
+    }
+
 
 }

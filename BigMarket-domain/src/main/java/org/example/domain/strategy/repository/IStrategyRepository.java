@@ -33,5 +33,7 @@ public interface IStrategyRepository {
     StrategyAwardRuleModelVO queryStrategyAwardRuleModelVO(Long strategyId, Long awardId);
 
     RuleTreeVO queryRuleTreeByTreeId(String treeId);
+
+    void storeStrategyAwardAmount(Long strategyId, Long awardId, Long awardAmount);
 }
 

@@ -224,4 +224,14 @@ public class StrategyRepository implements IStrategyRepository {
         iRedisService.setValue(cacheKey, ruleTreeVO);
         return ruleTreeVO;
     }
+
+    @Override
+    public void storeStrategyAwardAmount(Long strategyId, Long awardId, Long awardAmount) {
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_KEY + strategyId + "_" + awardId;
+        /** get data from cache */
+        Long cacheAwardAmount = iRedisService.getAtomicLong(cacheKey);
+        if (cacheAwardAmount != null) return;
+        /** store data to cache */
+        iRedisService.setAtomicLong(cacheKey,awardAmount);
+    }
 }
