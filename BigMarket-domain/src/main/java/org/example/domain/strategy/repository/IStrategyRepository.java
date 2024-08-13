@@ -35,5 +35,7 @@ public interface IStrategyRepository {
     RuleTreeVO queryRuleTreeByTreeId(String treeId);
 
     void storeStrategyAwardAmount(Long strategyId, Long awardId, Long awardAmount);
+
+    Boolean subtractAwardStock(String cacheKey);
 }
 

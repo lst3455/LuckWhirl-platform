@@ -1,12 +1,11 @@
 package org.example.infrastructure.persistent.repository;
 
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import org.example.domain.strategy.model.entity.StrategyAwardEntity;
 import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.model.entity.StrategyRuleEntity;
 import org.example.domain.strategy.model.vo.*;
 import org.example.domain.strategy.repository.IStrategyRepository;
-import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.infrastructure.persistent.dao.*;
 import org.example.infrastructure.persistent.po.*;
 import org.example.infrastructure.persistent.redis.IRedisService;
@@ -14,12 +13,12 @@ import org.example.types.common.Constants;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Repository
 public class StrategyRepository implements IStrategyRepository {
 
@@ -233,5 +232,18 @@ public class StrategyRepository implements IStrategyRepository {
         if (cacheAwardAmount != null) return;
         /** store data to cache */
         iRedisService.setAtomicLong(cacheKey,awardAmount);
+    }
+
+    @Override
+    public Boolean subtractAwardStock(String cacheKey) {
+        Long remainAmount = iRedisService.decr(cacheKey);
+        if (remainAmount < 0) {
+            iRedisService.setValue(cacheKey,0);
+            return false;
+        }
+        String lockKey = cacheKey + "_" + remainAmount;
+        boolean lock = iRedisService.setNX(lockKey);
+        if (!lock) log.info("lock strategy award stock fail, lockKey: {}",lockKey);
+        return lock;
     }
 }
