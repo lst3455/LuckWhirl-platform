@@ -157,8 +157,18 @@ public class RedissonService implements IRedisService {
     }
 
     @Override
-    public Long getAtomicLong(String cacheKey) {
-        return 0;
+    public Long getAtomicLong(String key) {
+        return redissonClient.getAtomicLong(key).get();
+    }
+
+    @Override
+    public void setAtomicLong(String key, Long value) {
+        redissonClient.getAtomicLong(key).set(value);
+    }
+
+    @Override
+    public boolean setNX(String key) {
+        return redissonClient.getBucket(key).trySet("lock");
     }
 
 
