@@ -27,11 +27,11 @@ public class StrategyArmoryDispatchTest {
 
     @Before
     public void test_strategyArmory(){
-        strategyArmoryDispatch.assembleRaffleStrategy(10004L);
+        strategyArmoryDispatch.assembleRaffleStrategy(10001L);
         log.info("awardTable size: {} - int",iRedisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10004L).size());
-        Map<Long,Long> map = iRedisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10004L);
+        Map<Long,Long> map = iRedisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10001L);
         System.out.println(map.get(1L));
-        Long awardId = iRedisService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10004L,1L);
+        Long awardId = iRedisService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10001L,1L);
         log.info("awardId: {} - awardId",awardId);
         /*log.info("awardId: {} - awardId",String.valueOf(iRedisService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + 10001L,1L)));*/
     }

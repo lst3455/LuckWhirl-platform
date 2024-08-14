@@ -32,4 +32,9 @@
         FROM strategy_award
         WHERE strategy_id = #{strategyId} and award_id = #{awardId}
     </select>
+    <update id="updateStrategyAwardStock" parameterType="org.example.infrastructure.persistent.po.StrategyAward">
+        UPDATE strategy_award
+        SET award_remain = award_remain - 1
+        WHERE strategy_id = #{strategyId} and award_id = #{awardId} and award_remain > 0
+    </update>
 </mapper>

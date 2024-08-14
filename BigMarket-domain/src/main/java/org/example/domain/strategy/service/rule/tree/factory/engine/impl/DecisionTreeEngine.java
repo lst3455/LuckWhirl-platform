@@ -38,9 +38,10 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         while (ruleTreeNodeVO != null) {
             /** get root node object */
             ILogicTreeNode iLogicTreeNode = logicTreeNodeMap.get(ruleTreeNodeVO.getRuleKey());
+            String ruleValue = ruleTreeNodeVO.getRuleValue();
 
             /** handle through cur tree node logic, return TreeActionEntity */
-            DefaultLogicTreeFactory.TreeActionEntity treeActionEntity = iLogicTreeNode.logic(userId, strategyId, awardId);
+            DefaultLogicTreeFactory.TreeActionEntity treeActionEntity = iLogicTreeNode.logic(userId, strategyId, awardId, ruleValue);
             /** handle through cur tree node logic, return TAKE_OVER or ALLOW */
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = treeActionEntity.getRuleLogicCheckTypeVO();
             /** get strategyAwardData after cur tree node logic */
@@ -51,7 +52,6 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
             curTreeNode = nextNode(ruleLogicCheckTypeVO.getCode(), ruleTreeNodeVO.getTreeNodeLineVOList());
             /** get next tree node object */
             ruleTreeNodeVO = treeNodeMap.get(curTreeNode);
-
         }
 
         /** return final strategyAwardData after all tree node logic */

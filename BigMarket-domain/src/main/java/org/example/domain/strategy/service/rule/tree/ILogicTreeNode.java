@@ -4,7 +4,7 @@ import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFac
 
 public interface ILogicTreeNode {
 
-    DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId);
+    DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue);
 
 
 }
