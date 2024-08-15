@@ -18,6 +18,7 @@ public class RuleStockLogicTreeNode implements ILogicTreeNode {
     @Resource
     private IStrategyDispatch iStrategyDispatch;
 
+    @Resource
     private IStrategyRepository iStrategyRepository;
 
     @Override

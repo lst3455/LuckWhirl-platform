@@ -36,8 +36,8 @@ public class RaffleStrategyTreeTest {
 
     @Before
     public void setup(){
-        log.info("test result: {}",iStrategyArmory.assembleRaffleStrategy(10001L));
-        ReflectionTestUtils.setField(ruleWeightLogicChain, "userRaffleTimes", 4500L);
+        log.info("test result: {}",iStrategyArmory.assembleRaffleStrategy(10004L));
+        ReflectionTestUtils.setField(ruleWeightLogicChain, "userRaffleTimes", 0L);
         ReflectionTestUtils.setField(ruleLockLogicTreeNode, "userRaffleTimes", 10L);
     }
 
@@ -45,7 +45,7 @@ public class RaffleStrategyTreeTest {
     public void test_performRaffle() throws InterruptedException {
         RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
                 .userId("user004")  // blacklist user: user001,user002,user003
-                .strategyId(10001L)
+                .strategyId(10004L)
                 .build();
 
         for (int i = 0; i < 10; i++) {
