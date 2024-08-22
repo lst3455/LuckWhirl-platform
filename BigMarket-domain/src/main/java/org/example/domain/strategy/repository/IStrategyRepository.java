@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface IStrategyRepository {
 
-    List<StrategyAwardEntity> getStrategyAwardList(Long strategyId);
+    List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
 
     void storeStrategyAwardTable(String strategyIdAsKey, int awardRateRange, HashMap<Long, Long> shuffleStrategyAwardTable);
 
@@ -44,5 +44,7 @@ public interface IStrategyRepository {
     StrategyAwardStockKeyVO takeQueueValue();
 
     void updateStrategyAwardStock(Long strategyId, Long awardId);
+
+    StrategyAwardEntity queryStrategyAwardEntityByStrategyIdAndAwardId(Long strategyId, Long awardId);
 }
 

@@ -13,6 +13,7 @@
         <module>BigMarket-trigger</module>
         <module>BigMarket-infrastructure</module>
         <module>BigMarket-types</module>
+        <module>BigMarket-api</module>
     </modules>
 
     <repositories>

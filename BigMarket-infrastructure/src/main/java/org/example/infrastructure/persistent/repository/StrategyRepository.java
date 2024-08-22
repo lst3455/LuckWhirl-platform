@@ -11,6 +11,8 @@ import org.example.infrastructure.persistent.dao.*;
 import org.example.infrastructure.persistent.po.*;
 import org.example.infrastructure.persistent.redis.IRedisService;
 import org.example.types.common.Constants;
+import org.example.types.enums.ResponseCode;
+import org.example.types.exception.AppException;
 import org.redisson.api.RBlockingDeque;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
@@ -49,10 +51,9 @@ public class StrategyRepository implements IStrategyRepository {
     private IRuleTreeNodeDao iRuleTreeNodeDao;
 
 
-
     @Override
-    public List<StrategyAwardEntity> getStrategyAwardList(Long strategyId) {
-        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_KEY + strategyId;
+    public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_LIST_KEY + strategyId;
         List<StrategyAwardEntity> strategyAwardEntities = iRedisService.getValue(cacheKey);
         /** get data from cache */
         if (strategyAwardEntities != null && !strategyAwardEntities.isEmpty()) return strategyAwardEntities;
@@ -67,6 +68,9 @@ public class StrategyRepository implements IStrategyRepository {
             strategyAwardEntity.setAwardAmount(strategyAward.getAwardAmount());
             strategyAwardEntity.setAwardRemain(strategyAward.getAwardRemain());
             strategyAwardEntity.setAwardRate(strategyAward.getAwardRate());
+            strategyAwardEntity.setAwardTitle(strategyAwardEntity.getAwardTitle());
+            strategyAwardEntity.setAwardSubtitle(strategyAwardEntity.getAwardTitle());
+            strategyAwardEntity.setSort(strategyAward.getSort());
             strategyAwardEntities.add(strategyAwardEntity);
         }
         /** put data into cache*/
@@ -83,7 +87,11 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public Integer getRateRange(String strategyIdAsKey) {
-        return iRedisService.getValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + strategyIdAsKey);
+        String cacheKey = Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + strategyIdAsKey;
+        if (!iRedisService.isExists(cacheKey)) {
+            throw new AppException(ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY.getCode(), cacheKey + Constants.SPLIT_COLON + ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY.getInfo());
+        }
+        return iRedisService.getValue(cacheKey);
     }
 
     @Override
@@ -277,5 +285,34 @@ public class StrategyRepository implements IStrategyRepository {
         strategyAward.setAwardId(awardId);
         strategyAward.setStrategyId(strategyId);
         iStrategyAwardDao.updateStrategyAwardStock(strategyAward);
+    }
+
+    @Override
+    public StrategyAwardEntity queryStrategyAwardEntityByStrategyIdAndAwardId(Long strategyId, Long awardId) {
+        /** get data from cache first */
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_KEY + strategyId + "_" + awardId;
+        StrategyAwardEntity strategyAwardEntity = iRedisService.getValue(cacheKey);
+        if (null != strategyAwardEntity) return strategyAwardEntity;
+
+        /** get data from database */
+        StrategyAward strategyAward = new StrategyAward();
+        strategyAward.setAwardId(awardId);
+        strategyAward.setStrategyId(strategyId);
+        strategyAward = iStrategyAwardDao.queryStrategyAwardByStrategyIdAndAwardId(strategyAward);
+
+        strategyAwardEntity = StrategyAwardEntity.builder()
+                .strategyId(strategyAward.getStrategyId())
+                .awardId(strategyAward.getAwardId())
+                .awardTitle(strategyAward.getAwardTitle())
+                .awardSubtitle(strategyAward.getAwardSubtitle())
+                .awardAmount(strategyAward.getAwardAmount())
+                .awardRemain(strategyAward.getAwardRemain())
+                .awardRate(strategyAward.getAwardRate())
+                .sort(strategyAward.getSort())
+                .build();
+
+        /** store data to cache */
+        iRedisService.setValue(cacheKey, strategyAwardEntity);
+        return strategyAwardEntity;
     }
 }

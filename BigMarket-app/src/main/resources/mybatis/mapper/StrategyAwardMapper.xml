@@ -37,4 +37,9 @@
         SET award_remain = award_remain - 1
         WHERE strategy_id = #{strategyId} and award_id = #{awardId} and award_remain > 0
     </update>
+    <select id="queryStrategyAwardByStrategyIdAndAwardId" parameterType="org.example.infrastructure.persistent.po.StrategyAward" resultMap="dataMap">
+        SELECT *
+        FROM strategy_award
+        WHERE strategy_id = #{strategyId} and award_id = #{awardId}
+    </select>
 </mapper>

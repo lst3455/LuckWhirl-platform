@@ -1,5 +1,19 @@
 server:
   port: 8091
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 50
+    accept-count: 10
+
+# application configuration
+app:
+  config:
+    # version control
+    api-version: v1
+    # cross-origin, can set to '*' in development
+    cross-origin: '*'
+
 
 # 线程池配置
 thread:

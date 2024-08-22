@@ -2,10 +2,7 @@ package org.example.domain.strategy.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.example.domain.strategy.model.entity.RaffleAwardEntity;
-import org.example.domain.strategy.model.entity.RaffleFactorEntity;
-import org.example.domain.strategy.model.entity.RuleActionEntity;
-import org.example.domain.strategy.model.entity.StrategyEntity;
+import org.example.domain.strategy.model.entity.*;
 import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
 import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
@@ -18,7 +15,7 @@ import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 
 @Slf4j
-public abstract class AbstractRaffleStrategy implements IRaffleStrategy,IRaffleStock {
+public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
     protected IStrategyRepository iStrategyRepository;
 
@@ -153,19 +150,33 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy,IRaffleS
         /** before raffle filter, go through rule chain */
         DefaultLogicChainFactory.StrategyAwardVO strategyChainAwardVO = raffleLogicChain(userId, strategyId);
         if(!DefaultLogicChainFactory.LogicModel.RULE_DEFAULT.getCode().equals(strategyChainAwardVO.getRuleModel())){
-            return RaffleAwardEntity.builder()
+            /*return RaffleAwardEntity.builder()
                     .awardId(strategyChainAwardVO.getAwardId())
                     .awardConfig(strategyChainAwardVO.getRuleModel())
-                    .build();
+                    .build();*/
+            return buildRaffleAwardEntity(strategyId,strategyChainAwardVO.getAwardId(),strategyChainAwardVO.getRuleModel());
         }
         /** centre raffle filter, go through rule tree */
         DefaultLogicTreeFactory.StrategyAwardVO strategyTreeAwardVO = raffleLogicTree(userId,strategyId,strategyChainAwardVO.getAwardId());
 
-        return RaffleAwardEntity.builder()
+        /*return RaffleAwardEntity.builder()
                 .awardId(strategyTreeAwardVO.getAwardId())
                 .awardConfig(strategyTreeAwardVO.getRuleModel())
+                .build();*/
+        return buildRaffleAwardEntity(strategyId,strategyTreeAwardVO.getAwardId(),strategyTreeAwardVO.getRuleModel());
+
+    }
+
+    private RaffleAwardEntity buildRaffleAwardEntity(Long strategyId, Long awardId, String ruleMode) {
+        StrategyAwardEntity strategyAward = iStrategyRepository.queryStrategyAwardEntityByStrategyIdAndAwardId(strategyId, awardId);
+        return RaffleAwardEntity.builder()
+                .awardId(awardId)
+                .awardConfig(ruleMode)
+                .sort(strategyAward.getSort())
                 .build();
     }
+
+
 
     public abstract DefaultLogicChainFactory.StrategyAwardVO raffleLogicChain(String userId,Long StrategyId);
     public abstract DefaultLogicTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long StrategyId, Long awardId);

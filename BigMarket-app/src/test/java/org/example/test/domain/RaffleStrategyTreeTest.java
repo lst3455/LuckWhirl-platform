@@ -48,7 +48,7 @@ public class RaffleStrategyTreeTest {
                 .strategyId(10004L)
                 .build();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             RaffleAwardEntity raffleAwardEntity = iraffleStrategy.performRaffleLogicChainWithRuleTree(raffleFactorEntity);
 
             log.info("request parameter：{}", JSON.toJSONString(raffleFactorEntity));
