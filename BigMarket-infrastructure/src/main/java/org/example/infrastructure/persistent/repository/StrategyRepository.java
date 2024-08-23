@@ -68,8 +68,8 @@ public class StrategyRepository implements IStrategyRepository {
             strategyAwardEntity.setAwardAmount(strategyAward.getAwardAmount());
             strategyAwardEntity.setAwardRemain(strategyAward.getAwardRemain());
             strategyAwardEntity.setAwardRate(strategyAward.getAwardRate());
-            strategyAwardEntity.setAwardTitle(strategyAwardEntity.getAwardTitle());
-            strategyAwardEntity.setAwardSubtitle(strategyAwardEntity.getAwardTitle());
+            strategyAwardEntity.setAwardTitle(strategyAward.getAwardTitle());
+            strategyAwardEntity.setAwardSubtitle(strategyAward.getAwardSubtitle());
             strategyAwardEntity.setSort(strategyAward.getSort());
             strategyAwardEntities.add(strategyAwardEntity);
         }

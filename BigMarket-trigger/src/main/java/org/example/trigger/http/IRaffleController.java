@@ -28,8 +28,8 @@ import java.util.List;
 
 @Slf4j
 @RestController()
-@CrossOrigin
-@RequestMapping
+@CrossOrigin("${app.config.cross-origin}")
+@RequestMapping("/api/${app.config.api-version}/raffle/")
 public class IRaffleController implements IRaffleService {
 
     @Resource
@@ -49,7 +49,7 @@ public class IRaffleController implements IRaffleService {
      */
     @RequestMapping(value = "strategy_armory", method = RequestMethod.GET)
     @Override
-    public Response<Boolean> strategyArmory(Long strategyId) {
+    public Response<Boolean> strategyArmory(@RequestParam Long strategyId) {
         try {
             log.info("raffle strategy armory start  strategyId:{}", strategyId);
             boolean armoryStatus = iStrategyArmory.assembleRaffleStrategy(strategyId);
@@ -70,7 +70,7 @@ public class IRaffleController implements IRaffleService {
     }
 
     /**
-     * query raffle award list(only store each award entity once) from
+     * query raffle award list(only store each award entity once)
      * <a href="http://localhost:8091/api/v1/raffle/query_raffle_award_list">/api/v1/raffle/query_raffle_award_list</a>
      * @param raffleAwardListRequestDTO
      * @return Response<List<RaffleAwardListResponseDTO>>
@@ -115,7 +115,7 @@ public class IRaffleController implements IRaffleService {
      */
     @RequestMapping(value = "random_raffle", method = RequestMethod.POST)
     @Override
-    public Response<RaffleResponseDTO> randomRaffle(RaffleRequestDTO raffleRequestDTO) {
+    public Response<RaffleResponseDTO> randomRaffle(@RequestBody RaffleRequestDTO raffleRequestDTO) {
         RaffleAwardEntity raffleAwardEntity = iRaffleStrategy.performRaffleLogicChainWithRuleTree(RaffleFactorEntity.builder()
                 .userId("system")  // blacklist user: user001,user002,user003
                 .strategyId(raffleRequestDTO.getStrategyId())

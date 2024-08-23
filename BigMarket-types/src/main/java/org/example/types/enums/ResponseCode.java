@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public enum ResponseCode {
 
-    SUCCESS("0000", "成功"),
-    UN_ERROR("0001", "未知失败"),
-    ILLEGAL_PARAMETER("0002", "非法参数"),
+    SUCCESS("0000", "success"),
+    UN_ERROR("0001", "fail"),
+    ILLEGAL_PARAMETER("0002", "invalid parameter"),
     STRATEGY_RULE_WEIGHT_IS_NULL("ERR_BIZ_001","business abnormal, strategy rule exist but doesn't complete configuration"),
     UN_ASSEMBLED_STRATEGY_ARMORY("ERR_BIZ_002", "raffle strategy armory has not done yet, please use IStrategyArmory to armory");
 
