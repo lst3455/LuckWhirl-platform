@@ -96,10 +96,10 @@ public class IRaffleController implements IRaffleService {
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(raffleAwardListResponseDTOList)
                     .build();
-            log.info("raffle strategy armory complete  strategyId:{} response:{}", raffleAwardListRequestDTO.getStrategyId(), JSON.toJSONString(response));
+            log.info("query raffle award list complete  strategyId:{} response:{}", raffleAwardListRequestDTO.getStrategyId(), JSON.toJSONString(response));
             return response;
         } catch (Exception e) {
-            log.error("raffle strategy armory error  strategyId:{}", raffleAwardListRequestDTO.getStrategyId());
+            log.error("query raffle award list error  strategyId:{}", raffleAwardListRequestDTO.getStrategyId());
             return Response.<List<RaffleAwardListResponseDTO>>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
@@ -121,7 +121,7 @@ public class IRaffleController implements IRaffleService {
                 .strategyId(raffleRequestDTO.getStrategyId())
                 .build());
         try {
-            log.info("random raffle start  strategyId:{}", raffleRequestDTO.getStrategyId());
+            log.info("random raffle start  strategyId:{} userId:{}", raffleRequestDTO.getStrategyId(), "system");
             Response<RaffleResponseDTO> response = Response.<RaffleResponseDTO>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
@@ -130,7 +130,7 @@ public class IRaffleController implements IRaffleService {
                             .awardIndex(raffleAwardEntity.getSort())
                             .build())
                     .build();
-            log.info("random raffle complete  strategyId:{} response:{}", raffleRequestDTO.getStrategyId(), JSON.toJSONString(response));
+            log.info("random raffle complete  strategyId:{} userId:{} response:{}", raffleRequestDTO.getStrategyId(), "system", JSON.toJSONString(response));
             return response;
         } catch (AppException e) {
             log.error("random raffle strategyId：{} {}", raffleRequestDTO.getStrategyId(), e.getInfo());

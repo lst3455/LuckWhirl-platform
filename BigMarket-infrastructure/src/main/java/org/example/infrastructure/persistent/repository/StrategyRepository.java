@@ -19,10 +19,7 @@ import org.redisson.api.RDelayedQueue;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -73,6 +70,7 @@ public class StrategyRepository implements IStrategyRepository {
             strategyAwardEntity.setSort(strategyAward.getSort());
             strategyAwardEntities.add(strategyAwardEntity);
         }
+        strategyAwardEntities.sort((a, b) -> Integer.compare(a.getSort(), b.getSort()));
         /** put data into cache*/
         iRedisService.setValue(cacheKey,strategyAwardEntities);
         return strategyAwardEntities;

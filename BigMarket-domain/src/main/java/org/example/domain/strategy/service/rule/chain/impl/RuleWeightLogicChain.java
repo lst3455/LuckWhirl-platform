@@ -21,7 +21,7 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
     @Resource
     private IStrategyDispatch iStrategyDispatch;
 
-    private Long userRaffleTimes = 4500L;
+    private Long userRaffleTimes = 10L;
 
     @Override
     public Long logic(String userId, Long strategyId) {
