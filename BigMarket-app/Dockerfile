@@ -1,17 +1,18 @@
-# 基础镜像
+# Base image
 FROM openjdk:8-jre-slim
 
-# 作者
-MAINTAINER xiaofuge
+# Author information
+#MAINTAINER St-Lin
 
-# 配置
+# Configuration parameters
 ENV PARAMS=""
 
-# 时区
-ENV TZ=PRC
+# Set the timezone to Singapore
+ENV TZ=Asia/Singapore
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# 添加应用
-ADD target/BigMarket-app-app.jar /BigMarket-app-app.jar
+# Add the application JAR to the container
+ADD target/BigMarket-app.jar /BigMarket-app.jar
 
-ENTRYPOINT ["sh","-c","java -jar $JAVA_OPTS /BigMarket-app-app.jar $PARAMS"]
+# Entry point to run the Java application
+ENTRYPOINT ["sh", "-c", "java -jar $JAVA_OPTS /BigMarket-app.jar $PARAMS"]
