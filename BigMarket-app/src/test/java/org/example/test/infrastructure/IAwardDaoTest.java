@@ -27,10 +27,4 @@ public class IAwardDaoTest {
         List<Award> awards = awardDao.queryAwardList();
         log.info("test result:{}", JSON.toJSONString(awards));
     }
-
-    @Test
-    public void test2_queryAwardList(){
-        List<Award> awards = awardDao.queryAwardListById();
-        log.info("test result:{}", JSON.toJSONString(awards));
-    }
 }

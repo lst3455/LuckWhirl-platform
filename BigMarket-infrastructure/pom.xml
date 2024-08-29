@@ -27,6 +27,13 @@
             <groupId>org.example</groupId>
             <artifactId>BigMarket-domain</artifactId>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/cn.bugstack.middleware/db-router-spring-boot-starter -->
+        <dependency>
+            <groupId>cn.bugstack.middleware</groupId>
+            <artifactId>db-router-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

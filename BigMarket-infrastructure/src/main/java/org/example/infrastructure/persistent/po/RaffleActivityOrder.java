@@ -22,7 +22,7 @@ public class RaffleActivityOrder {
     /** order time */
     private Date orderTime;
     /** order status（not_used、used、expire） */
-    private String state;
+    private String status;
     /** create time */
     private Date createTime;
     /** update time */
