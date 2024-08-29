@@ -19,12 +19,6 @@ public class RaffleActivity {
     private Date beginDateTime;
     /** activity end date */
     private Date endDateTime;
-    /** stock amount */
-    private Integer stockAmount;
-    /** stock remain */
-    private Integer stockRemain;
-    /** times of attending activity */
-    private Long activityAmountId;
     /** raffle strategy id */
     private Long strategyId;
     /** activity status */

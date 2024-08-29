@@ -11,6 +11,8 @@ public class RaffleActivityOrder {
     private Long id;
     /** user id */
     private String userId;
+    /** sku */
+    private Long sku;
     /** activity id */
     private Long activityId;
     /** activity name */
@@ -21,7 +23,13 @@ public class RaffleActivityOrder {
     private String orderId;
     /** order time */
     private Date orderTime;
-    /** order status（not_used、used、expire） */
+    /** total amount */
+    private Integer totalAmount;
+    /** day amount */
+    private Integer dayAmount;
+    /** month amount */
+    private Integer monthAmount;
+    /** order status */
     private String status;
     /** create time */
     private Date createTime;

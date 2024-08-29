@@ -4,10 +4,20 @@
 
     <resultMap id="dataMap" type="org.example.infrastructure.persistent.po.RaffleActivityAmount">
         <id column="id" property="id"/>
-        <result column="" property=""/>
+        <result column="activity_amount_id" property="activityAmountId"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="day_amount" property="dayAmount"/>
+        <result column="month_amount" property="monthAmount"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
+
     </resultMap>
+
+    <select id="queryRaffleActivityAmountByActivityAmountId" parameterType="java.lang.Long" resultMap="dataMap">
+        select *
+        from raffle_activity_amount
+        where activity_amount_id = #{activityAmountId}
+    </select>
 
 
 </mapper>

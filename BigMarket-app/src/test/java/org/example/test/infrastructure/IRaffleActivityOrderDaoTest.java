@@ -27,12 +27,16 @@ public class IRaffleActivityOrderDaoTest {
     public void test_insert(){
 
         RaffleActivityOrder raffleActivityOrder = new RaffleActivityOrder();
-        raffleActivityOrder.setUserId("test_user_02");
+        raffleActivityOrder.setUserId("test_user_03");
+        raffleActivityOrder.setSku(9011L);
         raffleActivityOrder.setActivityId(100301L);
         raffleActivityOrder.setActivityName("test");
         raffleActivityOrder.setStrategyId(10004L);
         raffleActivityOrder.setOrderId(RandomStringUtils.randomNumeric(12));
         raffleActivityOrder.setOrderTime(new Date());
+        raffleActivityOrder.setTotalAmount(0);
+        raffleActivityOrder.setDayAmount(0);
+        raffleActivityOrder.setMonthAmount(0);
         raffleActivityOrder.setStatus("not_used");
 
         iRaffleActivityOrderDao.insert(raffleActivityOrder);
@@ -40,7 +44,7 @@ public class IRaffleActivityOrderDaoTest {
 
     @Test
     public void test_queryRaffleActivityOrderByUserId(){
-        List<RaffleActivityOrder> raffleActivityOrderList = iRaffleActivityOrderDao.queryRaffleActivityOrderByUserId("test_user_02");
+        List<RaffleActivityOrder> raffleActivityOrderList = iRaffleActivityOrderDao.queryRaffleActivityOrderByUserId("test_user_03");
         log.info("test result:{}", JSON.toJSONString(raffleActivityOrderList));
     }
 }

@@ -9,9 +9,6 @@
         <result column="activity_desc" property="activityDesc"/>
         <result column="begin_date_time" property="beginDateTime"/>
         <result column="end_date_time" property="endDateTime"/>
-        <result column="stock_amount" property="stockAmount"/>
-        <result column="stock_remain" property="stockRemain"/>
-        <result column="activity_amount_id" property="activityAmountId"/>
         <result column="strategy_id" property="strategyId"/>
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
