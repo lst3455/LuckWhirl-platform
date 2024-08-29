@@ -1,4 +1,4 @@
-package org.example.test.domain;
+package org.example.test.domain.strategy;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;

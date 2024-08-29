@@ -7,6 +7,8 @@ public class Constants {
     public final static String SPLIT_COLON = ":";
 
     public static class RedisKey {
+        public static String ACTIVITY_AMOUNT_KEY = "big_market_activity_amount_key_";
+        public static String ACTIVITY_KEY = "big_market_activity_key_";
         public static String STRATEGY_AWARD_KEY = "big_market_strategy_award_key_";
         public static String STRATEGY_AWARD_AMOUNT_QUEUE_KEY = "big_market_strategy_award_amount_key_";
         public static String STRATEGY_AWARD_AMOUNT_KEY = "big_market_strategy_award_amount_key_";
