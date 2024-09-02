@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.example.domain.activity.model.entity.ActivityOrderEntity;
 import org.example.domain.activity.model.entity.ActivityShopCartEntity;
+import org.example.domain.activity.model.entity.ActivitySkuChargeEntity;
 import org.example.domain.activity.service.IRaffleOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,16 @@ public class CreateActivityOrderTest {
                 .build());
 
         log.info("test result: {}", JSON.toJSONString(activityOrder));
+    }
+
+    @Test
+    public void test_createSkuChargeOrder(){
+        ActivitySkuChargeEntity activitySkuChargeEntity = new ActivitySkuChargeEntity();
+        activitySkuChargeEntity.setSku(9011L);
+        activitySkuChargeEntity.setUserId("xiaofuge");
+        activitySkuChargeEntity.setOutBusinessNo("700091009116");
+        String orderId = iRaffleOrder.createSkuChargeOrder(activitySkuChargeEntity);
+        log.info("test result: {}",orderId);
     }
 
 

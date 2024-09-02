@@ -8,7 +8,7 @@ import org.checkerframework.checker.units.qual.A;
 @AllArgsConstructor
 public enum OrderStatusVO {
 
-    create("completed","completed");
+    completed("completed","completed");
 
     private final String code;
     private final String desc;

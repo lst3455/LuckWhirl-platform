@@ -15,13 +15,14 @@
         <result column="day_amount" property="dayAmount"/>
         <result column="month_amount" property="monthAmount"/>
         <result column="status" property="status"/>
+        <result column="out_business_no" property="outBusinessNo"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <insert id="insert" parameterType="org.example.infrastructure.persistent.po.RaffleActivityOrder">
-        insert into raffle_activity_order(user_id, sku, activity_id, activity_name, strategy_id, order_id, order_time, total_amount, day_amount, month_amount, status, create_time, update_time)
-        values(#{userId}, #{sku}, #{activityId}, #{activityName}, #{strategyId}, #{orderId}, #{orderTime}, #{totalAmount}, #{dayAmount}, #{monthAmount}, #{status}, now(), now())
+        insert into raffle_activity_order(user_id, sku, activity_id, activity_name, strategy_id, order_id, order_time, total_amount, day_amount, month_amount, status, out_business_no, create_time, update_time)
+        values(#{userId}, #{sku}, #{activityId}, #{activityName}, #{strategyId}, #{orderId}, #{orderTime}, #{totalAmount}, #{dayAmount}, #{monthAmount}, #{status}, #{outBusinessNo}, now(), now())
     </insert>
 
     <select id="queryRaffleActivityOrderByUserId" parameterType="java.lang.String" resultMap="dataMap">

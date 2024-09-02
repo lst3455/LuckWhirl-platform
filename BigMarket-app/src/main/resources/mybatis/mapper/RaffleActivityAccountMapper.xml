@@ -4,10 +4,40 @@
 
     <resultMap id="dataMap" type="org.example.infrastructure.persistent.po.RaffleActivityAccount">
         <id column="id" property="id"/>
-        <result column="" property=""/>
+        <result column="user_id" property="userId"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="total_remain" property="totalRemain"/>
+        <result column="day_amount" property="dayAmount"/>
+        <result column="day_remain" property="dayRemain"/>
+        <result column="month_amount" property="monthAmount"/>
+        <result column="month_remain" property="monthRemain"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
+
+    <insert id="insert" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccount">
+        insert into raffle_activity_account
+        (user_id, activity_id, total_amount, total_remain, day_amount,
+         day_remain, month_amount, month_remain, create_time, update_time)
+        values
+            (#{userId}, #{activityId}, #{totalAmount}, #{totalRemain}, #{dayAmount},
+             #{dayRemain}, #{monthAmount}, #{monthRemain}, now(), now())
+    </insert>
+
+    <update id="updateAccountQuota" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccount">
+        update raffle_activity_account
+        set
+            total_amount = total_amount + #{totalAmount},
+            total_remain = total_remain + #{totalRemain},
+            day_remain = day_remain + #{dayRemain},
+            day_amount = day_amount + #{dayAmount},
+            month_remain = month_remain + #{monthRemain},
+            month_amount = month_amount + #{monthAmount},
+            update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId}
+    </update>
+
 
 
 

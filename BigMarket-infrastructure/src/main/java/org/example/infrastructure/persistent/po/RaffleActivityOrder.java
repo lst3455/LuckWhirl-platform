@@ -31,6 +31,8 @@ public class RaffleActivityOrder {
     private Integer monthAmount;
     /** order status */
     private String status;
+    /** avoid duplicate */
+    private String outBusinessNo;
     /** create time */
     private Date createTime;
     /** update time */

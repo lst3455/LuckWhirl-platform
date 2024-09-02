@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.domain.activity.model.vo.OrderStatusVO;
 
 import java.util.Date;
 
@@ -34,6 +35,8 @@ public class ActivityOrderEntity {
     /** month amount */
     private Integer monthAmount;
     /** order status */
-    private String status;
+    private OrderStatusVO status;
+    /** avoid duplicate */
+    private String outBusinessNo;
 
 }
