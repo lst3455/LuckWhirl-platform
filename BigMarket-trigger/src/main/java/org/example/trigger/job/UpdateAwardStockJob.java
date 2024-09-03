@@ -20,7 +20,7 @@ public class UpdateAwardStockJob {
             log.info("scheduled task，update the award stock [using delayQueue to fetch, decrease the access frequency to the database]");
             StrategyAwardStockKeyVO strategyAwardStockKeyVO = iRaffleStock.takeQueueValue();
             if (strategyAwardStockKeyVO == null) return;
-            log.info("scheduled task，update the award stock strategyId:{} awardId:{}", strategyAwardStockKeyVO.getStrategyId(), strategyAwardStockKeyVO.getAwardId());
+            log.info("scheduled task，update the award stock success strategyId:{} awardId:{}", strategyAwardStockKeyVO.getStrategyId(), strategyAwardStockKeyVO.getAwardId());
             iRaffleStock.updateStrategyAwardStock(strategyAwardStockKeyVO.getStrategyId(), strategyAwardStockKeyVO.getAwardId());
         } catch (Exception e) {
             log.error("scheduled task，update the award stock fail", e);

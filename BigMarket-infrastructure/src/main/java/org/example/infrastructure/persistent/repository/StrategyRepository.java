@@ -266,8 +266,6 @@ public class StrategyRepository implements IStrategyRepository {
         RDelayedQueue<StrategyAwardStockKeyVO> delayedQueue = iRedisService.getDelayedQueue(blockingQueue);
         delayedQueue.offer(strategyAwardStockKeyVO,3, TimeUnit.SECONDS);
 
-
-
     }
 
     @Override

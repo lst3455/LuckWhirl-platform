@@ -26,8 +26,8 @@ public abstract class AbstractRaffleActivity implements IRaffleOrder{
     @Override
     public ActivityOrderEntity createActivityOrder(ActivityShopCartEntity activityShopCartEntity) {
 
-        ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuEntity(activityShopCartEntity.getSku());
-        ActivityEntity activityEntity = iActivityRepository.queryActivityByActivityEntityById(activitySkuEntity.getActivityId());
+        ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuEntityBySku(activityShopCartEntity.getSku());
+        ActivityEntity activityEntity = iActivityRepository.queryActivityEntityByActivityId(activitySkuEntity.getActivityId());
         ActivityAmountEntity activityAmountEntity = iActivityRepository.queryActivityAmountEntityByActivityAmountId(activitySkuEntity.getActivityAmountId());
         log.info("query result: {} {} {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));
 
@@ -44,13 +44,14 @@ public abstract class AbstractRaffleActivity implements IRaffleOrder{
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
         /** get sku entity */
-        ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuEntity(activitySkuChargeEntity.getSku());
-        ActivityEntity activityEntity = iActivityRepository.queryActivityByActivityEntityById(activitySkuEntity.getActivityId());
+        ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuEntityBySku(activitySkuChargeEntity.getSku());
+        ActivityEntity activityEntity = iActivityRepository.queryActivityEntityByActivityId(activitySkuEntity.getActivityId());
         ActivityAmountEntity activityAmountEntity = iActivityRepository.queryActivityAmountEntityByActivityAmountId(activitySkuEntity.getActivityAmountId());
         log.info("query result: {} {} {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));
 
         /** open the activity chain */
         IActionChain iActionChain = defaultActivityChainFactory.openActionChain();
+        /** actually success is useless, if fail to pass all chain node, it will throw error */
         boolean success = iActionChain.action(activitySkuEntity, activityEntity, activityAmountEntity);
 
         CreateOrderAggregate createOrderAggregate = buildOrderAggregate(activitySkuChargeEntity,activitySkuEntity, activityEntity, activityAmountEntity);

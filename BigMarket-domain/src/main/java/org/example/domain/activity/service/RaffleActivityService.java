@@ -3,15 +3,17 @@ package org.example.domain.activity.service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.domain.activity.model.aggregate.CreateOrderAggregate;
 import org.example.domain.activity.model.entity.*;
+import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
 import org.example.domain.activity.model.vo.OrderStatusVO;
 import org.example.domain.activity.repository.IActivityRepository;
 import org.example.domain.activity.service.rule.factory.DefaultActivityChainFactory;
+import org.example.domain.strategy.service.IRaffleStock;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class RaffleActivityService extends AbstractRaffleActivity{
+public class RaffleActivityService extends AbstractRaffleActivity implements ISkuStock {
 
     public RaffleActivityService(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         super(iActivityRepository, defaultActivityChainFactory);
@@ -48,5 +50,25 @@ public class RaffleActivityService extends AbstractRaffleActivity{
                 .monthAmount(activityAmountEntity.getMonthAmount())
                 .activityOrderEntity(activityOrderEntity)
                 .build();
+    }
+
+    @Override
+    public ActivitySkuStockKeyVO takeQueueValue() throws InterruptedException {
+        return iActivityRepository.takeQueueValue();
+    }
+
+    @Override
+    public void clearQueueValue() {
+        iActivityRepository.clearQueueValue();
+    }
+
+    @Override
+    public void updateActivitySkuStock(Long sku) {
+        iActivityRepository.updateActivitySkuStock(sku);
+    }
+
+    @Override
+    public void clearActivitySkuStock(Long sku) {
+        iActivityRepository.clearActivitySkuStock(sku);
     }
 }
