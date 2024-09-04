@@ -11,11 +11,14 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 
 @Component
 @Slf4j
 public class ActivitySkuStockZeroConsumer {
 
+    @Resource
     private ISkuStock iSkuStock;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "activity_sku_stock_zero"))

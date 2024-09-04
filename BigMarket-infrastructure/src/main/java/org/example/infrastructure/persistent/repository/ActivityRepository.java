@@ -178,7 +178,7 @@ public class ActivityRepository implements IActivityRepository {
         if (remain == 0){
             /** send MQ when remain is 0 */
             eventPublisher.publish(activitySkuStockZeroMessageEvent.topic(),activitySkuStockZeroMessageEvent.buildEventMessage(sku));
-            return false;
+            /*return false;*/
         } else if (remain < 0) {
             iRedisService.setAtomicLong(cacheKey,0L);
             return false;
@@ -210,8 +210,10 @@ public class ActivityRepository implements IActivityRepository {
     @Override
     public void clearQueueValue() {
         String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_QUERY_KEY;
-        RBlockingQueue<ActivitySkuStockKeyVO> destinationQueue = iRedisService.getBlockingQueue(cacheKey);
-        destinationQueue.clear();
+        RBlockingQueue<ActivitySkuStockKeyVO> blockingQueue = iRedisService.getBlockingQueue(cacheKey);
+        RDelayedQueue<ActivitySkuStockKeyVO> delayedQueue = iRedisService.getDelayedQueue(blockingQueue);
+        delayedQueue.clear();
+        blockingQueue.clear();
     }
 
     @Override

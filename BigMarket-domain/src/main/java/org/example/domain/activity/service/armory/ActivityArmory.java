@@ -24,7 +24,7 @@ public class ActivityArmory implements IActivityArmory,IActivityDispatch{
         iActivityRepository.queryActivityEntityByActivityId(activitySkuEntity.getActivityId());
         iActivityRepository.queryActivityAmountEntityByActivityAmountId(activitySkuEntity.getActivityAmountId());
 
-        return false;
+        return true;
     }
 
     @Override
