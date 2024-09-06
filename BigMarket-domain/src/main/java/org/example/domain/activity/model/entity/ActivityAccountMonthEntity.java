@@ -1,19 +1,15 @@
-package org.example.infrastructure.persistent.po;
+package org.example.domain.activity.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RaffleActivityAccountMonth {
-    /** auto increasing id */
-    private Long id;
+@AllArgsConstructor
+public class ActivityAccountMonthEntity {
     /** user id */
     private String userId;
     /** activity id */
@@ -24,8 +20,4 @@ public class RaffleActivityAccountMonth {
     private Integer monthAmount;
     /** day remain */
     private Integer monthRemain;
-    /** create time */
-    private Date createTime;
-    /** update time */
-    private Date updateTime;
 }

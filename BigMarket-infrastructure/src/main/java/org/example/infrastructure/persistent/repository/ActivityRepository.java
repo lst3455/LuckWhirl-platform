@@ -2,16 +2,14 @@ package org.example.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.example.domain.activity.event.ActivitySkuStockZeroMessageEvent;
-import org.example.domain.activity.model.aggregate.CreateOrderAggregate;
-import org.example.domain.activity.model.entity.ActivityAmountEntity;
-import org.example.domain.activity.model.entity.ActivityEntity;
-import org.example.domain.activity.model.entity.ActivityOrderEntity;
-import org.example.domain.activity.model.entity.ActivitySkuEntity;
+import org.example.domain.activity.model.aggregate.CreatePartakeOrderAggregate;
+import org.example.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
+import org.example.domain.activity.model.entity.*;
 import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
 import org.example.domain.activity.model.vo.ActivityStatusVO;
 import org.example.domain.activity.repository.IActivityRepository;
-import org.example.domain.strategy.model.vo.StrategyAwardStockKeyVO;
 import org.example.infrastructure.event.EventPublisher;
 import org.example.infrastructure.persistent.dao.*;
 import org.example.infrastructure.persistent.po.*;
@@ -53,10 +51,14 @@ public class ActivityRepository implements IActivityRepository {
     private EventPublisher eventPublisher;
     @Resource
     private ActivitySkuStockZeroMessageEvent activitySkuStockZeroMessageEvent;
+    @Resource
+    private IRaffleActivityAccountDayDao iRaffleActivityAccountDayDao;
+    @Resource
+    private IRaffleActivityAccountMonthDao iRaffleActivityAccountMonthDao;
 
 
     @Override
-    public ActivitySkuEntity queryActivitySkuEntityBySku(Long sku) {
+    public ActivitySkuEntity queryActivitySkuBySku(Long sku) {
         RaffleActivitySku raffleActivitySku = iRaffleActivitySkuDao.queryRaffleActivitySkuBySku(sku);
         return ActivitySkuEntity.builder()
                 .sku(raffleActivitySku.getSku())
@@ -68,7 +70,7 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public ActivityEntity queryActivityEntityByActivityId(Long activityId) {
+    public ActivityEntity queryActivityByActivityId(Long activityId) {
         /** first get data from cache */
         String cacheKey = Constants.RedisKey.ACTIVITY_KEY + activityId;
         ActivityEntity activityEntity = iRedisService.getValue(cacheKey);
@@ -89,7 +91,7 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public ActivityAmountEntity queryActivityAmountEntityByActivityAmountId(Long activityAmountId) {
+    public ActivityAmountEntity queryActivityAmountByActivityAmountId(Long activityAmountId) {
         /** first get data from cache */
         String cacheKey = Constants.RedisKey.ACTIVITY_AMOUNT_KEY + activityAmountId;
         ActivityAmountEntity activityAmountEntity = iRedisService.getValue(cacheKey);
@@ -107,8 +109,8 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public void doSaveOrder(CreateOrderAggregate createOrderAggregate) {
-        ActivityOrderEntity activityOrderEntity = createOrderAggregate.getActivityOrderEntity();
+    public void doSaveQuotaOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate) {
+        ActivityOrderEntity activityOrderEntity = createQuotaOrderAggregate.getActivityOrderEntity();
         /** convert domain object to persistent object */
         RaffleActivityOrder raffleActivityOrder = new RaffleActivityOrder();
         raffleActivityOrder.setUserId(activityOrderEntity.getUserId());
@@ -121,26 +123,26 @@ public class ActivityRepository implements IActivityRepository {
         raffleActivityOrder.setTotalAmount(activityOrderEntity.getTotalAmount());
         raffleActivityOrder.setDayAmount(activityOrderEntity.getDayAmount());
         raffleActivityOrder.setMonthAmount(activityOrderEntity.getMonthAmount());
-        raffleActivityOrder.setTotalAmount(createOrderAggregate.getTotalAmount());
-        raffleActivityOrder.setDayAmount(createOrderAggregate.getDayAmount());
-        raffleActivityOrder.setMonthAmount(createOrderAggregate.getMonthAmount());
+        raffleActivityOrder.setTotalAmount(createQuotaOrderAggregate.getTotalAmount());
+        raffleActivityOrder.setDayAmount(createQuotaOrderAggregate.getDayAmount());
+        raffleActivityOrder.setMonthAmount(createQuotaOrderAggregate.getMonthAmount());
         raffleActivityOrder.setStatus(activityOrderEntity.getStatus().getCode());
         raffleActivityOrder.setOutBusinessNo(activityOrderEntity.getOutBusinessNo());
 
         /** create RaffleActivityAccount object to store */
         RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
-        raffleActivityAccount.setUserId(createOrderAggregate.getUserId());
-        raffleActivityAccount.setActivityId(createOrderAggregate.getActivityId());
-        raffleActivityAccount.setTotalAmount(createOrderAggregate.getTotalAmount());
-        raffleActivityAccount.setTotalRemain(createOrderAggregate.getTotalAmount());
-        raffleActivityAccount.setDayAmount(createOrderAggregate.getDayAmount());
-        raffleActivityAccount.setDayRemain(createOrderAggregate.getDayAmount());
-        raffleActivityAccount.setMonthAmount(createOrderAggregate.getMonthAmount());
-        raffleActivityAccount.setMonthRemain(createOrderAggregate.getMonthAmount());
+        raffleActivityAccount.setUserId(createQuotaOrderAggregate.getUserId());
+        raffleActivityAccount.setActivityId(createQuotaOrderAggregate.getActivityId());
+        raffleActivityAccount.setTotalAmount(createQuotaOrderAggregate.getTotalAmount());
+        raffleActivityAccount.setTotalRemain(createQuotaOrderAggregate.getTotalAmount());
+        raffleActivityAccount.setDayAmount(createQuotaOrderAggregate.getDayAmount());
+        raffleActivityAccount.setDayRemain(createQuotaOrderAggregate.getDayAmount());
+        raffleActivityAccount.setMonthAmount(createQuotaOrderAggregate.getMonthAmount());
+        raffleActivityAccount.setMonthRemain(createQuotaOrderAggregate.getMonthAmount());
 
         try{
             /** take userId as key to set router */
-            idbRouterStrategy.doRouter(createOrderAggregate.getUserId());
+            idbRouterStrategy.doRouter(createQuotaOrderAggregate.getUserId());
             transactionTemplate.execute(status -> {
                try{
                    /** insert raffleActivityOrder */
@@ -152,8 +154,8 @@ public class ActivityRepository implements IActivityRepository {
                    return 1;
                }catch (DuplicateKeyException e){
                    status.setRollbackOnly();
-                   log.error("save order - unique key conflict userId: {} activityId: {} sku: {}", activityOrderEntity.getUserId(), activityOrderEntity.getActivityId(), activityOrderEntity.getSku(), e);
-                   throw new AppException(ResponseCode.INDEX_DUPLICATE.getCode());
+                   log.error("save quota order - unique key conflict userId: {} activityId: {} sku: {}", activityOrderEntity.getUserId(), activityOrderEntity.getActivityId(), activityOrderEntity.getSku(), e);
+                   throw new AppException(ResponseCode.INDEX_DUPLICATE.getCode(),e);
 
                }
             });
@@ -225,5 +227,132 @@ public class ActivityRepository implements IActivityRepository {
     public void clearActivitySkuStock(Long sku) {
         iRaffleActivitySkuDao.clearActivitySkuStock(sku);
     }
+
+    @Override
+    public ActivityAccountEntity queryActivityAccountByUserId(String userId, Long activityId) {
+        RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
+        raffleActivityAccount.setUserId(userId);
+        raffleActivityAccount.setActivityId(activityId);
+        raffleActivityAccount = iRaffleActivityAccountDao.queryActivityAccountByUserId(raffleActivityAccount);
+        if (raffleActivityAccount == null) return null;
+
+        return ActivityAccountEntity.builder()
+                .userId(raffleActivityAccount.getUserId())
+                .activityId(raffleActivityAccount.getActivityId())
+                .totalAmount(raffleActivityAccount.getTotalAmount())
+                .totalRemain(raffleActivityAccount.getTotalRemain())
+                .dayAmount(raffleActivityAccount.getDayAmount())
+                .dayRemain(raffleActivityAccount.getDayRemain())
+                .monthAmount(raffleActivityAccount.getMonthAmount())
+                .monthRemain(raffleActivityAccount.getMonthRemain())
+                .build();
+
+    }
+
+    @Override
+    public void doSaveRaffleOrder(CreatePartakeOrderAggregate createPartakeOrderAggregate) {
+        try{
+            /** get necessary data */
+            String userId = createPartakeOrderAggregate.getUserId();
+            Long activityId = createPartakeOrderAggregate.getActivityId();
+            ActivityAccountEntity activityAccountEntity = createPartakeOrderAggregate.getActivityAccountEntity();
+            ActivityAccountMonthEntity activityAccountMonthEntity = createPartakeOrderAggregate.getActivityAccountMonthEntity();
+            ActivityAccountDayEntity activityAccountDayEntity = createPartakeOrderAggregate.getActivityAccountDayEntity();
+            UserRaffleOrderEntity userRaffleOrderEntity = createPartakeOrderAggregate.getUserRaffleOrderEntity();
+
+            idbRouterStrategy.doRouter(userId);
+            transactionTemplate.execute(status -> {
+                try{
+                    /** first manipulate activity account */
+                    int updateTotalRemain = iRaffleActivityAccountDao.updateActivityAccountRemain(
+                            RaffleActivityAccount.builder()
+                                    .userId(userId)
+                                    .activityId(activityId)
+                                    .build());
+                    if (updateTotalRemain != 1){
+                        status.setRollbackOnly();
+                        log.error("save raffle order - totalRemain insufficient userId: {} activityId: {}", userId, activityId);
+                        throw new AppException(ResponseCode.ACCOUNT_QUOTA_ERROR.getCode(),ResponseCode.ACCOUNT_QUOTA_ERROR.getInfo());
+                    }
+                    /** then manipulate activity account month*/
+                    if (createPartakeOrderAggregate.isExistActivityAccountMonth()) {
+                        int updateMonthRemain = iRaffleActivityAccountMonthDao.updateActivityAccountMonthRemain(
+                                RaffleActivityAccountMonth.builder()
+                                        .userId(userId)
+                                        .activityId(activityId)
+                                        .month(activityAccountMonthEntity.getMonth())
+                                        .build());
+                        if (updateMonthRemain != 1) {
+                            status.setRollbackOnly();
+                            log.warn("save raffle order - monthRemain insufficient userId: {} activityId: {} month: {}", userId, activityId, activityAccountMonthEntity.getMonth());
+                            throw new AppException(ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getInfo());
+                        }
+                    } else {
+                        iRaffleActivityAccountMonthDao.insertActivityAccountMonth(RaffleActivityAccountMonth.builder()
+                                .userId(activityAccountMonthEntity.getUserId())
+                                .activityId(activityAccountMonthEntity.getActivityId())
+                                .month(activityAccountMonthEntity.getMonth())
+                                .monthAmount(activityAccountMonthEntity.getMonthAmount())
+                                .monthRemain(activityAccountMonthEntity.getMonthRemain() - 1)
+                                .build());
+                        /** if create new RaffleActivityAccountMonth, update monthRemain in RaffleActivityAccount */
+                        iRaffleActivityAccountDao.updateActivityAccountMonthRemain(RaffleActivityAccount.builder()
+                                .userId(userId)
+                                .activityId(activityId)
+                                .monthRemain(activityAccountEntity.getMonthRemain())
+                                .build());
+                    }
+                    /** then manipulate activity day */
+                    if (createPartakeOrderAggregate.isExistActivityAccountDay()) {
+                        int updateDayAmount = iRaffleActivityAccountDayDao.updateActivityAccountDayRemain(RaffleActivityAccountDay.builder()
+                                .userId(userId)
+                                .activityId(activityId)
+                                .day(activityAccountDayEntity.getDay())
+                                .build());
+                        if (updateDayAmount != 1) {
+                            status.setRollbackOnly();
+                            log.warn("save raffle order - dayRemain insufficient userId: {} activityId: {} day: {}", userId, activityId, activityAccountDayEntity.getDay());
+                            throw new AppException(ResponseCode.ACCOUNT_DAY_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_DAY_QUOTA_ERROR.getInfo());
+                        }
+                    } else {
+                        iRaffleActivityAccountDayDao.insertActivityAccountDay(RaffleActivityAccountDay.builder()
+                                .userId(activityAccountDayEntity.getUserId())
+                                .activityId(activityAccountDayEntity.getActivityId())
+                                .day(activityAccountDayEntity.getDay())
+                                .dayAmount(activityAccountDayEntity.getDayAmount())
+                                .dayRemain(activityAccountDayEntity.getDayRemain() - 1)
+                                .build());
+                        /** if create new RaffleActivityAccountDay, update dayRemain in RaffleActivityAccount */
+                        iRaffleActivityAccountDao.updateActivityAccountDayRemain(RaffleActivityAccount.builder()
+                                .userId(userId)
+                                .activityId(activityId)
+                                .dayRemain(activityAccountEntity.getDayRemain())
+                                .build());
+                    }
+
+
+
+                }catch (DuplicateKeyException e){
+                    status.setRollbackOnly();
+                    log.error("save raffle order - unique key conflict userId: {} activityId: {}", userId, activityId, e);
+                    throw new AppException(ResponseCode.INDEX_DUPLICATE.getCode(),e);
+                }
+                return 1;
+            });
+        }finally {
+            idbRouterStrategy.clear();
+        }
+    }
+
+    @Override
+    public ActivityAccountMonthEntity queryActivityAccountMonthByUserId(String userId, Long activityId, String month) {
+        return null;
+    }
+
+    @Override
+    public ActivityAccountDayEntity queryActivityAccountDayByUserId(String userId, Long activityId, String day) {
+        return null;
+    }
+
 
 }

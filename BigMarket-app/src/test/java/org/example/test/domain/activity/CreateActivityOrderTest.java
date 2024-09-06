@@ -2,11 +2,10 @@ package org.example.test.domain.activity;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.example.domain.activity.model.entity.ActivityOrderEntity;
 import org.example.domain.activity.model.entity.ActivityShopCartEntity;
 import org.example.domain.activity.model.entity.ActivitySkuChargeEntity;
-import org.example.domain.activity.service.IRaffleOrder;
+import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,11 +19,11 @@ import javax.annotation.Resource;
 public class CreateActivityOrderTest {
 
     @Resource
-    private IRaffleOrder iRaffleOrder;
+    private IRaffleActivityAccountQuotaService iRaffleActivityAccountQuotaService;
 
     @Test
     public void test_createActivityOrder(){
-        ActivityOrderEntity activityOrder = iRaffleOrder.createActivityOrder(ActivityShopCartEntity.builder()
+        ActivityOrderEntity activityOrder = iRaffleActivityAccountQuotaService.createActivityOrder(ActivityShopCartEntity.builder()
                         .sku(9011L)
                         .userId("user01")
                 .build());
@@ -38,7 +37,7 @@ public class CreateActivityOrderTest {
         activitySkuChargeEntity.setSku(9011L);
         activitySkuChargeEntity.setUserId("xiaofuge");
         activitySkuChargeEntity.setOutBusinessNo("700091009116");
-        String orderId = iRaffleOrder.createSkuChargeOrder(activitySkuChargeEntity);
+        String orderId = iRaffleActivityAccountQuotaService.createSkuChargeOrder(activitySkuChargeEntity);
         log.info("test result: {}",orderId);
     }
 

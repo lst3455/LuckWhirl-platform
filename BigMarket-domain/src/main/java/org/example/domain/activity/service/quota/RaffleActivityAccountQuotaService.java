@@ -1,31 +1,31 @@
-package org.example.domain.activity.service;
+package org.example.domain.activity.service.quota;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.example.domain.activity.model.aggregate.CreateOrderAggregate;
+import org.example.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import org.example.domain.activity.model.entity.*;
 import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
 import org.example.domain.activity.model.vo.OrderStatusVO;
 import org.example.domain.activity.repository.IActivityRepository;
-import org.example.domain.activity.service.rule.factory.DefaultActivityChainFactory;
-import org.example.domain.strategy.service.IRaffleStock;
+import org.example.domain.activity.service.IRaffleActivitySkuStockService;
+import org.example.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class RaffleActivityService extends AbstractRaffleActivity implements ISkuStock {
+public class RaffleActivityAccountQuotaService extends AbstractRaffleActivityAccountQuota implements IRaffleActivitySkuStockService {
 
-    public RaffleActivityService(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    public RaffleActivityAccountQuotaService(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         super(iActivityRepository, defaultActivityChainFactory);
     }
 
     @Override
-    protected void doSaveOrder(CreateOrderAggregate createOrderAggregate) {
-        iActivityRepository.doSaveOrder(createOrderAggregate);
+    protected void doSaveQuotaOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate) {
+        iActivityRepository.doSaveQuotaOrder(createQuotaOrderAggregate);
     }
 
     @Override
-    protected CreateOrderAggregate buildOrderAggregate(ActivitySkuChargeEntity activitySkuChargeEntity, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityAmountEntity activityAmountEntity) {
+    protected CreateQuotaOrderAggregate buildOrderAggregate(ActivitySkuChargeEntity activitySkuChargeEntity, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityAmountEntity activityAmountEntity) {
         /** create ActivityOrderEntity object */
         ActivityOrderEntity activityOrderEntity = new ActivityOrderEntity();
         activityOrderEntity.setUserId(activitySkuChargeEntity.getUserId());
@@ -42,7 +42,7 @@ public class RaffleActivityService extends AbstractRaffleActivity implements ISk
         activityOrderEntity.setStatus(OrderStatusVO.completed);
         activityOrderEntity.setOutBusinessNo(activitySkuChargeEntity.getOutBusinessNo());
 
-        return CreateOrderAggregate.builder()
+        return CreateQuotaOrderAggregate.builder()
                 .userId(activitySkuChargeEntity.getUserId())
                 .activityId(activityEntity.getActivityId())
                 .totalAmount(activityAmountEntity.getTotalAmount())

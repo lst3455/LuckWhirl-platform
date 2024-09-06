@@ -3,13 +3,11 @@ package org.example.trigger.listener;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
-import org.example.domain.activity.service.ISkuStock;
+import org.example.domain.activity.service.IRaffleActivitySkuStockService;
 import org.example.types.event.BaseEvent;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -19,7 +17,7 @@ import javax.annotation.Resource;
 public class ActivitySkuStockZeroConsumer {
 
     @Resource
-    private ISkuStock iSkuStock;
+    private IRaffleActivitySkuStockService iRaffleActivitySkuStockService;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "activity_sku_stock_zero"))
     public void listener(String message){
@@ -29,9 +27,9 @@ public class ActivitySkuStockZeroConsumer {
             }.getType());
             Long sku = eventMessage.getData();
             /** update the sku stock in database */
-            iSkuStock.clearActivitySkuStock(sku);
+            iRaffleActivitySkuStockService.clearActivitySkuStock(sku);
             /** clear the queue */
-            iSkuStock.clearQueueValue();
+            iRaffleActivitySkuStockService.clearQueueValue();
         }catch (Exception e){
             log.info("listen to activity sku stock is 0, consume fail topic:{} message:{}","activity_sku_stock_zero",message);
             throw e;

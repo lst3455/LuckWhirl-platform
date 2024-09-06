@@ -38,6 +38,38 @@
         where user_id = #{userId} and activity_id = #{activityId}
     </update>
 
+    <select id="queryActivityAccountByUserId" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccount" resultMap="dataMap">
+        select user_id, activity_id, total_amount, total_remain, day_amount,
+               day_remain, month_amount, month_remain
+        from raffle_activity_account
+        where user_id = #{userId} and activity_id = #{activityId}
+    </select>
+
+
+    <update id="updateActivityAccountRemain" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccount">
+        update raffle_activity_account
+        set total_remain = total_remain - 1,
+            day_remain = day_remain - 1,
+            month_remain = month_remain - 1,
+            update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId} and total_remain > 0 and day_remain > 0 and month_remain > 0
+    </update>
+
+    <update id="updateActivityAccountMonthRemain" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccount">
+        update raffle_activity_account
+        set month_remain = #{monthRemain} - 1, update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId}
+    </update>
+
+    <update id="updateActivityAccountDayRemain" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountDay">
+        update raffle_activity_account
+        set day_remain = #{dayRemain} - 1, update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId}
+    </update>
+
+
+
+
 
 
 

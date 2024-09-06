@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.infrastructure.persistent.dao.IRaffleActivityAccountMonthDao">
+
+    <resultMap id="dataMap" type="org.example.infrastructure.persistent.po.RaffleActivityAccountMonth">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="month" property="month"/>
+        <result column="month_amount" property="monthAmount"/>
+        <result column="month_remain" property="monthRemain"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insertActivityAccountMonth" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountMonth">
+        insert into raffle_activity_account_month(
+            user_id, activity_id, month, month_amount, month_remain, create_time, update_time)
+        values (
+                   #{userId}, #{activityId}, #{month}, #{monthAmount}, #{monthRemain}, now(), now())
+    </insert>
+
+    <select id="queryActivityAccountMonthByUserId" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountMonth" resultMap="dataMap">
+        select user_id, activity_id, month, month_amount, month_remain
+        from raffle_activity_account_month
+        where user_id = #{userId} and activity_id = #{activityId} and month = #{month}
+    </select>
+
+    <update id="updateActivityAccountMonthRemain" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountMonth">
+        update raffle_activity_account_month
+        set month_remain = month_remain - 1, update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId} and month = #{month} and month_remain > 0
+    </update>
+
+</mapper>

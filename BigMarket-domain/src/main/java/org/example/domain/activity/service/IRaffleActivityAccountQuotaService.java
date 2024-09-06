@@ -4,7 +4,7 @@ import org.example.domain.activity.model.entity.ActivityOrderEntity;
 import org.example.domain.activity.model.entity.ActivityShopCartEntity;
 import org.example.domain.activity.model.entity.ActivitySkuChargeEntity;
 
-public interface IRaffleOrder {
+public interface IRaffleActivityAccountQuotaService {
 
     ActivityOrderEntity createActivityOrder(ActivityShopCartEntity activityShopCartEntity);
 

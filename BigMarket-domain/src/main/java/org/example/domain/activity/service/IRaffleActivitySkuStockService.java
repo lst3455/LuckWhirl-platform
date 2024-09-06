@@ -2,7 +2,7 @@ package org.example.domain.activity.service;
 
 import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
 
-public interface ISkuStock {
+public interface IRaffleActivitySkuStockService {
 
     ActivitySkuStockKeyVO takeQueueValue() throws InterruptedException;
 

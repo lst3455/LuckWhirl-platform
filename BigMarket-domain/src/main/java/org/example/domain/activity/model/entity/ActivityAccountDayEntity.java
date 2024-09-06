@@ -1,21 +1,15 @@
-package org.example.infrastructure.persistent.po;
+package org.example.domain.activity.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
-
-import java.util.Date;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RaffleActivityAccountDay {
-
-    /** auto increasing id */
-    private Long id;
+@AllArgsConstructor
+public class ActivityAccountDayEntity {
     /** user id */
     private String userId;
     /** activity id */
@@ -26,8 +20,4 @@ public class RaffleActivityAccountDay {
     private Integer dayAmount;
     /** day remain */
     private Integer dayRemain;
-    /** create time */
-    private Date createTime;
-    /** update time */
-    private Date updateTime;
 }

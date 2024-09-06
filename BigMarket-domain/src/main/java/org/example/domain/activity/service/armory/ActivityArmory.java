@@ -18,11 +18,11 @@ public class ActivityArmory implements IActivityArmory,IActivityDispatch{
 
     @Override
     public boolean assembleActivitySku(Long sku) {
-        ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuEntityBySku(sku);
+        ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuBySku(sku);
         /** cache data to redis */
         iActivityRepository.storeActivitySkuStockAmount(sku,activitySkuEntity.getStockAmount());
-        iActivityRepository.queryActivityEntityByActivityId(activitySkuEntity.getActivityId());
-        iActivityRepository.queryActivityAmountEntityByActivityAmountId(activitySkuEntity.getActivityAmountId());
+        iActivityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
+        iActivityRepository.queryActivityAmountByActivityAmountId(activitySkuEntity.getActivityAmountId());
 
         return true;
     }

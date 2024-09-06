@@ -2,7 +2,7 @@ package org.example.trigger.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
-import org.example.domain.activity.service.ISkuStock;
+import org.example.domain.activity.service.IRaffleActivitySkuStockService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +13,16 @@ import javax.annotation.Resource;
 public class UpdateActivitySkuStockJob {
 
     @Resource
-    private ISkuStock iSkuStock;
+    private IRaffleActivitySkuStockService iRaffleActivitySkuStockService;
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void exec() {
         try {
             log.info("scheduled task，update the sku stock [using delayQueue to fetch, decrease the access frequency to the database]");
-            ActivitySkuStockKeyVO activitySkuStockKeyVO = iSkuStock.takeQueueValue();
+            ActivitySkuStockKeyVO activitySkuStockKeyVO = iRaffleActivitySkuStockService.takeQueueValue();
             if (activitySkuStockKeyVO == null) return;
             log.info("scheduled task，update the sku stock success sku:{} activityId:{}", activitySkuStockKeyVO.getSku(), activitySkuStockKeyVO.getActivityId());
-            iSkuStock.updateActivitySkuStock(activitySkuStockKeyVO.getSku());
+            iRaffleActivitySkuStockService.updateActivitySkuStock(activitySkuStockKeyVO.getSku());
         } catch (Exception e) {
             log.error("scheduled task，update the sku stock fail", e);
         }
