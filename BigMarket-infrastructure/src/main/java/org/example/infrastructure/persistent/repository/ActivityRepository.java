@@ -9,6 +9,7 @@ import org.example.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import org.example.domain.activity.model.entity.*;
 import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
 import org.example.domain.activity.model.vo.ActivityStatusVO;
+import org.example.domain.activity.model.vo.UserRaffleOrderStatusVO;
 import org.example.domain.activity.repository.IActivityRepository;
 import org.example.infrastructure.event.EventPublisher;
 import org.example.infrastructure.persistent.dao.*;
@@ -43,6 +44,8 @@ public class ActivityRepository implements IActivityRepository {
     private IRaffleActivityOrderDao iRaffleActivityOrderDao;
     @Resource
     private IRaffleActivityAccountDao iRaffleActivityAccountDao;
+    @Resource
+    private IUserRaffleOrderDao iUserRaffleOrderDao;
     @Resource
     private TransactionTemplate transactionTemplate;
     @Resource
@@ -230,6 +233,7 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public ActivityAccountEntity queryActivityAccountByUserId(String userId, Long activityId) {
+        /** check activity account exist */
         RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
         raffleActivityAccount.setUserId(userId);
         raffleActivityAccount.setActivityId(activityId);
@@ -329,15 +333,23 @@ public class ActivityRepository implements IActivityRepository {
                                 .dayRemain(activityAccountEntity.getDayRemain())
                                 .build());
                     }
+                    /** finally insert the userRaffleOrder into database */
+                    iUserRaffleOrderDao.insertUserRaffleOrder(UserRaffleOrder.builder()
+                            .userId(userRaffleOrderEntity.getUserId())
+                            .activityId(userRaffleOrderEntity.getActivityId())
+                            .activityName(userRaffleOrderEntity.getActivityName())
+                            .strategyId(userRaffleOrderEntity.getStrategyId())
+                            .orderId(userRaffleOrderEntity.getOrderId())
+                            .orderTime(userRaffleOrderEntity.getOrderTime())
+                            .orderStatus(userRaffleOrderEntity.getOrderStatus().getCode())
+                            .build());
 
-
-
+                    return 1;
                 }catch (DuplicateKeyException e){
                     status.setRollbackOnly();
                     log.error("save raffle order - unique key conflict userId: {} activityId: {}", userId, activityId, e);
                     throw new AppException(ResponseCode.INDEX_DUPLICATE.getCode(),e);
                 }
-                return 1;
             });
         }finally {
             idbRouterStrategy.clear();
@@ -346,13 +358,63 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public ActivityAccountMonthEntity queryActivityAccountMonthByUserId(String userId, Long activityId, String month) {
-        return null;
+        /** check activity account month exist */
+        RaffleActivityAccountMonth raffleActivityAccountMonth = RaffleActivityAccountMonth.builder()
+                .userId(userId)
+                .activityId(activityId)
+                .month(month)
+                .build();
+        raffleActivityAccountMonth = iRaffleActivityAccountMonthDao.queryActivityAccountMonthByUserId(raffleActivityAccountMonth);
+        if (raffleActivityAccountMonth == null) return null;
+
+        return ActivityAccountMonthEntity.builder()
+                .userId(raffleActivityAccountMonth.getUserId())
+                .activityId(raffleActivityAccountMonth.getActivityId())
+                .month(raffleActivityAccountMonth.getMonth())
+                .monthAmount(raffleActivityAccountMonth.getMonthAmount())
+                .monthRemain(raffleActivityAccountMonth.getMonthRemain())
+                .build();
     }
 
     @Override
     public ActivityAccountDayEntity queryActivityAccountDayByUserId(String userId, Long activityId, String day) {
-        return null;
+        /** check activity account day exist */
+        RaffleActivityAccountDay raffleActivityAccountDay = RaffleActivityAccountDay.builder()
+                .userId(userId)
+                .activityId(activityId)
+                .day(day)
+                .build();
+        raffleActivityAccountDay = iRaffleActivityAccountDayDao.queryActivityAccountDayByUserId(raffleActivityAccountDay);
+        if (raffleActivityAccountDay == null) return null;
+
+        return ActivityAccountDayEntity.builder()
+                .userId(raffleActivityAccountDay.getUserId())
+                .activityId(raffleActivityAccountDay.getActivityId())
+                .day(raffleActivityAccountDay.getDay())
+                .dayAmount(raffleActivityAccountDay.getDayAmount())
+                .dayRemain(raffleActivityAccountDay.getDayRemain())
+                .build();
     }
 
+    @Override
+    public UserRaffleOrderEntity queryNoUsedRaffleOrder(PartakeRaffleActivityEntity partakeRaffleActivityEntity) {
+        /** check if unused raffle order exist */
+        UserRaffleOrder userRaffleOrder = UserRaffleOrder.builder()
+                .userId(partakeRaffleActivityEntity.getUserId())
+                .activityId(partakeRaffleActivityEntity.getActivityId())
+                .build();
 
+        userRaffleOrder = iUserRaffleOrderDao.queryNoUsedRaffleOrder(userRaffleOrder);
+        if (userRaffleOrder == null) return null;
+
+        return UserRaffleOrderEntity.builder()
+                .userId(userRaffleOrder.getUserId())
+                .activityId(userRaffleOrder.getActivityId())
+                .activityName(userRaffleOrder.getActivityName())
+                .strategyId(userRaffleOrder.getStrategyId())
+                .orderId(userRaffleOrder.getOrderId())
+                .orderTime(userRaffleOrder.getOrderTime())
+                .orderStatus(UserRaffleOrderStatusVO.valueOf(userRaffleOrder.getOrderStatus()))
+                .build();
+    }
 }

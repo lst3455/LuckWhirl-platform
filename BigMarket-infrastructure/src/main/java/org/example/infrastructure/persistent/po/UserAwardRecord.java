@@ -23,7 +23,7 @@ public class UserAwardRecord {
     /** award getting time */
     private Date awardTime;
     /** award status；create,completed */
-    private String awardState;
+    private String awardStatus;
     /** create time */
     private Date createTime;
     /** update time */

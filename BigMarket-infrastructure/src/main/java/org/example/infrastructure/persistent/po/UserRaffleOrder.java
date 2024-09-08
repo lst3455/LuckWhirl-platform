@@ -1,10 +1,17 @@
 package org.example.infrastructure.persistent.po;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.N;
 
 import java.util.Date;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRaffleOrder {
     /** user id */
     private String id;
@@ -21,7 +28,7 @@ public class UserRaffleOrder {
     /** order time */
     private Date orderTime;
     /** order status:create,used,cancel */
-    private String orderState;
+    private String orderStatus;
     /** create time */
     private Date createTime;
     /** update time */

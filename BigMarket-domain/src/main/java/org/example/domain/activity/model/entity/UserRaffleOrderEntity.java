@@ -27,5 +27,5 @@ public class UserRaffleOrderEntity {
     /** order time */
     private Date orderTime;
     /** order status:create,used,cancel */
-    private UserRaffleOrderStatusVO orderState;
+    private UserRaffleOrderStatusVO orderStatus;
 }
