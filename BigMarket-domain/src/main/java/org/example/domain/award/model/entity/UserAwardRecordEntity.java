@@ -1,13 +1,18 @@
-package org.example.infrastructure.persistent.po;
+package org.example.domain.award.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.example.domain.award.model.vo.AwardStatusVO;
 
 import java.util.Date;
 
 @Data
-public class UserAwardRecord {
-    /** auto increasing id */
-    private String id;
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserAwardRecordEntity {
     /** user id */
     private String userId;
     /** activity id */
@@ -23,10 +28,5 @@ public class UserAwardRecord {
     /** award getting time */
     private Date awardTime;
     /** award status；create,completed */
-    private String awardStatus;
-    /** create time */
-    private Date createTime;
-    /** update time */
-    private Date updateTime;
-
+    private AwardStatusVO awardStatus;
 }
