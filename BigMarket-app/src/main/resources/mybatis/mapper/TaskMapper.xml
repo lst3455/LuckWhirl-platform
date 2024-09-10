@@ -24,7 +24,7 @@
     <update id="updateTaskSendMessageCompleted"
             parameterType="org.example.infrastructure.persistent.po.UserAwardRecord">
         update task
-        set status = 'completed', update_time = now()
+        set status = 'complete', update_time = now()
         where user_id = #{userId} and message_id = #{messageId}
     </update>
 
@@ -35,9 +35,9 @@
     </update>
 
     <select id="queryNoSendMessageTaskList" resultMap="dataMap">
-        select user_id, topic, message_id, message
+        select *
         from task
-        where status = 'fail' or (status = 'create' and now() - update_time > 60000)
+        where status = 'fail' or (status = 'create' and now() - update_time > 60)
         limit 10
     </select>
 
