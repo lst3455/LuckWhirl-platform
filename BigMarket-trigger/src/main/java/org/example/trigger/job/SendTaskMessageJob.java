@@ -47,6 +47,10 @@ public class SendTaskMessageJob {
                             threadPoolExecutor.execute(() -> {
                                 try {
                                     iTaskService.sendMessage(taskEntity);
+                                    /**
+                                     * todo
+                                     * one issue, database 02 can not update
+                                     */
                                     iTaskService.updateTaskSendMessageCompleted(taskEntity.getUserId(), taskEntity.getMessageId());
                                     log.info("scheduled task，send task message success, userId: {}, topic: {}", taskEntity.getUserId(), taskEntity.getTopic());
                                 } catch (Exception e) {
