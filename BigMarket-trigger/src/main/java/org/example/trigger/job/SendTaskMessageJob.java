@@ -1,7 +1,6 @@
 package org.example.trigger.job;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.task.model.entity.TaskEntity;
 import org.example.domain.task.service.ITaskService;
@@ -49,9 +48,9 @@ public class SendTaskMessageJob {
                                 try {
                                     iTaskService.sendMessage(taskEntity);
                                     iTaskService.updateTaskSendMessageCompleted(taskEntity.getUserId(), taskEntity.getMessageId());
-                                    log.info("scheduled task，send task message success userId: {} topic: {}", taskEntity.getUserId(), taskEntity.getTopic());
+                                    log.info("scheduled task，send task message success, userId: {}, topic: {}", taskEntity.getUserId(), taskEntity.getTopic());
                                 } catch (Exception e) {
-                                    log.error("scheduled task，send task message fail in taskEntityList userId: {} topic: {}", taskEntity.getUserId(), taskEntity.getTopic());
+                                    log.error("scheduled task，send task message fail in taskEntityList, userId: {}, topic: {}", taskEntity.getUserId(), taskEntity.getTopic());
                                     iTaskService.updateTaskSendMessageFail(taskEntity.getUserId(), taskEntity.getMessageId());
                                 }
                             });
