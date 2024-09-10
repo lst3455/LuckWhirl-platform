@@ -19,7 +19,7 @@ public class AwardServiceTest {
     private IAwardService awardService;
 
     @Test
-    public void test_() throws InterruptedException {
+    public void test_sendTaskMessageJob() throws InterruptedException {
 
         new CountDownLatch(1).await();
     }
