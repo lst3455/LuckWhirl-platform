@@ -22,7 +22,7 @@
     </insert>
 
     <update id="updateTaskSendMessageCompleted"
-            parameterType="org.example.infrastructure.persistent.po.UserAwardRecord">
+            parameterType="org.example.infrastructure.persistent.po.Task">
         update task
         set status = 'complete', update_time = now()
         where user_id = #{userId} and message_id = #{messageId}
