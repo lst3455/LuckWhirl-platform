@@ -28,7 +28,7 @@ public class SendTaskMessageJob {
     public void exec() {
         try {
             int dbCount = idbRouterStrategy.dbCount();
-            for (int i = 1; i < dbCount; i++) {
+            for (int i = 1; i <= dbCount; i++) {
                 int finalI = i;
                 threadPoolExecutor.execute(() -> {
                     try {

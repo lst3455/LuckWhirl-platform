@@ -17,9 +17,9 @@ public class EventPublisher {
         try {
             String messageJson = JSON.toJSONString(eventMessage);
             rabbitTemplate.convertAndSend(topic, messageJson);
-            log.info("send MQ success topic:{} message:{}", topic, messageJson);
+            log.info("send MQ success, topic:{}, message:{}", topic, messageJson);
         } catch (Exception e) {
-            log.error("send MQ fail topic:{} message:{}", topic, JSON.toJSONString(eventMessage), e);
+            log.error("send MQ fail, topic:{}, message:{}", topic, JSON.toJSONString(eventMessage), e);
             throw e;
         }
     }
@@ -27,9 +27,9 @@ public class EventPublisher {
     public void publish(String topic, String eventMessageJSON) {
         try {
             rabbitTemplate.convertAndSend(topic, eventMessageJSON);
-            log.info("send MQ success topic:{} message:{}", topic, eventMessageJSON);
+            log.info("send MQ success, topic:{}, message:{}", topic, eventMessageJSON);
         } catch (Exception e) {
-            log.error("send MQ fail topic:{} message:{}", topic, eventMessageJSON, e);
+            log.error("send MQ fail, topic:{}, message:{}", topic, eventMessageJSON, e);
             throw e;
         }
     }
