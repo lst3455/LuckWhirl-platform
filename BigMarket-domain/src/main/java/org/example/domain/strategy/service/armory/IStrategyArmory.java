@@ -5,4 +5,5 @@ public interface IStrategyArmory {
     /** assemble the raffle strategy for corresponding strategyId */
     boolean assembleRaffleStrategy(Long strategyId);
 
+    boolean assembleRaffleStrategyByActivityId(Long activityId);
 }

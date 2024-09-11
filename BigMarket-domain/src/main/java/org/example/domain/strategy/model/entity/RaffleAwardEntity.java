@@ -14,6 +14,8 @@ public class RaffleAwardEntity {
 
     /** award id */
     private Long awardId;
+    /** award title */
+    private String awardTitle;
     /** award config */
     private String awardConfig;
     /** sort */

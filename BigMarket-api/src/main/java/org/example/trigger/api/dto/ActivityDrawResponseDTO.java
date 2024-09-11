@@ -9,9 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RaffleResponseDTO {
-    /** award id */
+public class ActivityDrawResponseDTO {
+    /** awardId */
     private Long awardId;
-    /** award index */
+    /** awardTitle*/
+    private String awardTitle;
+    /** awardIndex */
     private Integer awardIndex;
+
 }

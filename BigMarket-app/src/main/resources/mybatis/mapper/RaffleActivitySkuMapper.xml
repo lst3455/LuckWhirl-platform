@@ -30,6 +30,12 @@
         set stock_remain = 0, update_time = now()
         where sku = #{sku}
     </update>
+    <select id="queryActivitySkuListByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
+        select sku, activity_amount_id, stock_amount, stock_remain
+        from raffle_activity_sku 
+        where activity_id = #{activityId}
+    </select>
+
 
 
 </mapper>

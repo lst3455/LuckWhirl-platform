@@ -47,6 +47,9 @@ public class StrategyRepository implements IStrategyRepository {
     @Resource
     private IRuleTreeNodeDao iRuleTreeNodeDao;
 
+    @Resource
+    private IRaffleActivityDao iRaffleActivityDao;
+
 
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
@@ -310,5 +313,10 @@ public class StrategyRepository implements IStrategyRepository {
         /** store data to cache */
         iRedisService.setValue(cacheKey, strategyAwardEntity);
         return strategyAwardEntity;
+    }
+
+    @Override
+    public Long queryStrategyIdByActivityId(Long activityId) {
+        return iRaffleActivityDao.queryStrategyIdByActivityId(activityId);
     }
 }

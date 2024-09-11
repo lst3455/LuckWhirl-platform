@@ -25,7 +25,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -416,5 +418,22 @@ public class ActivityRepository implements IActivityRepository {
                 .orderTime(userRaffleOrder.getOrderTime())
                 .orderStatus(UserRaffleOrderStatusVO.valueOf(userRaffleOrder.getOrderStatus()))
                 .build();
+    }
+
+    @Override
+    public List<ActivitySkuEntity> queryActivitySkuByActivityId(Long activityId) {
+        List<RaffleActivitySku> raffleActivitySkuList = iRaffleActivitySkuDao.queryRaffleActivitySkuByActivityId(activityId);
+        List<ActivitySkuEntity> activitySkuEntityList = new ArrayList<>();
+        for(RaffleActivitySku raffleActivitySku : raffleActivitySkuList){
+            ActivitySkuEntity activitySkuEntity = ActivitySkuEntity.builder()
+                        .sku(raffleActivitySku.getSku())
+                        .activityId(raffleActivitySku.getActivityId())
+                        .activityAmountId(raffleActivitySku.getActivityAmountId())
+                        .stockAmount(raffleActivitySku.getStockAmount())
+                        .stockRemain(raffleActivitySku.getStockRemain())
+                        .build();
+            activitySkuEntityList.add(activitySkuEntity);
+        }
+        return activitySkuEntityList;
     }
 }

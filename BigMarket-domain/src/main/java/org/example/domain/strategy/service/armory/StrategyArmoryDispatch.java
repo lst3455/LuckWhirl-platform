@@ -57,6 +57,12 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         return true;
     }
 
+    @Override
+    public boolean assembleRaffleStrategyByActivityId(Long activityId) {
+        Long strategyId = iStrategyRepository.queryStrategyIdByActivityId(activityId);
+        return assembleRaffleStrategy(strategyId);
+    }
+
     public void assembleRaffleStrategy(String strategyIdAsKey, List<StrategyAwardEntity> strategyAwardEntities) {
         /** calculate sum of rate */
         BigDecimal totalAwardRate = strategyAwardEntities.stream()

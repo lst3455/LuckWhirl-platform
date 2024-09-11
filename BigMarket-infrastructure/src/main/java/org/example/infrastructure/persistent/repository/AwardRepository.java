@@ -10,8 +10,10 @@ import org.example.domain.award.repository.IAwardRepository;
 import org.example.infrastructure.event.EventPublisher;
 import org.example.infrastructure.persistent.dao.ITaskDao;
 import org.example.infrastructure.persistent.dao.IUserAwardRecordDao;
+import org.example.infrastructure.persistent.dao.IUserRaffleOrderDao;
 import org.example.infrastructure.persistent.po.Task;
 import org.example.infrastructure.persistent.po.UserAwardRecord;
+import org.example.infrastructure.persistent.po.UserRaffleOrder;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 import org.springframework.dao.DuplicateKeyException;
@@ -34,6 +36,8 @@ public class AwardRepository implements IAwardRepository {
     private TransactionTemplate transactionTemplate;
     @Resource
     private EventPublisher eventPublisher;
+    @Resource
+    private IUserRaffleOrderDao iUserRaffleOrderDao;
 
     @Override
     public void doSaveUserAwardRecord(UserAwardRecordAggregate userAwardRecordAggregate) {
@@ -60,6 +64,10 @@ public class AwardRepository implements IAwardRepository {
         task.setMessageId(taskEntity.getMessageId());
         task.setMessage(JSON.toJSONString(taskEntity.getMessage()));
         task.setStatus(taskEntity.getStatus().getCode());
+
+        UserRaffleOrder userRaffleOrder = new UserRaffleOrder();
+        userRaffleOrder.setUserId(userAwardRecordEntity.getUserId());
+        userRaffleOrder.setOrderId(userAwardRecordEntity.getOrderId());
         /** start the transaction */
         try {
             idbRouterStrategy.doRouter(userId);
@@ -67,10 +75,17 @@ public class AwardRepository implements IAwardRepository {
                 try{
                     iTaskDao.insertTask(task);
                     iUserAwardRecordDao.insertUserAwardRecord(userAwardRecord);
+
+                    int amount = iUserRaffleOrderDao.updateUserRaffleOrderStatusUsed(userRaffleOrder);
+                    if (amount != 1){
+                        status.setRollbackOnly();
+                        log.error("save user award record - update userRaffleOrder fail, userId: {}, activityId: {}, awardId: {}", userId, activityId, awardId);
+                        throw new AppException(ResponseCode.ACTIVITY_RAFFLE_ORDER_ERROR.getCode(),ResponseCode.ACTIVITY_RAFFLE_ORDER_ERROR.getInfo());
+                    }
                     return 1;
                 }catch (DuplicateKeyException e){
                     status.setRollbackOnly();
-                    log.error("save user award record - unique key conflict userId: {} activityId: {} awardId: {}", userId, activityId, awardId, e);
+                    log.error("save user award record - unique key conflict, userId: {}, activityId: {}, awardId: {}", userId, activityId, awardId, e);
                     throw new AppException(ResponseCode.INDEX_DUPLICATE.getCode(),e);
                 }
             });

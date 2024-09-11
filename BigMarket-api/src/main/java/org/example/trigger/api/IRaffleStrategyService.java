@@ -2,13 +2,13 @@ package org.example.trigger.api;
 
 import org.example.trigger.api.dto.RaffleAwardListRequestDTO;
 import org.example.trigger.api.dto.RaffleAwardListResponseDTO;
-import org.example.trigger.api.dto.RaffleRequestDTO;
-import org.example.trigger.api.dto.RaffleResponseDTO;
+import org.example.trigger.api.dto.RaffleStrategyRequestDTO;
+import org.example.trigger.api.dto.RaffleStrategyResponseDTO;
 import org.example.types.model.Response;
 
 import java.util.List;
 
-public interface IRaffleService {
+public interface IRaffleStrategyService {
     /**
      * strategy armory into cache api
      * @param strategyId
@@ -25,8 +25,8 @@ public interface IRaffleService {
 
     /**
      * query random raffle api
-     * @param raffleRequestDTO
+     * @param raffleStrategyRequestDTO
      * @return RaffleResponseDTO
      */
-    Response<RaffleResponseDTO> randomRaffle(RaffleRequestDTO raffleRequestDTO);
+    Response<RaffleStrategyResponseDTO> randomRaffle(RaffleStrategyRequestDTO raffleStrategyRequestDTO);
 }

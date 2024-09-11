@@ -7,4 +7,6 @@ import org.example.infrastructure.persistent.po.RaffleActivity;
 public interface IRaffleActivityDao {
 
     RaffleActivity queryRaffleActivityByActivityId(Long activityId);
+
+    Long queryStrategyIdByActivityId(Long activityId);
 }
