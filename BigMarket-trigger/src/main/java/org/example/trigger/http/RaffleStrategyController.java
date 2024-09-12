@@ -2,10 +2,13 @@ package org.example.trigger.http;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
 import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 import org.example.domain.strategy.model.entity.StrategyAwardEntity;
 import org.example.domain.strategy.service.IRaffleAward;
+import org.example.domain.strategy.service.IRaffleAwardRule;
 import org.example.domain.strategy.service.IRaffleStrategy;
 import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.trigger.api.IRaffleStrategyService;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * raffle service
@@ -41,9 +46,16 @@ public class RaffleStrategyController implements IRaffleStrategyService {
     @Resource
     private IRaffleStrategy iRaffleStrategy;
 
+    @Resource
+    private IRaffleAwardRule iRaffleAwardRule;
+
+    @Resource
+    private IRaffleActivityAccountQuotaService iRaffleActivityAccountQuotaService;
+
     /**
      * armory the raffle table into cache
      * <a href="http://localhost:8091/api/v1/raffle/strategy/strategy_armory">/api/v1/raffle/strategy/strategy_armory</a>
+     *
      * @param strategyId
      * @return Response<Boolean>
      */
@@ -72,22 +84,52 @@ public class RaffleStrategyController implements IRaffleStrategyService {
     /**
      * query raffle award list(only store each award entity once)
      * <a href="http://localhost:8091/api/v1/raffle/strategy/query_raffle_award_list">/api/v1/raffle/strategy/query_raffle_award_list</a>
+     *
      * @param raffleAwardListRequestDTO
-     * @return Response<List<RaffleAwardListResponseDTO>>
+     * @return Response<List < RaffleAwardListResponseDTO>>
      */
     @RequestMapping(value = "query_raffle_award_list", method = RequestMethod.POST)
     @Override
     public Response<List<RaffleAwardListResponseDTO>> queryRaffleAwardList(@RequestBody RaffleAwardListRequestDTO raffleAwardListRequestDTO) {
         try {
-            log.info("query raffle award list start, strategyId:{}", raffleAwardListRequestDTO.getStrategyId());
-            List<StrategyAwardEntity> strategyAwardEntityList = iRaffleAward.queryStrategyAwardList(raffleAwardListRequestDTO.getStrategyId());
+            /** check parameter */
+            if (StringUtils.isBlank(raffleAwardListRequestDTO.getUserId()) || raffleAwardListRequestDTO.getActivityId() == null) {
+                log.error("query raffle award list error - invalid parameter, userId:{}, activityId:{}", raffleAwardListRequestDTO.getUserId(),raffleAwardListRequestDTO.getActivityId());
+                return Response.<List<RaffleAwardListResponseDTO>>builder()
+                        .code(ResponseCode.ILLEGAL_PARAMETER.getCode())
+                        .info(ResponseCode.ILLEGAL_PARAMETER.getInfo())
+                        .build();
+            }
+
+            log.info("query raffle award list start, userId:{}, activityId:{}", raffleAwardListRequestDTO.getUserId(),raffleAwardListRequestDTO.getActivityId());
+            /**
+             * query award list
+             * for raffle_award table, award only bind the tree_id as their rule_model
+             * so for one strategyId, tree_id may be different for different award
+             */
+            List<StrategyAwardEntity> strategyAwardEntityList = iRaffleAward.queryStrategyAwardListByActivityId(raffleAwardListRequestDTO.getActivityId());
+            /** get rule model, actually is treeId */
+            String[] treeIds = strategyAwardEntityList.stream()
+                    .map(StrategyAwardEntity::getRuleModel)
+                    .filter(Objects::nonNull)
+                    .toArray(String[]::new);
+            /** query ruleValue of rule_lock tree node */
+            Map<String,Integer> ruleLockAmountMap = iRaffleAwardRule.queryRuleTreeLockNodeValueByTreeIds(treeIds);
+            /** query user raffle amount */
+            Integer dayPartakeAmount = iRaffleActivityAccountQuotaService.queryRaffleActivityAccountDayPartakeAmount(raffleAwardListRequestDTO.getUserId(),raffleAwardListRequestDTO.getActivityId());
+
+
             List<RaffleAwardListResponseDTO> raffleAwardListResponseDTOList = new ArrayList<>();
             for (StrategyAwardEntity strategyAward : strategyAwardEntityList) {
+                Integer ruleLockAmount = ruleLockAmountMap.getOrDefault(strategyAward.getRuleModel(),0);
                 raffleAwardListResponseDTOList.add(RaffleAwardListResponseDTO.builder()
                         .awardId(strategyAward.getAwardId())
                         .awardTitle(strategyAward.getAwardTitle())
                         .awardSubtitle(strategyAward.getAwardSubtitle())
                         .sort(strategyAward.getSort())
+                        .awardUnlockAmount(ruleLockAmount)
+                        .isUnlock(dayPartakeAmount >= ruleLockAmount)
+                        .awardUnlockRemain(dayPartakeAmount >= ruleLockAmount? 0 : ruleLockAmount - dayPartakeAmount)
                         .build());
             }
 
@@ -96,10 +138,10 @@ public class RaffleStrategyController implements IRaffleStrategyService {
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(raffleAwardListResponseDTOList)
                     .build();
-            log.info("query raffle award list complete, strategyId:{} response:{}", raffleAwardListRequestDTO.getStrategyId(), JSON.toJSONString(response));
+            log.info("query raffle award list complete, userId:{}, activityId:{}, response:{}", raffleAwardListRequestDTO.getUserId(), raffleAwardListRequestDTO.getActivityId(), JSON.toJSONString(response));
             return response;
         } catch (Exception e) {
-            log.error("query raffle award list error, strategyId:{}", raffleAwardListRequestDTO.getStrategyId());
+            log.error("query raffle award list error, userId:{}, activityId:{}", raffleAwardListRequestDTO.getUserId(),raffleAwardListRequestDTO.getActivityId());
             return Response.<List<RaffleAwardListResponseDTO>>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
@@ -110,6 +152,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
     /**
      * execute random raffle
      * <a href="http://localhost:8091/api/v1/raffle/random_raffle">/api/v1/raffle/random_raffle</a>
+     *
      * @param raffleStrategyRequestDTO
      * @return Response<RaffleResponseDTO>
      */

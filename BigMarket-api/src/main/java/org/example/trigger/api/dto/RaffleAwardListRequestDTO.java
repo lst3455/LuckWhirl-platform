@@ -1,10 +1,14 @@
 package org.example.trigger.api.dto;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class RaffleAwardListRequestDTO {
 
+    @Deprecated
     private Long strategyId;
+
+    private Long activityId;
+
+    private String userId;
 }

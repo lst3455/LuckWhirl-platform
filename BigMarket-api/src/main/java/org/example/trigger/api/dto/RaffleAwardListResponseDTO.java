@@ -18,4 +18,10 @@ public class RaffleAwardListResponseDTO {
     private String awardSubtitle;
     /** award sort */
     private Integer sort;
+    /** award unlock count */
+    private Integer awardUnlockAmount;
+    /** if unlock */
+    private Boolean isUnlock;
+    /** award unlock remain */
+    private Integer awardUnlockRemain;
 }

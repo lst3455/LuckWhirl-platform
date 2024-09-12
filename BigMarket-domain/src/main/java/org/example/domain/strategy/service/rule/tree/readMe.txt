@@ -1,0 +1,1 @@
+Logic tree only depend on the tree relevant table configuration, all node config define in rule_tree_node

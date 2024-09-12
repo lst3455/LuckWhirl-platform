@@ -1,0 +1,1 @@
+Logic chain only depend on the strategy_rule table configuration, and now only control black_list, weight, default

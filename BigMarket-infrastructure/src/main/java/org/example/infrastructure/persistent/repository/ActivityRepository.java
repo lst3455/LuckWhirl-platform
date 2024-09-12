@@ -2,7 +2,6 @@ package org.example.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.example.domain.activity.event.ActivitySkuStockZeroMessageEvent;
 import org.example.domain.activity.model.aggregate.CreatePartakeOrderAggregate;
 import org.example.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
@@ -435,5 +434,18 @@ public class ActivityRepository implements IActivityRepository {
             activitySkuEntityList.add(activitySkuEntity);
         }
         return activitySkuEntityList;
+    }
+
+    @Override
+    public Integer queryRaffleActivityAccountDayPartakeAmount(String userId, Long activityId) {
+        RaffleActivityAccountDay raffleActivityAccountDay = new RaffleActivityAccountDay();
+        raffleActivityAccountDay.setUserId(userId);
+        raffleActivityAccountDay.setActivityId(activityId);
+        raffleActivityAccountDay.setDay(raffleActivityAccountDay.currentDay());
+        raffleActivityAccountDay = iRaffleActivityAccountDayDao.queryActivityAccountDay(raffleActivityAccountDay);
+        if (raffleActivityAccountDay == null) return 0;
+        return raffleActivityAccountDay.getDayAmount() - raffleActivityAccountDay.getDayRemain();
+
+
     }
 }

@@ -7,4 +7,7 @@ import java.util.List;
 public interface IRaffleAward {
 
     List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
+
+    List<StrategyAwardEntity> queryStrategyAwardListByActivityId(Long activityId);
+
 }

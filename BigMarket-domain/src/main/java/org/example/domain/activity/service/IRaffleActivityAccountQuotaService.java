@@ -9,4 +9,6 @@ public interface IRaffleActivityAccountQuotaService {
     ActivityOrderEntity createActivityOrder(ActivityShopCartEntity activityShopCartEntity);
 
     String createSkuChargeOrder(ActivitySkuChargeEntity activitySkuChargeEntity);
+
+    Integer queryRaffleActivityAccountDayPartakeAmount(String userId, Long activityId);
 }

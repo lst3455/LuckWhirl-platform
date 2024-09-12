@@ -7,9 +7,9 @@ import org.example.domain.strategy.model.vo.RuleTreeVO;
 import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
 import org.example.domain.strategy.model.vo.StrategyAwardStockKeyVO;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface IStrategyRepository {
 
@@ -50,5 +50,7 @@ public interface IStrategyRepository {
     Long queryStrategyIdByActivityId(Long activityId);
 
     Long queryTodayUserRaffleCount(String userId, Long strategyId);
+
+    Map<String, Integer> queryRuleTreeLockNodeValueByTreeIds(String[] treeIds);
 }
 

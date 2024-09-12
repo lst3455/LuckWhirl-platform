@@ -43,4 +43,6 @@ public interface IActivityRepository {
     UserRaffleOrderEntity queryNoUsedRaffleOrder(PartakeRaffleActivityEntity partakeRaffleActivityEntity);
 
     List<ActivitySkuEntity> queryActivitySkuByActivityId(Long activityId);
+
+    Integer queryRaffleActivityAccountDayPartakeAmount(String userId, Long activityId);
 }

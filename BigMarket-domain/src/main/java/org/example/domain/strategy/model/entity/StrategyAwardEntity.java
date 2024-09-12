@@ -28,4 +28,6 @@ public class StrategyAwardEntity {
     private String awardSubtitle;
     /** sort */
     private Integer sort;
+    /** rule model */
+    private String ruleModel;
 }

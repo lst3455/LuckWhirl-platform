@@ -13,6 +13,7 @@ import org.example.domain.strategy.model.vo.StrategyAwardStockKeyVO;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.AbstractRaffleStrategy;
 import org.example.domain.strategy.service.IRaffleAward;
+import org.example.domain.strategy.service.IRaffleAwardRule;
 import org.example.domain.strategy.service.IRaffleStock;
 import org.example.domain.strategy.service.armory.IStrategyDispatch;
 import org.example.domain.strategy.service.rule.chain.ILogicChain;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRaffleAward, IRaffleStock {
+public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRaffleAward, IRaffleStock, IRaffleAwardRule {
 
 
     public DefaultRaffleStrategy(IStrategyRepository iStrategyRepository, IStrategyDispatch iStrategyDispatch, DefaultLogicChainFactory defaultLogicChainFactory, DefaultLogicTreeFactory defaultLogicTreeFactory) {
@@ -156,5 +157,16 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
         return iStrategyRepository.queryStrategyAwardList(strategyId);
+    }
+
+    @Override
+    public List<StrategyAwardEntity> queryStrategyAwardListByActivityId(Long activityId) {
+        Long strategyId = iStrategyRepository.queryStrategyIdByActivityId(activityId);
+        return queryStrategyAwardList(strategyId);
+    }
+
+    @Override
+    public Map<String, Integer> queryRuleTreeLockNodeValueByTreeIds(String[] treeIds) {
+        return iStrategyRepository.queryRuleTreeLockNodeValueByTreeIds(treeIds);
     }
 }

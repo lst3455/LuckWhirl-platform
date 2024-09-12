@@ -1,7 +1,6 @@
 package org.example.infrastructure.persistent.repository;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.example.domain.strategy.model.entity.StrategyAwardEntity;
 import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.model.entity.StrategyRuleEntity;
@@ -13,7 +12,6 @@ import org.example.infrastructure.persistent.redis.IRedisService;
 import org.example.types.common.Constants;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
-import org.redisson.api.RBlockingDeque;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.springframework.stereotype.Repository;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -74,6 +73,7 @@ public class StrategyRepository implements IStrategyRepository {
             strategyAwardEntity.setAwardTitle(strategyAward.getAwardTitle());
             strategyAwardEntity.setAwardSubtitle(strategyAward.getAwardSubtitle());
             strategyAwardEntity.setSort(strategyAward.getSort());
+            strategyAwardEntity.setRuleModel(strategyAward.getRuleModel());
             strategyAwardEntities.add(strategyAwardEntity);
         }
         strategyAwardEntities.sort((a, b) -> Integer.compare(a.getSort(), b.getSort()));
@@ -335,5 +335,28 @@ public class StrategyRepository implements IStrategyRepository {
 
         if (raffleActivityAccountDay == null) return 0L;
         return (long) (raffleActivityAccountDay.getDayAmount() - raffleActivityAccountDay.getDayRemain());
+    }
+
+
+    @Override
+    public Map<String, Integer> queryRuleTreeLockNodeValueByTreeIds(String[] treeIds) {
+        if (treeIds == null || treeIds.length == 0) return new HashMap<>();
+        Map<String, Integer> ruleLockAmountMap = new HashMap<>();
+        Set<RuleTreeNode> ruleTreeNodeSet = new HashSet<>();
+        for (String treeId : treeIds){
+            List<RuleTreeNode> ruleTreeNodeList = iRuleTreeNodeDao.queryRuleTreeNodeListByTreeId(treeId);
+            ruleTreeNodeSet.addAll(ruleTreeNodeList);
+        }
+        /** filter out those not rule_lock node */
+        ruleTreeNodeSet = ruleTreeNodeSet.stream()
+                .filter(node -> node != null && node.getRuleKey().equals("rule_lock"))
+                .collect(Collectors.toSet());
+        /** put treeId and ruleValue pair into map */
+        for (RuleTreeNode ruleTreeNode : ruleTreeNodeSet){
+            String treeId = ruleTreeNode.getTreeId();
+            Integer ruleValue = Integer.valueOf(ruleTreeNode.getRuleValue());
+            ruleLockAmountMap.put(treeId,ruleValue);
+        }
+        return ruleLockAmountMap;
     }
 }
