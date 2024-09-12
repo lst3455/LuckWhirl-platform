@@ -48,5 +48,7 @@ public interface IStrategyRepository {
     StrategyAwardEntity queryStrategyAwardEntityByStrategyIdAndAwardId(Long strategyId, Long awardId);
 
     Long queryStrategyIdByActivityId(Long activityId);
+
+    Long queryTodayUserRaffleCount(String userId, Long strategyId);
 }
 

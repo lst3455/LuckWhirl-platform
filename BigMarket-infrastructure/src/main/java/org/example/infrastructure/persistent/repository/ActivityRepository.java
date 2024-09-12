@@ -386,7 +386,7 @@ public class ActivityRepository implements IActivityRepository {
                 .activityId(activityId)
                 .day(day)
                 .build();
-        raffleActivityAccountDay = iRaffleActivityAccountDayDao.queryActivityAccountDayByUserId(raffleActivityAccountDay);
+        raffleActivityAccountDay = iRaffleActivityAccountDayDao.queryActivityAccountDay(raffleActivityAccountDay);
         if (raffleActivityAccountDay == null) return null;
 
         return ActivityAccountDayEntity.builder()

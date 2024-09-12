@@ -50,6 +50,9 @@ public class StrategyRepository implements IStrategyRepository {
     @Resource
     private IRaffleActivityDao iRaffleActivityDao;
 
+    @Resource
+    private IRaffleActivityAccountDayDao iRaffleActivityAccountDayDao;
+
 
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
@@ -318,5 +321,19 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public Long queryStrategyIdByActivityId(Long activityId) {
         return iRaffleActivityDao.queryStrategyIdByActivityId(activityId);
+    }
+
+    @Override
+    public Long queryTodayUserRaffleCount(String userId, Long strategyId) {
+        Long activityId = iRaffleActivityDao.queryActivityIdByStrategyId(strategyId);
+        /** create RaffleActivityAccountDay object */
+        RaffleActivityAccountDay raffleActivityAccountDay = new RaffleActivityAccountDay();
+        raffleActivityAccountDay.setActivityId(activityId);
+        raffleActivityAccountDay.setUserId(userId);
+        raffleActivityAccountDay.setDay(raffleActivityAccountDay.currentDay());
+        raffleActivityAccountDay = iRaffleActivityAccountDayDao.queryActivityAccountDay(raffleActivityAccountDay);
+
+        if (raffleActivityAccountDay == null) return 0L;
+        return (long) (raffleActivityAccountDay.getDayAmount() - raffleActivityAccountDay.getDayRemain());
     }
 }

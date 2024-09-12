@@ -51,7 +51,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
             throw new AppException(ResponseCode.ACTIVITY_DATE_ERROR.getCode(), ResponseCode.ACTIVITY_DATE_ERROR.getInfo());
         }
 
-        /** check if unused RaffleOrder exist */
+        /** check if unused RaffleOrder exist, if yes, will not use the activity account amount */
         UserRaffleOrderEntity userRaffleOrderEntity = iActivityRepository.queryNoUsedRaffleOrder(partakeRaffleActivityEntity);
         if (userRaffleOrderEntity != null) {
             log.info("create raffle order[unused order exist] userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));

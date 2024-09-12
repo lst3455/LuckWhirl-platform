@@ -56,8 +56,8 @@ public class RaffleActivityController implements IRaffleActivityService {
      * @param activityId
      * @return Response<Boolean>
      */
-    @RequestMapping(value = "activity_armory", method = RequestMethod.GET)
     @Override
+    @RequestMapping(value = "activity_armory", method = RequestMethod.GET)
     public Response<Boolean> activityArmory(@RequestParam Long activityId) {
         try {
             log.info("raffle activity armory start, activityId:{}", activityId);
@@ -90,7 +90,8 @@ public class RaffleActivityController implements IRaffleActivityService {
      * @return Response<ActivityDrawResponseDTO>
      */
     @Override
-    public Response<ActivityDrawResponseDTO> draw(ActivityDrawRequestDTO activityDrawRequestDTO) {
+    @RequestMapping(value = "draw", method = RequestMethod.POST)
+    public Response<ActivityDrawResponseDTO> draw(@RequestBody ActivityDrawRequestDTO activityDrawRequestDTO) {
         try {
             log.info("lucky draw - start, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId());
             /** first check parameter */
@@ -110,7 +111,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             userAwardRecordEntity.setUserId(userRaffleOrderEntity.getUserId());
             userAwardRecordEntity.setActivityId(userRaffleOrderEntity.getActivityId());
             userAwardRecordEntity.setStrategyId(userRaffleOrderEntity.getStrategyId());
-            userAwardRecordEntity.setOrderId(RandomStringUtils.randomNumeric(12));
+            userAwardRecordEntity.setOrderId(userRaffleOrderEntity.getOrderId());
             userAwardRecordEntity.setAwardId(raffleAwardEntity.getAwardId());
             userAwardRecordEntity.setAwardTitle(raffleAwardEntity.getAwardTitle());
             userAwardRecordEntity.setAwardTime(new Date());

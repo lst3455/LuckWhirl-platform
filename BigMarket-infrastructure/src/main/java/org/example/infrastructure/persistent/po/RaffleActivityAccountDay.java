@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.checkerframework.checker.units.qual.A;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -30,4 +31,10 @@ public class RaffleActivityAccountDay {
     private Date createTime;
     /** update time */
     private Date updateTime;
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public String currentDay() {
+        return dateFormat.format(new Date());
+    }
 }
