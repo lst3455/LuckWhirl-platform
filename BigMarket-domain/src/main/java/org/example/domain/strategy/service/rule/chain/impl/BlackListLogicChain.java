@@ -19,7 +19,7 @@ public class BlackListLogicChain extends AbstractLogicChain {
     /** logic has been deprecated */
     @Override
     public Long logic(String userId, Long strategyId) {
-        log.info("raffle rule chain start - blacklist userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain start - blacklist, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(strategyId,ruleModel());
         String[] splitRuleValue = ruleValue.split(Constants.SPLIT_COLON);
         Long awardId = Long.parseLong(splitRuleValue[0]);
@@ -29,18 +29,18 @@ public class BlackListLogicChain extends AbstractLogicChain {
         for (String userBlackListId : userBlackListIds) {
             if (userId.equals(userBlackListId)) {
                 /** take over by rule chain - blacklist */
-                log.info("raffle rule chain take over - blacklist userId: {} strategyId: {} ruleModel: {} awardId: {}",userId,strategyId,ruleModel(),awardId);
+                log.info("raffle rule chain take over - blacklist, userId: {}, strategyId: {}, ruleModel: {}, awardId: {}",userId,strategyId,ruleModel(),awardId);
                 return awardId;
             }
         }
         /** pass rule chain - blacklist, go to next chain node */
-        log.info("raffle rule chain pass - blacklist userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain pass - blacklist, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         return next().logic(userId,strategyId);
     }
 
     @Override
     public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId) {
-        log.info("raffle rule chain start - blacklist userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain start - blacklist, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(strategyId,ruleModel());
         String[] splitRuleValue = ruleValue.split(Constants.SPLIT_COLON);
         Long awardId = Long.parseLong(splitRuleValue[0]);
@@ -50,7 +50,7 @@ public class BlackListLogicChain extends AbstractLogicChain {
         for (String userBlackListId : userBlackListIds) {
             if (userId.equals(userBlackListId)) {
                 /** take over by rule chain - blacklist */
-                log.info("raffle rule chain take over - blacklist userId: {} strategyId: {} ruleModel: {} awardId: {}",userId,strategyId,ruleModel(),awardId);
+                log.info("raffle rule chain take over - blacklist, userId: {}, strategyId: {}, ruleModel: {}, awardId: {}",userId,strategyId,ruleModel(),awardId);
                 return DefaultLogicChainFactory.StrategyAwardVO.builder()
                         .awardId(awardId)
                         .ruleModel(ruleModel())
@@ -58,7 +58,7 @@ public class BlackListLogicChain extends AbstractLogicChain {
             }
         }
         /** pass rule chain - blacklist, go to next chain node */
-        log.info("raffle rule chain pass - blacklist userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain pass - blacklist, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         return next().treeVersionLogic(userId,strategyId);
     }
 

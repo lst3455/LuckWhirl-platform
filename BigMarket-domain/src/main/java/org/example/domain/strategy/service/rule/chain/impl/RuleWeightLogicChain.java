@@ -25,7 +25,7 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
 
     @Override
     public Long logic(String userId, Long strategyId) {
-        log.info("raffle rule chain start - weight userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain start - weight, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(strategyId, ruleModel());
 
         /** ruleValue sample => 4000:102,103,104,105 5000:102,103,104,105,106 6000:102,103,104,105,106,107 */
@@ -41,18 +41,18 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
         if (validKey != null) {
             Long userRaffleTimes = validKey;
             Long awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleTimes);
-            log.info("raffle rule chain take over - weight userId: {} strategyId: {} ruleModel: {} awardId:{}",userId,strategyId,ruleModel(),awardId);
+            log.info("raffle rule chain take over - weight, userId: {}, strategyId: {}, ruleModel: {}, awardId:{}",userId,strategyId,ruleModel(),awardId);
             return awardId;
         }
 
         /** if can't find valid key, pass filter engine */
-        log.info("raffle rule chain pass - weight userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain pass - weight, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         return next().logic(userId,strategyId);
     }
 
     @Override
     public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId) {
-        log.info("raffle rule chain start - weight userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain start - weight, userId: {}, strategyId: {}, ruleModel: {},",userId,strategyId,ruleModel());
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(strategyId, ruleModel());
 
         /** ruleValue sample => 4000:102,103,104,105 5000:102,103,104,105,106 6000:102,103,104,105,106,107 */
@@ -68,7 +68,7 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
         if (validKey != null) {
             Long userRaffleTimes = validKey;
             Long awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleTimes);
-            log.info("raffle rule chain take over - weight userId: {} strategyId: {} ruleModel: {} awardId:{}",userId,strategyId,ruleModel(),awardId);
+            log.info("raffle rule chain take over - weight, userId: {}, strategyId: {}, ruleModel: {}, awardId:{}",userId,strategyId,ruleModel(),awardId);
             return DefaultLogicChainFactory.StrategyAwardVO.builder()
                     .awardId(awardId)
                     .ruleModel(ruleModel())
@@ -76,7 +76,7 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
         }
 
         /** if can't find valid key, pass filter engine */
-        log.info("raffle rule chain pass - weight userId: {} strategyId: {} ruleModel: {}",userId,strategyId,ruleModel());
+        log.info("raffle rule chain pass - weight, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         return next().treeVersionLogic(userId,strategyId);
     }
 

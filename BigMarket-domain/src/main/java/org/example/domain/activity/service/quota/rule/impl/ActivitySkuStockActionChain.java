@@ -25,7 +25,7 @@ public class ActivitySkuStockActionChain extends AbstractActionChain {
 
     @Override
     public boolean action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityAmountEntity activityAmountEntity) {
-        log.info("activity rule chain start - skuStock sku:{} activityId:{}",activitySkuEntity.getSku(), activityEntity.getActivityId());
+        log.info("activity rule chain start - skuStock, sku:{}, activityId:{}",activitySkuEntity.getSku(), activityEntity.getActivityId());
 
         /** subtract the corresponding activity sku stock amount, return true if success */
         boolean status = iActivityRepository.subtractActivitySkuStock(activitySkuEntity.getSku(),activityEntity.getEndDateTime());
@@ -35,11 +35,11 @@ public class ActivitySkuStockActionChain extends AbstractActionChain {
                     .sku(activitySkuEntity.getSku())
                     .activityId(activitySkuEntity.getActivityId())
                     .build());
-            log.info("activity rule chain pass - skuStock sku:{} activityId:{}",activitySkuEntity.getSku(), activityEntity.getActivityId());
+            log.info("activity rule chain pass - skuStock, sku:{}, activityId:{}",activitySkuEntity.getSku(), activityEntity.getActivityId());
             return true;
         }
 
-        log.info("activity rule chain take over - skuStock sku:{} activityId:{} errorInfo:{}",activitySkuEntity.getSku(), activityEntity.getActivityId(),ResponseCode.ACTIVITY_SKU_STOCK_ERROR.getInfo());
+        log.info("activity rule chain take over - skuStock, sku:{}, activityId:{}, errorInfo:{}",activitySkuEntity.getSku(), activityEntity.getActivityId(),ResponseCode.ACTIVITY_SKU_STOCK_ERROR.getInfo());
         return false;
     }
 }

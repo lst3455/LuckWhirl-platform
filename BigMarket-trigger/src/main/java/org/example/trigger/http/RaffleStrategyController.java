@@ -51,14 +51,14 @@ public class RaffleStrategyController implements IRaffleStrategyService {
     @Override
     public Response<Boolean> strategyArmory(@RequestParam Long strategyId) {
         try {
-            log.info("raffle strategy armory start  strategyId:{}", strategyId);
+            log.info("raffle strategy armory start, strategyId:{}", strategyId);
             boolean armoryStatus = iStrategyArmory.assembleRaffleStrategy(strategyId);
             Response<Boolean> response = Response.<Boolean>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(armoryStatus)
                     .build();
-            log.info("raffle strategy armory complete, strategyId:{} response:{}", strategyId, JSON.toJSONString(response));
+            log.info("raffle strategy armory complete, strategyId:{}, response:{}", strategyId, JSON.toJSONString(response));
             return response;
         } catch (Exception e) {
             log.error("raffle strategy armory error, strategyId:{}", strategyId);
@@ -79,7 +79,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
     @Override
     public Response<List<RaffleAwardListResponseDTO>> queryRaffleAwardList(@RequestBody RaffleAwardListRequestDTO raffleAwardListRequestDTO) {
         try {
-            log.info("query raffle award list start  strategyId:{}", raffleAwardListRequestDTO.getStrategyId());
+            log.info("query raffle award list start, strategyId:{}", raffleAwardListRequestDTO.getStrategyId());
             List<StrategyAwardEntity> strategyAwardEntityList = iRaffleAward.queryStrategyAwardList(raffleAwardListRequestDTO.getStrategyId());
             List<RaffleAwardListResponseDTO> raffleAwardListResponseDTOList = new ArrayList<>();
             for (StrategyAwardEntity strategyAward : strategyAwardEntityList) {
@@ -121,7 +121,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
                 .strategyId(raffleStrategyRequestDTO.getStrategyId())
                 .build());
         try {
-            log.info("random raffle start  strategyId:{} userId:{}", raffleStrategyRequestDTO.getStrategyId(), "system");
+            log.info("random raffle start, strategyId:{}, userId:{}", raffleStrategyRequestDTO.getStrategyId(), "system");
             Response<RaffleStrategyResponseDTO> response = Response.<RaffleStrategyResponseDTO>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
@@ -130,7 +130,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
                             .awardIndex(raffleAwardEntity.getSort())
                             .build())
                     .build();
-            log.info("random raffle complete  strategyId:{} userId:{} response:{}", raffleStrategyRequestDTO.getStrategyId(), "system", JSON.toJSONString(response));
+            log.info("random raffle complete, strategyId:{}, userId:{}, response:{}", raffleStrategyRequestDTO.getStrategyId(), "system", JSON.toJSONString(response));
             return response;
         } catch (AppException e) {
             log.error("random raffle error, strategyId：{} {}", raffleStrategyRequestDTO.getStrategyId(), e.getInfo());

@@ -46,7 +46,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = treeActionEntity.getRuleLogicCheckTypeVO();
             /** get strategyAwardData after cur tree node logic */
             strategyAwardVO = treeActionEntity.getStrategyAwardVO();
-            log.info("raffle rule tree engine [{}] treeId:{} treeNode:{} code:{}",ruleTreeVO.getTreeName(),ruleTreeVO.getTreeId(),curTreeNode,ruleLogicCheckTypeVO);
+            log.info("raffle rule tree engine [{}], treeId:{}, treeNode:{}, code:{}",ruleTreeVO.getTreeName(),ruleTreeVO.getTreeId(),curTreeNode,ruleLogicCheckTypeVO);
 
             /** get next tree node key */
             curTreeNode = nextNode(ruleLogicCheckTypeVO.getCode(), ruleTreeNodeVO.getTreeNodeLineVOList());

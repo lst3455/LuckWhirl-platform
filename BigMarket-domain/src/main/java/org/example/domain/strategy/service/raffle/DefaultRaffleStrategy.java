@@ -108,7 +108,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
             ruleMatterEntity.setRuleModel(ruleModel);
             ruleActionEntity = logicFilter.filter(ruleMatterEntity);
             /** go into all filter */
-            log.info("[rule before raffle] userId: {} ruleModel: {} code: {} info: {}", raffleFactorEntity.getUserId(), ruleModel, ruleActionEntity.getCode(), ruleActionEntity.getInfo());
+            log.info("[rule before raffle] userId: {}, ruleModel: {}, code: {}, info: {}", raffleFactorEntity.getUserId(), ruleModel, ruleActionEntity.getCode(), ruleActionEntity.getInfo());
             if (!RuleLogicCheckTypeVO.ALLOW.getCode().equals(ruleActionEntity.getCode())) return ruleActionEntity;
         }
 
@@ -136,7 +136,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
             ruleMatterEntity.setRuleModel(ruleModel);
             ruleActionEntity = logicFilter.filter(ruleMatterEntity);
             /** go into all filter */
-            log.info("[rule during raffle] userId: {} ruleModel: {} code: {} info: {}", raffleFactorEntity.getUserId(), ruleModel, ruleActionEntity.getCode(), ruleActionEntity.getInfo());
+            log.info("[rule during raffle] userId: {}, ruleModel: {}, code: {}, info: {}", raffleFactorEntity.getUserId(), ruleModel, ruleActionEntity.getCode(), ruleActionEntity.getInfo());
             if (!RuleLogicCheckTypeVO.ALLOW.getCode().equals(ruleActionEntity.getCode())) return ruleActionEntity;
         }
         return ruleActionEntity;

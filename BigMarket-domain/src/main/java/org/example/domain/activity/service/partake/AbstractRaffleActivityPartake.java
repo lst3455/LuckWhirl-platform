@@ -3,7 +3,6 @@ package org.example.domain.activity.service.partake;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.activity.model.aggregate.CreatePartakeOrderAggregate;
-import org.example.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import org.example.domain.activity.model.entity.ActivityEntity;
 import org.example.domain.activity.model.entity.PartakeRaffleActivityEntity;
 import org.example.domain.activity.model.entity.UserRaffleOrderEntity;
@@ -54,7 +53,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         /** check if unused RaffleOrder exist, if yes, will not use the activity account amount */
         UserRaffleOrderEntity userRaffleOrderEntity = iActivityRepository.queryNoUsedRaffleOrder(partakeRaffleActivityEntity);
         if (userRaffleOrderEntity != null) {
-            log.info("create raffle order[unused order exist] userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
+            log.info("create raffle order[unused order exist], userId:{}, activityId:{}, userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
             return userRaffleOrderEntity;
         }
 

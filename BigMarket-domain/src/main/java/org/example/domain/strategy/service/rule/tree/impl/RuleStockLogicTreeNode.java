@@ -23,7 +23,7 @@ public class RuleStockLogicTreeNode implements ILogicTreeNode {
 
     @Override
     public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue) {
-        log.info("inside RuleStockLogicTreeNode userId:{} strategyId:{} ruleModel:{}",userId, strategyId, ruleValue);
+        log.info("inside RuleStockLogicTreeNode, userId:{}, strategyId:{}, ruleModel:{}",userId, strategyId, ruleValue);
 
         /** subtract the corresponding award stock amount, return true if success */
         boolean status = iStrategyDispatch.subtractAwardStock(strategyId,awardId);

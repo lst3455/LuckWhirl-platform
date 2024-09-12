@@ -1,11 +1,8 @@
 package org.example.trigger.http;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.example.domain.activity.model.entity.UserRaffleOrderEntity;
-import org.example.domain.activity.repository.IActivityRepository;
 import org.example.domain.activity.service.IRaffleActivityPartakeService;
 import org.example.domain.activity.service.armory.IActivityArmory;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
@@ -13,8 +10,6 @@ import org.example.domain.award.model.vo.AwardStatusVO;
 import org.example.domain.award.service.IAwardService;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
 import org.example.domain.strategy.model.entity.RaffleFactorEntity;
-import org.example.domain.strategy.repository.IStrategyRepository;
-import org.example.domain.strategy.service.IRaffleAward;
 import org.example.domain.strategy.service.IRaffleStrategy;
 import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.trigger.api.IRaffleActivityService;

@@ -15,9 +15,9 @@ public class SendTaskMessageCustomer {
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.send_award}"))
     public void listener(String message) {
         try {
-            log.info("listen to sendTaskMessage, topic: {} message: {}", topic, message);
+            log.info("listen to sendTaskMessage, topic: {}, message: {}", topic, message);
         } catch (Exception e) {
-            log.error("listen to sendTaskMessage fail, topic: {} message: {}", topic, message);
+            log.error("listen to sendTaskMessage fail, topic: {}, message: {}", topic, message);
             throw e;
         }
     }

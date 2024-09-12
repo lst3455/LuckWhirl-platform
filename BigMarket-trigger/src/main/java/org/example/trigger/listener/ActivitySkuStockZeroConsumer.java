@@ -22,7 +22,7 @@ public class ActivitySkuStockZeroConsumer {
     @RabbitListener(queuesToDeclare = @Queue(value = "activity_sku_stock_zero"))
     public void listener(String message){
         try{
-            log.info("listen to activity sku stock is 0 topic:{} message:{}","activity_sku_stock_zero",message);
+            log.info("listen to activity sku stock is 0, topic:{}, message:{}","activity_sku_stock_zero",message);
             BaseEvent.EventMessage<Long> eventMessage = JSON.parseObject(message,new TypeReference<BaseEvent.EventMessage<Long>>(){
             }.getType());
             Long sku = eventMessage.getData();
@@ -31,7 +31,7 @@ public class ActivitySkuStockZeroConsumer {
             /** clear the queue */
             iRaffleActivitySkuStockService.clearQueueValue();
         }catch (Exception e){
-            log.info("listen to activity sku stock is 0, consume fail topic:{} message:{}","activity_sku_stock_zero",message);
+            log.info("listen to activity sku stock is 0, consume fail, topic:{}, message:{}","activity_sku_stock_zero",message);
             throw e;
         }
     }

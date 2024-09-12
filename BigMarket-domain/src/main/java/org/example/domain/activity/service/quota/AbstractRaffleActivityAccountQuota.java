@@ -29,7 +29,7 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
         ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuBySku(activityShopCartEntity.getSku());
         ActivityEntity activityEntity = iActivityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
         ActivityAmountEntity activityAmountEntity = iActivityRepository.queryActivityAmountByActivityAmountId(activitySkuEntity.getActivityAmountId());
-        log.info("query result: {} {} {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));
+        log.info("query result: {}, {}, {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));
 
         return ActivityOrderEntity.builder().build();
     }
@@ -47,7 +47,7 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
         ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuBySku(activitySkuChargeEntity.getSku());
         ActivityEntity activityEntity = iActivityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
         ActivityAmountEntity activityAmountEntity = iActivityRepository.queryActivityAmountByActivityAmountId(activitySkuEntity.getActivityAmountId());
-        log.info("query result: {} {} {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));
+        log.info("query result: {}, {}, {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));
 
         /** open the activity chain */
         IActionChain iActionChain = defaultActivityChainFactory.openActionChain();
