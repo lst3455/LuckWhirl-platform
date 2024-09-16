@@ -15,6 +15,7 @@ import java.util.Date;
 @Service
 public class RaffleActivityAccountQuotaService extends AbstractRaffleActivityAccountQuota implements IRaffleActivitySkuStockService {
 
+
     public RaffleActivityAccountQuotaService(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         super(iActivityRepository, defaultActivityChainFactory);
     }
@@ -53,13 +54,13 @@ public class RaffleActivityAccountQuotaService extends AbstractRaffleActivityAcc
     }
 
     @Override
-    public ActivitySkuStockKeyVO takeQueueValue() throws InterruptedException {
-        return iActivityRepository.takeQueueValue();
+    public ActivitySkuStockKeyVO takeQueueValue(Long sku) throws InterruptedException {
+        return iActivityRepository.takeQueueValue(sku);
     }
 
     @Override
-    public void clearQueueValue() {
-        iActivityRepository.clearQueueValue();
+    public void clearQueueValue(Long sku) {
+        iActivityRepository.clearQueueValue(sku);
     }
 
     @Override
@@ -71,6 +72,7 @@ public class RaffleActivityAccountQuotaService extends AbstractRaffleActivityAcc
     public void clearActivitySkuStock(Long sku) {
         iActivityRepository.clearActivitySkuStock(sku);
     }
+
 
     @Override
     public Integer queryRaffleActivityAccountDayPartakeAmount(String userId, Long activityId) {

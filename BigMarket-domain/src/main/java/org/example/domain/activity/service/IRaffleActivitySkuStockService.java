@@ -4,11 +4,12 @@ import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
 
 public interface IRaffleActivitySkuStockService {
 
-    ActivitySkuStockKeyVO takeQueueValue() throws InterruptedException;
+    ActivitySkuStockKeyVO takeQueueValue(Long sku) throws InterruptedException;
 
-    void clearQueueValue();
+    void clearQueueValue(Long sku);
 
     void updateActivitySkuStock(Long sku);
 
     void clearActivitySkuStock(Long sku);
+
 }

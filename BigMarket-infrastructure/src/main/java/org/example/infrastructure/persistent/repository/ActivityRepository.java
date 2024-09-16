@@ -199,23 +199,25 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public void activitySkuStockConsumeSendQueue(ActivitySkuStockKeyVO activitySkuStockKeyVO) {
-        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_QUERY_KEY;
+        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_QUERY_KEY + activitySkuStockKeyVO.getSku();
         RBlockingQueue<ActivitySkuStockKeyVO> blockingQueue = iRedisService.getBlockingQueue(cacheKey);
         /** create a delay queue */
         RDelayedQueue<ActivitySkuStockKeyVO> delayedQueue = iRedisService.getDelayedQueue(blockingQueue);
         delayedQueue.offer(activitySkuStockKeyVO,3, TimeUnit.SECONDS);
+        /** add to queueList to store all used sku */
+        ActivitySkuStockKeyVO.blockingQueueSkuSet.add(activitySkuStockKeyVO.getSku());
     }
 
     @Override
-    public ActivitySkuStockKeyVO takeQueueValue() {
-        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_QUERY_KEY;
+    public ActivitySkuStockKeyVO takeQueueValue(Long sku) {
+        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_QUERY_KEY + sku;
         RBlockingQueue<ActivitySkuStockKeyVO> destinationQueue = iRedisService.getBlockingQueue(cacheKey);
         return destinationQueue.poll();
     }
 
     @Override
-    public void clearQueueValue() {
-        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_QUERY_KEY;
+    public void clearQueueValue(Long sku) {
+        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_QUERY_KEY + sku;
         RBlockingQueue<ActivitySkuStockKeyVO> blockingQueue = iRedisService.getBlockingQueue(cacheKey);
         RDelayedQueue<ActivitySkuStockKeyVO> delayedQueue = iRedisService.getDelayedQueue(blockingQueue);
         delayedQueue.clear();

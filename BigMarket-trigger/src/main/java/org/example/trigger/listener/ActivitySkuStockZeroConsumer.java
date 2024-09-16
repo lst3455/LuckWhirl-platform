@@ -3,6 +3,7 @@ package org.example.trigger.listener;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.example.domain.activity.model.vo.ActivitySkuStockKeyVO;
 import org.example.domain.activity.service.IRaffleActivitySkuStockService;
 import org.example.types.event.BaseEvent;
 import org.springframework.amqp.rabbit.annotation.Queue;
@@ -28,6 +29,9 @@ public class ActivitySkuStockZeroConsumer {
             Long sku = eventMessage.getData();
             /** update the sku stock in database */
             iRaffleActivitySkuStockService.clearActivitySkuStock(sku);
+            /** update the sku stock in database todo 清空时，需要设定sku标识，不能全部清空。*/
+            iRaffleActivitySkuStockService.clearQueueValue(sku);
+            ActivitySkuStockKeyVO.blockingQueueSkuSet.remove(sku);
         }catch (Exception e){
             log.info("listen to activity sku stock is 0, consume fail, topic:{}, message:{}","activity_sku_stock_zero",message);
             throw e;
