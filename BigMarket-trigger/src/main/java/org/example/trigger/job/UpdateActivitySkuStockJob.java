@@ -21,6 +21,10 @@ public class UpdateActivitySkuStockJob {
             log.info("scheduled task，update the sku stock [using delayQueue to fetch, decrease the access frequency to the database]");
             ActivitySkuStockKeyVO activitySkuStockKeyVO = iRaffleActivitySkuStockService.takeQueueValue();
             if (activitySkuStockKeyVO == null) return;
+            /**
+             * todo
+             * if sku stock is 0, no need to update again
+             */
             log.info("scheduled task，update the sku stock success, sku:{}, activityId:{}", activitySkuStockKeyVO.getSku(), activitySkuStockKeyVO.getActivityId());
             iRaffleActivitySkuStockService.updateActivitySkuStock(activitySkuStockKeyVO.getSku());
         } catch (Exception e) {

@@ -40,7 +40,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         Long activityId = partakeRaffleActivityEntity.getActivityId();
         Date currentDate = new Date();
 
-        ActivityEntity activityEntity = iActivityRepository.queryActivityByActivityId(activityId);
+        ActivityEntity activityEntity = iActivityRepository.queryRaffleActivityByActivityId(activityId);
         /** check activity status */
         if (!ActivityStatusVO.open.equals(activityEntity.getStatus())) {
             throw new AppException(ResponseCode.ACTIVITY_STATE_ERROR.getCode(), ResponseCode.ACTIVITY_STATE_ERROR.getInfo());

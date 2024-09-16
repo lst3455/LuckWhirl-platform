@@ -9,6 +9,7 @@ import org.example.domain.strategy.service.rule.tree.ILogicTreeNode;
 import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFactory;
 import org.example.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
     }
 
     @Override
-    public DefaultLogicTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Long awardId) {
+    public DefaultLogicTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Long awardId, Date endDateTime) {
 
         DefaultLogicTreeFactory.StrategyAwardVO strategyAwardVO = null;
         /** get root node of the tree */
@@ -41,7 +42,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
             String ruleValue = ruleTreeNodeVO.getRuleValue();
 
             /** handle through cur tree node logic, return TreeActionEntity */
-            DefaultLogicTreeFactory.TreeActionEntity treeActionEntity = iLogicTreeNode.logic(userId, strategyId, awardId, ruleValue);
+            DefaultLogicTreeFactory.TreeActionEntity treeActionEntity = iLogicTreeNode.logic(userId, strategyId, awardId, ruleValue, endDateTime);
             /** handle through cur tree node logic, return TAKE_OVER or ALLOW */
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = treeActionEntity.getRuleLogicCheckTypeVO();
             /** get strategyAwardData after cur tree node logic */

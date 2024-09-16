@@ -7,11 +7,13 @@ import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFac
 import org.example.types.common.Constants;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Slf4j
 @Component("rule_lucky")
 public class RuleLuckyAwardLogicTreeNode implements ILogicTreeNode {
     @Override
-    public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue) {
+    public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue, Date endDateTime) {
         log.info("inside RuleLuckyAwardLogicTreeNode, userId:{}, strategyId:{}, ruleModel:{}",userId, strategyId, ruleValue);
         String[] ruleValueSplit = ruleValue.split(Constants.SPLIT_COLON);
         if (ruleValueSplit.length == 0) {

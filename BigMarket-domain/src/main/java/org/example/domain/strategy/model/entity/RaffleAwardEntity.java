@@ -22,5 +22,4 @@ public class RaffleAwardEntity {
     private Integer sort;
     /** award describe */
     private String awardDesc;
-
 }

@@ -12,7 +12,7 @@ public interface IActivityRepository {
 
     ActivitySkuEntity queryActivitySkuBySku(Long sku);
 
-    ActivityEntity queryActivityByActivityId(Long activityId);
+    ActivityEntity queryRaffleActivityByActivityId(Long activityId);
 
     ActivityAmountEntity queryActivityAmountByActivityAmountId(Long activityAmountId);
 

@@ -100,6 +100,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             RaffleAwardEntity raffleAwardEntity = iRaffleStrategy.performRaffleLogicChainWithRuleTree(RaffleFactorEntity.builder()
                     .userId(userRaffleOrderEntity.getUserId())  // blacklist user: user001,user002,user003
                     .strategyId(userRaffleOrderEntity.getStrategyId())
+                    .endDateTime(userRaffleOrderEntity.getEndDateTime())
                     .build());
             /** create use award record and save */
             UserAwardRecordEntity userAwardRecordEntity = new UserAwardRecordEntity();

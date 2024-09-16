@@ -8,6 +8,7 @@ import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFac
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 @Slf4j
 @Component("rule_lock")
@@ -17,7 +18,7 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
     private IStrategyRepository iStrategyRepository;
 
     @Override
-    public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue) {
+    public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue, Date endDateTime) {
 
         log.info("inside RuleLockLogicTreeNode, userId:{}, strategyId:{}, ruleModel:{}",userId, strategyId, ruleValue);
         Long raffleTimesLimit;

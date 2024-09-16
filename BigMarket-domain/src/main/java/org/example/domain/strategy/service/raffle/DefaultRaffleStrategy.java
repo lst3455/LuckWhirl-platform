@@ -25,6 +25,7 @@ import org.example.domain.strategy.service.rule.tree.factory.engine.IDecisionTre
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,6 +48,11 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
 
     @Override
     public DefaultLogicTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Long awardId) {
+        return raffleLogicTree(userId,strategyId,awardId,null);
+    }
+
+    @Override
+    public DefaultLogicTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Long awardId, Date endDateTime) {
         StrategyAwardRuleModelVO strategyAwardRuleModelVO = iStrategyRepository.queryStrategyAwardRuleModelVO(strategyId, awardId);
         if (strategyAwardRuleModelVO == null) {
             return DefaultLogicTreeFactory.StrategyAwardVO.builder()
@@ -58,7 +64,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
             throw new RuntimeException("can't find ruleTreeVO base on the provide ruleModel, please check database strategy_award and rule_tree, wrong tree_id: " + strategyAwardRuleModelVO.getRuleModels());
         }
         IDecisionTreeEngine iDecisionTreeEngine = defaultLogicTreeFactory.openLogicTree(ruleTreeVO);
-        return iDecisionTreeEngine.process(userId,strategyId,awardId);
+        return iDecisionTreeEngine.process(userId,strategyId,awardId,endDateTime);
     }
 
 

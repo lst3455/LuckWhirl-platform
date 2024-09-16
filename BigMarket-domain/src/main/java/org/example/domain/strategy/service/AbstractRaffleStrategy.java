@@ -14,6 +14,8 @@ import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFac
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 
+import java.util.Date;
+
 @Slf4j
 public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
@@ -143,6 +145,8 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         /** verify parameters */
         String userId = raffleFactorEntity.getUserId();
         Long strategyId = raffleFactorEntity.getStrategyId();
+        Date endDateTime = raffleFactorEntity.getEndDateTime();
+
         if (strategyId == null || StringUtils.isBlank(userId)) {
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
@@ -157,7 +161,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
             return buildRaffleAwardEntity(strategyId,strategyChainAwardVO.getAwardId(),strategyChainAwardVO.getRuleModel());
         }
         /** centre raffle filter, go through rule tree */
-        DefaultLogicTreeFactory.StrategyAwardVO strategyTreeAwardVO = raffleLogicTree(userId,strategyId,strategyChainAwardVO.getAwardId());
+        DefaultLogicTreeFactory.StrategyAwardVO strategyTreeAwardVO = raffleLogicTree(userId,strategyId,strategyChainAwardVO.getAwardId(),endDateTime);
 
         /*return RaffleAwardEntity.builder()
                 .awardId(strategyTreeAwardVO.getAwardId())
@@ -181,6 +185,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
     public abstract DefaultLogicChainFactory.StrategyAwardVO raffleLogicChain(String userId,Long StrategyId);
     public abstract DefaultLogicTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long StrategyId, Long awardId);
+    public abstract DefaultLogicTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long StrategyId, Long awardId, Date endDateTime);
 
     /** doCheckRaffleBeforeLogic has been deprecated */
     protected abstract RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String[] ruleModels);

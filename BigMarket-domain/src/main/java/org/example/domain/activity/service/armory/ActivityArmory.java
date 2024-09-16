@@ -1,7 +1,6 @@
 package org.example.domain.activity.service.armory;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.example.domain.activity.model.entity.ActivitySkuEntity;
 import org.example.domain.activity.repository.IActivityRepository;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class ActivityArmory implements IActivityArmory,IActivityDispatch{
         /** cache data to redis */
         iActivityRepository.storeActivitySkuStockAmount(sku,activitySkuEntity.getStockAmount());
         /** cache data to redis when query*/
-        iActivityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
+        iActivityRepository.queryRaffleActivityByActivityId(activitySkuEntity.getActivityId());
         /** cache data to redis when query*/
         iActivityRepository.queryActivityAmountByActivityAmountId(activitySkuEntity.getActivityAmountId());
 
@@ -39,7 +38,7 @@ public class ActivityArmory implements IActivityArmory,IActivityDispatch{
             iActivityRepository.queryActivityAmountByActivityAmountId(activitySkuEntity.getActivityAmountId());
         }
         /** cache data to redis when query*/
-        iActivityRepository.queryActivityByActivityId(activityId);
+        iActivityRepository.queryRaffleActivityByActivityId(activityId);
         return true;
     }
 

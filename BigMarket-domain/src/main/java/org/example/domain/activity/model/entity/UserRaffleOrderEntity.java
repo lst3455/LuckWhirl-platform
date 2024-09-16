@@ -28,4 +28,6 @@ public class UserRaffleOrderEntity {
     private Date orderTime;
     /** order status:create,used,cancel */
     private UserRaffleOrderStatusVO orderStatus;
+    /** activity end date */
+    private Date endDateTime;
 }

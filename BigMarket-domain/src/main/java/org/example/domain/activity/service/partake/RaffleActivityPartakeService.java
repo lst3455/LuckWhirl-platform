@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 @Service
 public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
@@ -30,7 +29,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
 
     @Override
     protected UserRaffleOrderEntity buildUserRaffleOrder(String userId, Long activityId, Date currentDate) {
-        ActivityEntity activityEntity = iActivityRepository.queryActivityByActivityId(activityId);
+        ActivityEntity activityEntity = iActivityRepository.queryRaffleActivityByActivityId(activityId);
         return UserRaffleOrderEntity.builder()
                 .userId(userId)
                 .activityId(activityId)
@@ -39,6 +38,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
                 .orderId(RandomStringUtils.randomNumeric(12))
                 .orderTime(currentDate)
                 .orderStatus(UserRaffleOrderStatusVO.create)
+                .endDateTime(activityEntity.getEndDateTime())
                 .build();
     }
 

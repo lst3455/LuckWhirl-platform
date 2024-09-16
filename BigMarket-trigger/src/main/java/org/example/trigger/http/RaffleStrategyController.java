@@ -117,8 +117,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
             Map<String,Integer> ruleLockAmountMap = iRaffleAwardRule.queryRuleTreeLockNodeValueByTreeIds(treeIds);
             /** query user raffle amount */
             Integer dayPartakeAmount = iRaffleActivityAccountQuotaService.queryRaffleActivityAccountDayPartakeAmount(raffleAwardListRequestDTO.getUserId(),raffleAwardListRequestDTO.getActivityId());
-
-
+            /** create raffleAwardListResponseDTOList */
             List<RaffleAwardListResponseDTO> raffleAwardListResponseDTOList = new ArrayList<>();
             for (StrategyAwardEntity strategyAward : strategyAwardEntityList) {
                 Integer ruleLockAmount = ruleLockAmountMap.getOrDefault(strategyAward.getRuleModel(),0);

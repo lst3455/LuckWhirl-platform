@@ -28,8 +28,6 @@ public class ActivitySkuStockZeroConsumer {
             Long sku = eventMessage.getData();
             /** update the sku stock in database */
             iRaffleActivitySkuStockService.clearActivitySkuStock(sku);
-            /** clear the queue */
-            iRaffleActivitySkuStockService.clearQueueValue();
         }catch (Exception e){
             log.info("listen to activity sku stock is 0, consume fail, topic:{}, message:{}","activity_sku_stock_zero",message);
             throw e;

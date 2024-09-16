@@ -7,6 +7,7 @@ import org.example.domain.strategy.model.vo.RuleTreeVO;
 import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
 import org.example.domain.strategy.model.vo.StrategyAwardStockKeyVO;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,8 @@ public interface IStrategyRepository {
     void storeStrategyAwardAmount(Long strategyId, Long awardId, Long awardAmount);
 
     Boolean subtractAwardStock(String cacheKey);
+
+    Boolean subtractAwardStock(String cacheKey, Date endDateTime);
 
     void awardStockConsumeSendQueue(StrategyAwardStockKeyVO build);
 

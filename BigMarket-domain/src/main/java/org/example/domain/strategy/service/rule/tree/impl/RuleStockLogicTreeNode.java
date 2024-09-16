@@ -10,6 +10,7 @@ import org.example.domain.strategy.service.rule.tree.factory.DefaultLogicTreeFac
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 @Slf4j
 @Component("rule_stock")
@@ -22,11 +23,11 @@ public class RuleStockLogicTreeNode implements ILogicTreeNode {
     private IStrategyRepository iStrategyRepository;
 
     @Override
-    public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue) {
+    public DefaultLogicTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Long awardId, String ruleValue, Date endDateTime) {
         log.info("inside RuleStockLogicTreeNode, userId:{}, strategyId:{}, ruleModel:{}",userId, strategyId, ruleValue);
 
         /** subtract the corresponding award stock amount, return true if success */
-        boolean status = iStrategyDispatch.subtractAwardStock(strategyId,awardId);
+        boolean status = iStrategyDispatch.subtractAwardStock(strategyId,awardId,endDateTime);
         if (status) {
             /** add strategyId and awardId to delay queue, in order to delayed consume the database stock */
             iStrategyRepository.awardStockConsumeSendQueue(StrategyAwardStockKeyVO.builder()

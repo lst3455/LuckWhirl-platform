@@ -253,13 +253,25 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public Boolean subtractAwardStock(String cacheKey) {
+        return subtractAwardStock(cacheKey, null);
+    }
+
+    @Override
+    public Boolean subtractAwardStock(String cacheKey, Date endDateTime) {
         Long remainAmount = iRedisService.decr(cacheKey);
         if (remainAmount < 0) {
             iRedisService.setValue(cacheKey,0);
             return false;
         }
         String lockKey = cacheKey + "_" + remainAmount;
-        boolean lock = iRedisService.setNX(lockKey);
+        boolean lock = false;
+        /** go different setNX depend on if use endDateTime */
+        if (endDateTime == null) lock = iRedisService.setNX(lockKey);
+        else {
+            long expireMillis = endDateTime.getTime() - System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1);
+            lock = iRedisService.setNX(lockKey,expireMillis,TimeUnit.MILLISECONDS);
+        }
+
         if (!lock) log.info("lock strategy award stock fail, lockKey: {}",lockKey);
         return lock;
     }
@@ -325,7 +337,7 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public Long queryTodayUserRaffleCount(String userId, Long strategyId) {
-        Long activityId = iRaffleActivityDao.queryActivityIdByStrategyId(strategyId);
+        Long activityId = iRaffleActivityDao.queryRaffleActivityIdByStrategyId(strategyId);
         /** create RaffleActivityAccountDay object */
         RaffleActivityAccountDay raffleActivityAccountDay = new RaffleActivityAccountDay();
         raffleActivityAccountDay.setActivityId(activityId);

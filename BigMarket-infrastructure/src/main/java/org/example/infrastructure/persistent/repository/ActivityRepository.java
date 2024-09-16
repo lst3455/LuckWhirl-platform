@@ -74,7 +74,7 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public ActivityEntity queryActivityByActivityId(Long activityId) {
+    public ActivityEntity queryRaffleActivityByActivityId(Long activityId) {
         /** first get data from cache */
         String cacheKey = Constants.RedisKey.ACTIVITY_KEY + activityId;
         ActivityEntity activityEntity = iRedisService.getValue(cacheKey);
