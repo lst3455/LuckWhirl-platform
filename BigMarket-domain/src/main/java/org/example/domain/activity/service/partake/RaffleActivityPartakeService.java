@@ -68,7 +68,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
             activityAccountMonthEntity.setActivityId(activityId);
             activityAccountMonthEntity.setMonth(month);
             activityAccountMonthEntity.setMonthAmount(activityAccountEntity.getMonthAmount());
-            activityAccountMonthEntity.setMonthRemain(activityAccountEntity.getMonthRemain());
+            activityAccountMonthEntity.setMonthRemain(activityAccountEntity.getMonthAmount());
         }
 
         /** check day amount */
@@ -85,7 +85,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
             activityAccountDayEntity.setActivityId(activityId);
             activityAccountDayEntity.setDay(day);
             activityAccountDayEntity.setDayAmount(activityAccountEntity.getDayAmount());
-            activityAccountDayEntity.setDayRemain(activityAccountEntity.getDayRemain());
+            activityAccountDayEntity.setDayRemain(activityAccountEntity.getDayAmount());
         }
 
         /** create PartakeOrderAggregate */

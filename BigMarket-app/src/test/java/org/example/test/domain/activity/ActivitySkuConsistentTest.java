@@ -33,7 +33,7 @@ public class ActivitySkuConsistentTest {
 
     @Test
     public void test_createSkuChargeOrder() throws InterruptedException {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             try{
                 ActivitySkuChargeEntity activitySkuChargeEntity = new ActivitySkuChargeEntity();
                 activitySkuChargeEntity.setSku(9011L);

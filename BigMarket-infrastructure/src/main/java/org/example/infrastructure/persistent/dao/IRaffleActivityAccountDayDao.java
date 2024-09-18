@@ -10,7 +10,9 @@ public interface IRaffleActivityAccountDayDao {
     @DBRouter
     RaffleActivityAccountDay queryActivityAccountDay(RaffleActivityAccountDay raffleActivityAccountDay);
 
-    int updateActivityAccountDayRemain(RaffleActivityAccountDay build);
+    int updateActivityAccountDayRemain(RaffleActivityAccountDay raffleActivityAccountDay);
 
-    void insertActivityAccountDay(RaffleActivityAccountDay build);
+    void insertActivityAccountDay(RaffleActivityAccountDay raffleActivityAccountDay);
+
+    int updateAccountDayQuota(RaffleActivityAccountDay raffleActivityAccountDay);
 }

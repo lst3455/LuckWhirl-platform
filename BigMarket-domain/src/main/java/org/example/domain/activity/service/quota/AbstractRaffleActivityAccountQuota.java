@@ -6,6 +6,7 @@ import org.example.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import org.example.domain.activity.model.entity.*;
 import org.example.domain.activity.repository.IActivityRepository;
 import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
+import org.example.domain.activity.service.armory.ActivityArmory;
 import org.example.domain.activity.service.quota.rule.IActionChain;
 import org.example.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 import org.example.types.enums.ResponseCode;
@@ -18,9 +19,12 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
 
     protected DefaultActivityChainFactory defaultActivityChainFactory;
 
-    public AbstractRaffleActivityAccountQuota(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    protected ActivityArmory activityArmory;
+
+    public AbstractRaffleActivityAccountQuota(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory, ActivityArmory activityArmory) {
         this.iActivityRepository = iActivityRepository;
         this.defaultActivityChainFactory = defaultActivityChainFactory;
+        this.activityArmory = activityArmory;
     }
 
     @Override
@@ -45,6 +49,8 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
         }
         /** get sku entity */
         ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuBySku(activitySkuChargeEntity.getSku());
+        /** armory sku amount */
+        activityArmory.assembleActivitySku(activitySkuEntity.getSku());
         ActivityEntity activityEntity = iActivityRepository.queryRaffleActivityByActivityId(activitySkuEntity.getActivityId());
         ActivityAmountEntity activityAmountEntity = iActivityRepository.queryActivityAmountByActivityAmountId(activitySkuEntity.getActivityAmountId());
         log.info("query result: {}, {}, {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));

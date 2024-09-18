@@ -16,7 +16,7 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <insert id="insert" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccount">
+    <insert id="insertActivityAccount" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccount">
         insert into raffle_activity_account
         (user_id, activity_id, total_amount, total_remain, day_amount,
          day_remain, month_amount, month_remain, create_time, update_time)

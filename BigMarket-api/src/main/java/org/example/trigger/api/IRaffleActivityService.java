@@ -9,4 +9,6 @@ public interface IRaffleActivityService {
     Response<Boolean> activityArmory(Long activityId);
 
     Response<ActivityDrawResponseDTO> draw(ActivityDrawRequestDTO activityDrawRequestDTO);
+
+    Response<Boolean> DailySignRebate(String userId);
 }

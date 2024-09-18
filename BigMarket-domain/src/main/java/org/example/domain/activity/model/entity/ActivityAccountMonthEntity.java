@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActivityAccountMonthEntity {
+
     /** user id */
     private String userId;
     /** activity id */

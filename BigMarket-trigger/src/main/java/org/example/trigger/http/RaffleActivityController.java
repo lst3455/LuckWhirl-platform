@@ -1,5 +1,6 @@
 package org.example.trigger.http;
 
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.example.domain.activity.model.entity.UserRaffleOrderEntity;
@@ -8,6 +9,9 @@ import org.example.domain.activity.service.armory.IActivityArmory;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.model.vo.AwardStatusVO;
 import org.example.domain.award.service.IAwardService;
+import org.example.domain.rebate.model.entity.BehaviorEntity;
+import org.example.domain.rebate.model.vo.BehaviorTypeVO;
+import org.example.domain.rebate.service.IBehaviorRebateService;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
 import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 import org.example.domain.strategy.service.IRaffleStrategy;
@@ -21,13 +25,17 @@ import org.example.types.model.Response;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @RestController()
 @CrossOrigin("${app.config.cross-origin}")
 @RequestMapping("/api/${app.config.api-version}/raffle/activity")
 public class RaffleActivityController implements IRaffleActivityService {
+
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
     @Resource
     private IRaffleActivityPartakeService iRaffleActivityPartakeService;
@@ -43,6 +51,9 @@ public class RaffleActivityController implements IRaffleActivityService {
 
     @Resource
     private IStrategyArmory iStrategyArmory;
+
+    @Resource
+    private IBehaviorRebateService iBehaviorRebateService;
 
     /**
      * armory the raffle activity sku and strategy into cache
@@ -132,6 +143,45 @@ public class RaffleActivityController implements IRaffleActivityService {
         } catch (Exception e){
             log.error("raffle activity error, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId(),e);
             return Response.<ActivityDrawResponseDTO>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * do daily sign in, get rebate
+     * <a href="http://localhost:8091/api/v1/raffle/activity/daily_sign_rebate">/api/v1/raffle/activity/daily_sign_rebate</a>
+     *
+     * @param userId
+     * @return Response<Boolean>
+     */
+    @Override
+    @RequestMapping(value = "daily_sign_rebate", method = RequestMethod.POST)
+    public Response<Boolean> DailySignRebate(@RequestParam String userId) {
+        try{
+            log.info("daily sign rebate start, userId:{}", userId);
+            BehaviorEntity behaviorEntity = BehaviorEntity.builder()
+                        .userId(userId)
+                        .behaviorTypeVO(BehaviorTypeVO.SIGN)
+                        .outBusinessNo(simpleDateFormat.format(new Date()))
+                        .build();
+            List<String> rebateOrderIdList = iBehaviorRebateService.createRebateOrder(behaviorEntity);
+            log.info("daily sign rebate start, userId:{}, rebateOrderIdList:{}", userId, JSON.toJSONString(rebateOrderIdList));
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(true)
+                    .build();
+        }catch (AppException e) {
+            log.error("daily sign rebate error, userId:{}", userId,e);
+            return Response.<Boolean>builder()
+                    .code(e.getCode())
+                    .info(e.getInfo())
+                    .build();
+        } catch (Exception e){
+            log.error("daily sign rebate error, userId:{}", userId,e);
+            return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();

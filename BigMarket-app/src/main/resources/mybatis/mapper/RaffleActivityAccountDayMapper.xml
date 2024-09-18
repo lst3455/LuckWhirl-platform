@@ -32,4 +32,13 @@
         where user_id = #{userId} and activity_id = #{activityId} and day = #{day}
     </select>
 
+    <update id="updateAccountDayQuota" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountDay">
+        update raffle_activity_account_day
+        set day_remain = day_remain + #{dayRemain},
+            day_amount = day_amount + #{dayAmount},
+            update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId} and day = #{day}
+    </update>
+
+
 </mapper>

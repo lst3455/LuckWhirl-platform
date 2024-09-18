@@ -63,14 +63,21 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public ActivitySkuEntity queryActivitySkuBySku(Long sku) {
+        /** first get data from cache */
+        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_KEY + sku;
+        ActivitySkuEntity activitySkuEntity = iRedisService.getValue(cacheKey);
+        if (activitySkuEntity != null) return activitySkuEntity;
+        /** then get data from database */
         RaffleActivitySku raffleActivitySku = iRaffleActivitySkuDao.queryRaffleActivitySkuBySku(sku);
-        return ActivitySkuEntity.builder()
+        activitySkuEntity = ActivitySkuEntity.builder()
                 .sku(raffleActivitySku.getSku())
                 .activityId(raffleActivitySku.getActivityId())
                 .activityAmountId(raffleActivitySku.getActivityAmountId())
                 .stockAmount(raffleActivitySku.getStockAmount())
                 .stockRemain(raffleActivitySku.getStockRemain())
                 .build();
+        iRedisService.setValue(cacheKey,activitySkuEntity);
+        return activitySkuEntity;
     }
 
     @Override
@@ -144,6 +151,23 @@ public class ActivityRepository implements IActivityRepository {
         raffleActivityAccount.setMonthAmount(createQuotaOrderAggregate.getMonthAmount());
         raffleActivityAccount.setMonthRemain(createQuotaOrderAggregate.getMonthAmount());
 
+        /** create RaffleActivityAccountMonth object to store */
+        RaffleActivityAccountMonth raffleActivityAccountMonth = new RaffleActivityAccountMonth();
+        raffleActivityAccountMonth.setUserId(createQuotaOrderAggregate.getUserId());
+        raffleActivityAccountMonth.setActivityId(createQuotaOrderAggregate.getActivityId());
+        raffleActivityAccountMonth.setMonth(raffleActivityAccountMonth.currentMonth());
+        raffleActivityAccountMonth.setMonthAmount(createQuotaOrderAggregate.getMonthAmount());
+        raffleActivityAccountMonth.setMonthRemain(createQuotaOrderAggregate.getMonthAmount());
+
+
+        /** create RaffleActivityAccountDay object to store */
+        RaffleActivityAccountDay raffleActivityAccountDay = new RaffleActivityAccountDay();
+        raffleActivityAccountDay.setUserId(createQuotaOrderAggregate.getUserId());
+        raffleActivityAccountDay.setActivityId(createQuotaOrderAggregate.getActivityId());
+        raffleActivityAccountDay.setDay(raffleActivityAccountDay.currentDay());
+        raffleActivityAccountDay.setDayAmount(createQuotaOrderAggregate.getDayAmount());
+        raffleActivityAccountDay.setDayRemain(createQuotaOrderAggregate.getDayAmount());
+
         try{
             /** take userId as key to set router */
             idbRouterStrategy.doRouter(createQuotaOrderAggregate.getUserId());
@@ -154,7 +178,18 @@ public class ActivityRepository implements IActivityRepository {
                    /** update account */
                    int amount = iRaffleActivityAccountDao.updateAccountQuota(raffleActivityAccount);
                    /** amount == 0, means account does not exist, create new account */
-                   if (amount == 0) iRaffleActivityAccountDao.insert(raffleActivityAccount);
+                   if (amount == 0) iRaffleActivityAccountDao.insertActivityAccount(raffleActivityAccount);
+
+                   /** update day account */
+                   int dayAmount = iRaffleActivityAccountDayDao.updateAccountDayQuota(raffleActivityAccountDay);
+                   /** dayAmount == 0, means day account does not exist, create new account */
+                   if (dayAmount == 0) iRaffleActivityAccountDayDao.insertActivityAccountDay(raffleActivityAccountDay);
+
+                   /** update month account */
+                   int monthAmount = iRaffleActivityAccountMonthDao.updateAccountMonthQuota(raffleActivityAccountMonth);
+                   /** monthAmount == 0, means month account does not exist, create new account */
+                   if (monthAmount == 0) iRaffleActivityAccountMonthDao.insertActivityAccountMonth(raffleActivityAccountMonth);
+
                    return 1;
                }catch (DuplicateKeyException e){
                    status.setRollbackOnly();
@@ -180,6 +215,9 @@ public class ActivityRepository implements IActivityRepository {
     @Override
     public boolean subtractActivitySkuStock(Long sku, Date endDateTime) {
         String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_AMOUNT_KEY + sku;
+        if (!iRedisService.isExists(cacheKey)) {
+            throw new AppException(ResponseCode.CACHEKEY_NOT_EXIST.getCode(),ResponseCode.CACHEKEY_NOT_EXIST.getInfo());
+        }
         Long remain = iRedisService.decr(cacheKey);
         if (remain == 0){
             /** send MQ when remain is 0 */

@@ -32,4 +32,14 @@
         where user_id = #{userId} and activity_id = #{activityId} and month = #{month} and month_remain > 0
     </update>
 
+    <update id="updateAccountMonthQuota" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountMonth">
+        update raffle_activity_account_month
+        set month_remain = month_remain + #{monthRemain},
+            month_amount = month_amount + #{monthAmount},
+            update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId} and month = #{month}
+    </update>
+
+
+
 </mapper>

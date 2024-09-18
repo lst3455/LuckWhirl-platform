@@ -13,6 +13,7 @@ public enum ResponseCode {
     UN_ERROR("0001", "fail"),
     ILLEGAL_PARAMETER("0002", "invalid parameter"),
     INDEX_DUPLICATE("0003","unique key conflict" ),
+    CACHEKEY_NOT_EXIST("0004", "cache key not exist"),
     STRATEGY_RULE_WEIGHT_IS_NULL("ERR_BIZ_001","business abnormal, strategy rule exist but doesn't complete configuration"),
     UN_ASSEMBLED_STRATEGY_ARMORY("ERR_BIZ_002", "raffle strategy armory has not done yet, please use IStrategyArmory to armory"),
     ACTIVITY_STATE_ERROR("ERR_BIZ_003", "activity dose not open"),
@@ -22,7 +23,8 @@ public enum ResponseCode {
     ACCOUNT_QUOTA_ERROR("ERR_BIZ_006","account amount insufficient"),
     ACCOUNT_MONTH_QUOTA_ERROR("ERR_BIZ_007","account month amount insufficient"),
     ACCOUNT_DAY_QUOTA_ERROR("ERR_BIZ_008","account day amount insufficient"),
-    ACTIVITY_RAFFLE_ORDER_ERROR("ERR_BIZ_009","user raffle order has been used" );
+    ACTIVITY_RAFFLE_ORDER_ERROR("ERR_BIZ_009","user raffle order has been used" )
+    ;
 
 
     private String code;

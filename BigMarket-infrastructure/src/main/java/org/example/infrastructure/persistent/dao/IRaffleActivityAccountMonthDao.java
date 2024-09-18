@@ -13,4 +13,6 @@ public interface IRaffleActivityAccountMonthDao {
     int updateActivityAccountMonthRemain(RaffleActivityAccountMonth build);
 
     void insertActivityAccountMonth(RaffleActivityAccountMonth build);
+
+    int updateAccountMonthQuota(RaffleActivityAccountMonth raffleActivityAccountMonth);
 }
