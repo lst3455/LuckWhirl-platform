@@ -554,4 +554,11 @@ public class ActivityRepository implements IActivityRepository {
 
         return activityAccountEntity;
     }
+
+    @Override
+    public Integer queryRaffleActivityAccountPartakeAmount(String userId, Long activityId) {
+        ActivityAccountEntity activityAccountEntity = queryActivityAccountByUserId(userId, activityId);
+        if (activityAccountEntity == null) return 0;
+        return activityAccountEntity.getTotalAmount() - activityAccountEntity.getTotalRemain();
+    }
 }

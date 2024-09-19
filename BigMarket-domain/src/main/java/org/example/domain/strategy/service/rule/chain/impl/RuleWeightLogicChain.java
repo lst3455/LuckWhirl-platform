@@ -21,9 +21,8 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
     @Resource
     private IStrategyDispatch iStrategyDispatch;
 
-    private Long userRaffleTimes = 10L;
-
     @Override
+    @Deprecated
     public Long logic(String userId, Long strategyId) {
         log.info("raffle rule chain start - weight, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(strategyId, ruleModel());
@@ -35,11 +34,12 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
 
         List<Long> ruleValueKeyMap = new ArrayList<>(ruleValueMap.keySet());
         /** binary search a biggest key smaller than userRaffleTimes */
+        Long userRaffleTimes = 10L;
         Long validKey = binarySearchKey(ruleValueKeyMap,userRaffleTimes);
 
         /** if can find valid key, should be caught by filter engine */
         if (validKey != null) {
-            Long userRaffleTimes = validKey;
+            userRaffleTimes = validKey;
             Long awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleTimes);
             log.info("raffle rule chain take over - weight, userId: {}, strategyId: {}, ruleModel: {}, awardId:{}",userId,strategyId,ruleModel(),awardId);
             return awardId;
@@ -60,14 +60,18 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
         /** if ruleValueMap is empty or error in initialization, allow to pass filter engine */
         if (ruleValueMap == null || ruleValueMap.isEmpty()) return next().treeVersionLogic(userId,strategyId);
 
+        /** get user raffle times from activity account */
+        Long userRaffleCount = iStrategyRepository.queryTotalUserRaffleCount(userId, strategyId);
+
+
         List<Long> ruleValueKeyMap = new ArrayList<>(ruleValueMap.keySet());
         /** binary search a biggest key smaller than userRaffleTimes */
-        Long validKey = binarySearchKey(ruleValueKeyMap,userRaffleTimes);
+        Long validKey = binarySearchKey(ruleValueKeyMap,userRaffleCount);
 
         /** if can find valid key, should be caught by filter engine */
         if (validKey != null) {
-            Long userRaffleTimes = validKey;
-            Long awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleTimes);
+            userRaffleCount = validKey;
+            Long awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleCount);
             log.info("raffle rule chain take over - weight, userId: {}, strategyId: {}, ruleModel: {}, awardId:{}",userId,strategyId,ruleModel(),awardId);
             return DefaultLogicChainFactory.StrategyAwardVO.builder()
                     .awardId(awardId)

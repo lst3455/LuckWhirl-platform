@@ -7,25 +7,20 @@ import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
 import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 import org.example.domain.strategy.model.entity.StrategyAwardEntity;
+import org.example.domain.strategy.model.vo.RuleWeightVO;
 import org.example.domain.strategy.service.IRaffleAward;
 import org.example.domain.strategy.service.IRaffleAwardRule;
 import org.example.domain.strategy.service.IRaffleStrategy;
 import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.trigger.api.IRaffleStrategyService;
-import org.example.trigger.api.dto.RaffleAwardListRequestDTO;
-import org.example.trigger.api.dto.RaffleAwardListResponseDTO;
-import org.example.trigger.api.dto.RaffleStrategyRequestDTO;
-import org.example.trigger.api.dto.RaffleStrategyResponseDTO;
+import org.example.trigger.api.dto.*;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 import org.example.types.model.Response;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * raffle service
@@ -149,14 +144,69 @@ public class RaffleStrategyController implements IRaffleStrategyService {
     }
 
     /**
+     * query award list to display current UserTotalRaffleCount can get what awardList
+     * <a href="http://localhost:8091/api/v1/raffle/strategy/query_raffle_strategy_rule_weight_award_list">/api/v1/raffle/strategy/query_raffle_strategy_rule_weight_award_list</a>
+     *
+     * @param raffleStrategyRuleWeightAwardRequestDTO
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "query_raffle_strategy_rule_weight_award_list", method = RequestMethod.POST)
+    public Response<List<RaffleStrategyRuleWeightAwardResponseDTO>> queryRaffleStrategyRuleWeightAwardList(@RequestBody RaffleStrategyRuleWeightAwardRequestDTO raffleStrategyRuleWeightAwardRequestDTO) {
+        try{
+            log.error("query raffle strategy rule weight award list start, userId:{}, activityId:{}", raffleStrategyRuleWeightAwardRequestDTO.getUserId(),raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
+            if (raffleStrategyRuleWeightAwardRequestDTO.getActivityId() == null || StringUtils.isBlank(raffleStrategyRuleWeightAwardRequestDTO.getUserId())){
+                throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
+            }
+            Integer UserTotalRaffleCount = iRaffleActivityAccountQuotaService.queryRaffleActivityAccountPartakeAmount(raffleStrategyRuleWeightAwardRequestDTO.getUserId(),raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
+
+            List<RaffleStrategyRuleWeightAwardResponseDTO> raffleStrategyRuleWeightAwardResponseDTOList = new ArrayList<>();
+            List<RuleWeightVO> ruleWeightVOList = iRaffleAwardRule.queryAwardRuleWeightByActivityId(raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
+            for (RuleWeightVO ruleWeightVO : ruleWeightVOList) {
+
+                List<RaffleStrategyRuleWeightAwardResponseDTO.StrategyAward> strategyAwardList = new ArrayList<>();
+                List<RuleWeightVO.Award> awardList = ruleWeightVO.getAwardList();
+
+                for (RuleWeightVO.Award award : awardList) {
+                    RaffleStrategyRuleWeightAwardResponseDTO.StrategyAward strategyAward = new RaffleStrategyRuleWeightAwardResponseDTO.StrategyAward();
+                    strategyAward.setAwardId(award.getAwardId());
+                    strategyAward.setAwardTitle(award.getAwardTitle());
+                    strategyAwardList.add(strategyAward);
+                }
+
+                RaffleStrategyRuleWeightAwardResponseDTO raffleStrategyRuleWeightAwardResponseDTO = new RaffleStrategyRuleWeightAwardResponseDTO();
+                raffleStrategyRuleWeightAwardResponseDTO.setRuleWeightCount(ruleWeightVO.getWeight().intValue());
+                raffleStrategyRuleWeightAwardResponseDTO.setStrategyAwardList(strategyAwardList);
+                raffleStrategyRuleWeightAwardResponseDTO.setUserTotalRaffleCount(UserTotalRaffleCount);
+
+                raffleStrategyRuleWeightAwardResponseDTOList.add(raffleStrategyRuleWeightAwardResponseDTO);
+            }
+            raffleStrategyRuleWeightAwardResponseDTOList.sort(Comparator.comparingInt(RaffleStrategyRuleWeightAwardResponseDTO::getRuleWeightCount));
+
+            log.info("query raffle strategy rule weight award list complete, userId:{}, activityId:{}", raffleStrategyRuleWeightAwardRequestDTO.getUserId(),raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
+            return Response.<List<RaffleStrategyRuleWeightAwardResponseDTO>>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(raffleStrategyRuleWeightAwardResponseDTOList)
+                    .build();
+        }catch (Exception e){
+            log.error("query raffle strategy rule weight award list error, userId:{}, activityId:{}", raffleStrategyRuleWeightAwardRequestDTO.getUserId(),raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
+            return Response.<List<RaffleStrategyRuleWeightAwardResponseDTO>>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
      * execute random raffle
      * <a href="http://localhost:8091/api/v1/raffle/random_raffle">/api/v1/raffle/random_raffle</a>
      *
      * @param raffleStrategyRequestDTO
      * @return Response<RaffleResponseDTO>
      */
-    @RequestMapping(value = "random_raffle", method = RequestMethod.POST)
     @Override
+    @RequestMapping(value = "random_raffle", method = RequestMethod.POST)
     public Response<RaffleStrategyResponseDTO> randomRaffle(@RequestBody RaffleStrategyRequestDTO raffleStrategyRequestDTO) {
         RaffleAwardEntity raffleAwardEntity = iRaffleStrategy.performRaffleLogicChainWithRuleTree(RaffleFactorEntity.builder()
                 .userId("system")  // blacklist user: user001,user002,user003

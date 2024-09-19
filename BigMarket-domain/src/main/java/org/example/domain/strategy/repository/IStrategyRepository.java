@@ -4,6 +4,7 @@ import org.example.domain.strategy.model.entity.StrategyAwardEntity;
 import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.model.entity.StrategyRuleEntity;
 import org.example.domain.strategy.model.vo.RuleTreeVO;
+import org.example.domain.strategy.model.vo.RuleWeightVO;
 import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
 import org.example.domain.strategy.model.vo.StrategyAwardStockKeyVO;
 
@@ -55,5 +56,9 @@ public interface IStrategyRepository {
     Long queryTodayUserRaffleCount(String userId, Long strategyId);
 
     Map<String, Integer> queryRuleTreeLockNodeValueByTreeIds(String[] treeIds);
+
+    Long queryTotalUserRaffleCount(String userId, Long strategyId);
+
+    List<RuleWeightVO> queryAwardRuleWeight(Long strategyId);
 }
 

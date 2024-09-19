@@ -6,10 +6,7 @@ import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 import org.example.domain.strategy.model.entity.RuleActionEntity;
 import org.example.domain.strategy.model.entity.RuleMatterEntity;
 import org.example.domain.strategy.model.entity.StrategyAwardEntity;
-import org.example.domain.strategy.model.vo.RuleLogicCheckTypeVO;
-import org.example.domain.strategy.model.vo.RuleTreeVO;
-import org.example.domain.strategy.model.vo.StrategyAwardRuleModelVO;
-import org.example.domain.strategy.model.vo.StrategyAwardStockKeyVO;
+import org.example.domain.strategy.model.vo.*;
 import org.example.domain.strategy.repository.IStrategyRepository;
 import org.example.domain.strategy.service.AbstractRaffleStrategy;
 import org.example.domain.strategy.service.IRaffleAward;
@@ -174,5 +171,16 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
     @Override
     public Map<String, Integer> queryRuleTreeLockNodeValueByTreeIds(String[] treeIds) {
         return iStrategyRepository.queryRuleTreeLockNodeValueByTreeIds(treeIds);
+    }
+
+    @Override
+    public List<RuleWeightVO> queryAwardRuleWeight(Long strategyId) {
+        return iStrategyRepository.queryAwardRuleWeight(strategyId);
+    }
+
+    @Override
+    public List<RuleWeightVO> queryAwardRuleWeightByActivityId(Long activityId) {
+        Long strategyId = iStrategyRepository.queryStrategyIdByActivityId(activityId);
+        return queryAwardRuleWeight(strategyId);
     }
 }

@@ -17,4 +17,5 @@ public interface IRaffleActivityService {
     Response<Boolean> isDailySignRebateGet(String userId);
 
     Response<UserActivityAccountResponseDTO> queryRaffleActivityAccount(UserActivityAccountRequestDTO userActivityAccountRequestDTO);
+
 }

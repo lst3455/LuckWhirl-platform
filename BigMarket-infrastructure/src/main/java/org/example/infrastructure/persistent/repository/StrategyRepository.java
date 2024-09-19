@@ -6,6 +6,7 @@ import org.example.domain.strategy.model.entity.StrategyEntity;
 import org.example.domain.strategy.model.entity.StrategyRuleEntity;
 import org.example.domain.strategy.model.vo.*;
 import org.example.domain.strategy.repository.IStrategyRepository;
+import org.example.domain.strategy.service.rule.chain.factory.DefaultLogicChainFactory;
 import org.example.infrastructure.persistent.dao.*;
 import org.example.infrastructure.persistent.po.*;
 import org.example.infrastructure.persistent.redis.IRedisService;
@@ -51,6 +52,9 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Resource
     private IRaffleActivityAccountDayDao iRaffleActivityAccountDayDao;
+
+    @Resource
+    private IRaffleActivityAccountDao iRaffleActivityAccountDao;
 
 
     @Override
@@ -370,5 +374,76 @@ public class StrategyRepository implements IStrategyRepository {
             ruleLockAmountMap.put(treeId,ruleValue);
         }
         return ruleLockAmountMap;
+    }
+
+    @Override
+    public Long queryTotalUserRaffleCount(String userId, Long strategyId) {
+        Long activityId = iRaffleActivityDao.queryRaffleActivityIdByStrategyId(strategyId);
+        /** create RaffleActivityAccountDay object */
+        RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
+        raffleActivityAccount.setActivityId(activityId);
+        raffleActivityAccount.setUserId(userId);
+        raffleActivityAccount = iRaffleActivityAccountDao.queryActivityAccountByUserId(raffleActivityAccount);
+
+        if (raffleActivityAccount == null) return 0L;
+        return (long) (raffleActivityAccount.getTotalAmount() - raffleActivityAccount.getDayRemain());
+    }
+
+    @Override
+    public List<RuleWeightVO> queryAwardRuleWeight(Long strategyId) {
+        /** get data from cache first */
+        String cacheKey = Constants.RedisKey.STRATEGY_RULE_WEIGHT_KEY + strategyId;
+        List<RuleWeightVO> ruleWeightVOList = iRedisService.getValue(cacheKey);
+        if (ruleWeightVOList != null) return ruleWeightVOList;
+        /** get data from database */
+        ruleWeightVOList = new ArrayList<>();
+        /** get rule weight value */
+        StrategyRule strategyRule = new StrategyRule();
+        strategyRule.setStrategyId(strategyId);
+        strategyRule.setRuleModel(DefaultLogicChainFactory.LogicModel.RULE_WEIGHT.getCode());
+        String ruleValue = iStrategyRuleDao.queryStrategyRuleValue(strategyRule);
+        /** get rule weight value map through StrategyRuleEntity method */
+        StrategyRuleEntity strategyRuleEntity = new StrategyRuleEntity();
+        strategyRuleEntity.setRuleModel(DefaultLogicChainFactory.LogicModel.RULE_WEIGHT.getCode());
+        strategyRuleEntity.setRuleValue(ruleValue);
+        Map<Long, Set<Long>> ruleWeightValueMap = strategyRuleEntity.getRuleValueMap();
+
+        Map<Long,String> awardMap = new HashMap<>(); // store id,title pair
+        List<StrategyAward> strategyAwardList = iStrategyAwardDao.queryStrategyAwardListByStrategyId(strategyId); // get awardList
+
+        Set<Long> ruleWeightValueMapKeySet = ruleWeightValueMap.keySet();
+        for (Long ruleWeightKey : ruleWeightValueMapKeySet) {
+            Set<Long> awardIdList = ruleWeightValueMap.get(ruleWeightKey);
+            List<RuleWeightVO.Award> awardList = new ArrayList<>();
+            for (Long awardId : awardIdList) {
+                String awardTitle;
+                if (!awardMap.containsKey(awardId)) {
+                    awardTitle = searchStrategyAward(awardId, strategyAwardList).getAwardTitle();
+                    awardMap.put(awardId,awardTitle);
+                }
+                awardTitle = awardMap.get(awardId);
+                /** store into awardList*/
+                awardList.add(RuleWeightVO.Award.builder()
+                        .awardId(awardId)
+                        .awardTitle(awardTitle)
+                        .build());
+            }
+            ruleWeightVOList.add(RuleWeightVO.builder()
+                    .ruleValue(ruleValue)
+                    .weight(ruleWeightKey)
+                    .awardIdSet(awardIdList)
+                    .awardList(awardList)
+                    .build());
+        }
+
+        iRedisService.setValue(cacheKey, ruleWeightVOList);
+        return ruleWeightVOList;
+    }
+
+    private StrategyAward searchStrategyAward(Long awardId, List<StrategyAward> strategyAwardList) {
+        for (StrategyAward strategyAward : strategyAwardList){
+            if (strategyAward.getAwardId().equals(awardId)) return strategyAward;
+        }
+        return new StrategyAward();
     }
 }

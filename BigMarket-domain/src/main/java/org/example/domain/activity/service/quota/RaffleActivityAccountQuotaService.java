@@ -84,4 +84,9 @@ public class RaffleActivityAccountQuotaService extends AbstractRaffleActivityAcc
     public ActivityAccountEntity queryActivityAccountEntity(String userId, Long activityId) {
         return iActivityRepository.queryActivityAccountEntity(userId,activityId);
     }
+
+    @Override
+    public Integer queryRaffleActivityAccountPartakeAmount(String userId, Long activityId) {
+        return iActivityRepository.queryRaffleActivityAccountPartakeAmount(userId,activityId);
+    }
 }
