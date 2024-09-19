@@ -42,6 +42,7 @@ public class BehaviorRebateService implements IBehaviorRebateService{
                         .rebateDesc(dailyBehaviorRebateVO.getRebateDesc())
                         .rebateType(dailyBehaviorRebateVO.getRebateType())
                         .rebateConfig(dailyBehaviorRebateVO.getRebateConfig())
+                        .outBusinessNo(behaviorEntity.getOutBusinessNo())
                         .bizId(bizId)
                         .build();
             rebateOrderIdList.add(behaviorRebateOrderEntity.getOrderId());
@@ -76,5 +77,10 @@ public class BehaviorRebateService implements IBehaviorRebateService{
         iBehaviorRebateRepository.doSaveUserRebateOrder(behaviorEntity.getUserId(), behaviorRebateAggregateList);
 
         return rebateOrderIdList;
+    }
+
+    @Override
+    public List<BehaviorRebateOrderEntity> queryBehaviorRebateOrderByOutBusinessNo(String userId, String outBusinessNo) {
+        return iBehaviorRebateRepository.queryBehaviorRebateOrderByOutBusinessNo(userId, outBusinessNo);
     }
 }

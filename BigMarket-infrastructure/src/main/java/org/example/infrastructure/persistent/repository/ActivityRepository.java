@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -405,7 +406,7 @@ public class ActivityRepository implements IActivityRepository {
                 .activityId(activityId)
                 .month(month)
                 .build();
-        raffleActivityAccountMonth = iRaffleActivityAccountMonthDao.queryActivityAccountMonthByUserId(raffleActivityAccountMonth);
+        raffleActivityAccountMonth = iRaffleActivityAccountMonthDao.queryActivityAccountMonth(raffleActivityAccountMonth);
         if (raffleActivityAccountMonth == null) return null;
 
         return ActivityAccountMonthEntity.builder()
@@ -487,5 +488,70 @@ public class ActivityRepository implements IActivityRepository {
         return raffleActivityAccountDay.getDayAmount() - raffleActivityAccountDay.getDayRemain();
 
 
+    }
+
+    @Override
+    public ActivityAccountEntity queryActivityAccountEntity(String userId, Long activityId) {
+        /** get activity account first */
+        RaffleActivityAccount raffleActivityAccount = iRaffleActivityAccountDao.queryActivityAccountByUserId(RaffleActivityAccount.builder()
+                .activityId(activityId)
+                .userId(userId)
+                .build());
+
+        if (null == raffleActivityAccount) {
+            /** means do not have account, should get total amount first */
+            return ActivityAccountEntity.builder()
+                    .activityId(activityId)
+                    .userId(userId)
+                    .totalAmount(0)
+                    .totalRemain(0)
+                    .monthAmount(0)
+                    .monthRemain(0)
+                    .dayAmount(0)
+                    .dayRemain(0)
+                    .build();
+        }
+
+        SimpleDateFormat simpleDateFormatMonth = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat simpleDateFormatDay = new SimpleDateFormat("yyyy-MM-dd");
+        /** get activity account month */
+        RaffleActivityAccountMonth raffleActivityAccountMonth = iRaffleActivityAccountMonthDao.queryActivityAccountMonth(RaffleActivityAccountMonth.builder()
+                .activityId(activityId)
+                .userId(userId)
+                .month(simpleDateFormatMonth.format(new Date()))
+                .build());
+
+        /** get activity account day */
+        RaffleActivityAccountDay raffleActivityAccountDay = iRaffleActivityAccountDayDao.queryActivityAccountDay(RaffleActivityAccountDay.builder()
+                .activityId(activityId)
+                .userId(userId)
+                .day(simpleDateFormatDay.format(new Date()))
+                .build());
+
+        ActivityAccountEntity activityAccountEntity = new ActivityAccountEntity();
+        activityAccountEntity.setUserId(userId);
+        activityAccountEntity.setActivityId(activityId);
+        activityAccountEntity.setTotalAmount(raffleActivityAccount.getTotalAmount());
+        activityAccountEntity.setTotalRemain(raffleActivityAccount.getTotalRemain());
+
+        if (raffleActivityAccountDay == null) {
+            /** means do not have day account, just use total amount, day amount can pass to next day */
+            activityAccountEntity.setDayAmount(raffleActivityAccount.getDayAmount());
+            activityAccountEntity.setDayRemain(raffleActivityAccount.getDayRemain()); // todo need to check if should be getDayAmount()
+        } else {
+            activityAccountEntity.setDayAmount(raffleActivityAccountDay.getDayAmount());
+            activityAccountEntity.setDayRemain(raffleActivityAccountDay.getDayRemain());
+        }
+
+        if (null == raffleActivityAccountMonth) {
+            /** means do not have month account, just use total amount, month amount can pass to next month */
+            activityAccountEntity.setMonthAmount(raffleActivityAccount.getMonthAmount());
+            activityAccountEntity.setMonthRemain(raffleActivityAccount.getMonthRemain()); // todo need to check if should be getMonthAmount()
+        } else {
+            activityAccountEntity.setMonthAmount(raffleActivityAccountMonth.getMonthAmount());
+            activityAccountEntity.setMonthRemain(raffleActivityAccountMonth.getMonthRemain());
+        }
+
+        return activityAccountEntity;
     }
 }

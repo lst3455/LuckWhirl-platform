@@ -20,7 +20,7 @@
                    #{userId}, #{activityId}, #{month}, #{monthAmount}, #{monthRemain}, now(), now())
     </insert>
 
-    <select id="queryActivityAccountMonthByUserId" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountMonth" resultMap="dataMap">
+    <select id="queryActivityAccountMonth" parameterType="org.example.infrastructure.persistent.po.RaffleActivityAccountMonth" resultMap="dataMap">
         select user_id, activity_id, month, month_amount, month_remain
         from raffle_activity_account_month
         where user_id = #{userId} and activity_id = #{activityId} and month = #{month}

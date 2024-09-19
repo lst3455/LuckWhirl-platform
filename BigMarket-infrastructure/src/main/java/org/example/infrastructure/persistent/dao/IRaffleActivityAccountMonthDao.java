@@ -8,7 +8,7 @@ import org.example.infrastructure.persistent.po.RaffleActivityAccountMonth;
 public interface IRaffleActivityAccountMonthDao {
 
     @DBRouter
-    RaffleActivityAccountMonth queryActivityAccountMonthByUserId(RaffleActivityAccountMonth raffleActivityAccountMonth);
+    RaffleActivityAccountMonth queryActivityAccountMonth(RaffleActivityAccountMonth raffleActivityAccountMonth);
 
     int updateActivityAccountMonthRemain(RaffleActivityAccountMonth build);
 

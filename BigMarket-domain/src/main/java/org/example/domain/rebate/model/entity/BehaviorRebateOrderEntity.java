@@ -23,6 +23,8 @@ public class BehaviorRebateOrderEntity {
     private String rebateType;
     /** configuration */
     private String rebateConfig;
+    /** outBusinessNo, just date */
+    private String outBusinessNo;
     /** business id */
     private String bizId;
 }

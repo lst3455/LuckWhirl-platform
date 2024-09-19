@@ -3,13 +3,16 @@ package org.example.trigger.http;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.example.domain.activity.model.entity.ActivityAccountEntity;
 import org.example.domain.activity.model.entity.UserRaffleOrderEntity;
+import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.example.domain.activity.service.IRaffleActivityPartakeService;
 import org.example.domain.activity.service.armory.IActivityArmory;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.model.vo.AwardStatusVO;
 import org.example.domain.award.service.IAwardService;
 import org.example.domain.rebate.model.entity.BehaviorEntity;
+import org.example.domain.rebate.model.entity.BehaviorRebateOrderEntity;
 import org.example.domain.rebate.model.vo.BehaviorTypeVO;
 import org.example.domain.rebate.service.IBehaviorRebateService;
 import org.example.domain.strategy.model.entity.RaffleAwardEntity;
@@ -19,6 +22,8 @@ import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.trigger.api.IRaffleActivityService;
 import org.example.trigger.api.dto.ActivityDrawRequestDTO;
 import org.example.trigger.api.dto.ActivityDrawResponseDTO;
+import org.example.trigger.api.dto.UserActivityAccountRequestDTO;
+import org.example.trigger.api.dto.UserActivityAccountResponseDTO;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 import org.example.types.model.Response;
@@ -39,6 +44,9 @@ public class RaffleActivityController implements IRaffleActivityService {
 
     @Resource
     private IRaffleActivityPartakeService iRaffleActivityPartakeService;
+
+    @Resource
+    private IRaffleActivityAccountQuotaService iRaffleActivityAccountQuotaService;
 
     @Resource
     private IRaffleStrategy iRaffleStrategy;
@@ -77,7 +85,7 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(armoryStatus)
                     .build();
-            log.info("raffle activity armory success, activityId:{}", activityId);
+            log.info("raffle activity armory complete, activityId:{}", activityId);
             return response;
         } catch (Exception e) {
             log.error("raffle activity armory error, activityId:{}", activityId);
@@ -124,7 +132,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             userAwardRecordEntity.setAwardTime(new Date());
             userAwardRecordEntity.setAwardStatus(AwardStatusVO.create);
             iAwardService.saveUserAwardRecord(userAwardRecordEntity);
-
+            log.info("lucky draw - complete, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId());
             return Response.<ActivityDrawResponseDTO>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
@@ -135,13 +143,13 @@ public class RaffleActivityController implements IRaffleActivityService {
                             .build())
                     .build();
         } catch (AppException e) {
-            log.error("raffle activity error, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId(),e);
+            log.error("raffle activity error, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId(), e);
             return Response.<ActivityDrawResponseDTO>builder()
                     .code(e.getCode())
                     .info(e.getInfo())
                     .build();
-        } catch (Exception e){
-            log.error("raffle activity error, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId(),e);
+        } catch (Exception e) {
+            log.error("raffle activity error, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId(), e);
             return Response.<ActivityDrawResponseDTO>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
@@ -159,29 +167,96 @@ public class RaffleActivityController implements IRaffleActivityService {
     @Override
     @RequestMapping(value = "daily_sign_rebate", method = RequestMethod.POST)
     public Response<Boolean> DailySignRebate(@RequestParam String userId) {
-        try{
+        try {
             log.info("daily sign rebate start, userId:{}", userId);
             BehaviorEntity behaviorEntity = BehaviorEntity.builder()
-                        .userId(userId)
-                        .behaviorTypeVO(BehaviorTypeVO.SIGN)
-                        .outBusinessNo(simpleDateFormat.format(new Date()))
-                        .build();
+                    .userId(userId)
+                    .behaviorTypeVO(BehaviorTypeVO.SIGN)
+                    .outBusinessNo(simpleDateFormat.format(new Date()))
+                    .build();
             List<String> rebateOrderIdList = iBehaviorRebateService.createRebateOrder(behaviorEntity);
-            log.info("daily sign rebate start, userId:{}, rebateOrderIdList:{}", userId, JSON.toJSONString(rebateOrderIdList));
+            log.info("daily sign rebate complete, userId:{}, rebateOrderIdList:{}", userId, JSON.toJSONString(rebateOrderIdList));
             return Response.<Boolean>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(true)
                     .build();
-        }catch (AppException e) {
-            log.error("daily sign rebate error, userId:{}", userId,e);
+        } catch (AppException e) {
+            log.error("daily sign rebate error, userId:{}", userId, e);
             return Response.<Boolean>builder()
                     .code(e.getCode())
                     .info(e.getInfo())
                     .build();
-        } catch (Exception e){
-            log.error("daily sign rebate error, userId:{}", userId,e);
+        } catch (Exception e) {
+            log.error("daily sign rebate error, userId:{}", userId, e);
             return Response.<Boolean>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * check if daily sign in complete
+     * <a href="http://localhost:8091/api/v1/raffle/activity/is_daily_sign_rebate_get">/api/v1/raffle/activity/is_daily_sign_rebate_get</a>
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "is_daily_sign_rebate_get", method = RequestMethod.POST)
+    public Response<Boolean> isDailySignRebateGet(String userId) {
+        try {
+            log.info("is dail sign rebate get start, userId:{}", userId);
+            List<BehaviorRebateOrderEntity> behaviorRebateOrderEntityList = iBehaviorRebateService.queryBehaviorRebateOrderByOutBusinessNo(userId, simpleDateFormat.format(new Date()));
+            log.info("is dail sign rebate get complete, userId:{}", userId);
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(behaviorRebateOrderEntityList != null && !behaviorRebateOrderEntityList.isEmpty())
+                    .build();
+        } catch (Exception e) {
+            log.error("is dail sign rebate get error, userId:{}", userId, e);
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * query user raffle activity account amount and remain
+     * * <a href="http://localhost:8091/api/v1/raffle/activity/query_raffle_activity_account">/api/v1/raffle/activity/query_raffle_activity_account</a>
+     *
+     * @param userActivityAccountRequestDTO
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "query_raffle_activity_account", method = RequestMethod.POST)
+    public Response<UserActivityAccountResponseDTO> queryRaffleActivityAccount(@RequestBody UserActivityAccountRequestDTO userActivityAccountRequestDTO) {
+        try {
+            log.info("query raffle activity account start, userId:{}, activityId:{}", userActivityAccountRequestDTO.getUserId(), userActivityAccountRequestDTO.getActivityId());
+            if (StringUtils.isBlank(userActivityAccountRequestDTO.getUserId()) || null == userActivityAccountRequestDTO.getActivityId()) {
+                throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
+            }
+            ActivityAccountEntity activityAccountEntity = iRaffleActivityAccountQuotaService.queryActivityAccountEntity(userActivityAccountRequestDTO.getUserId(), userActivityAccountRequestDTO.getActivityId());
+            UserActivityAccountResponseDTO userActivityAccountResponseDTO = UserActivityAccountResponseDTO.builder()
+                    .totalAmount(activityAccountEntity.getTotalAmount())
+                    .totalRemain(activityAccountEntity.getTotalRemain())
+                    .dayAmount(activityAccountEntity.getDayAmount())
+                    .dayRemain(activityAccountEntity.getDayRemain())
+                    .monthAmount(activityAccountEntity.getMonthAmount())
+                    .monthRemain(activityAccountEntity.getMonthRemain())
+                    .build();
+            log.info("query raffle activity account complete, userId:{}, activityId:{}, dto:{}", userActivityAccountRequestDTO.getUserId(), userActivityAccountRequestDTO.getActivityId(), JSON.toJSONString(userActivityAccountResponseDTO));
+            return Response.<UserActivityAccountResponseDTO>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(userActivityAccountResponseDTO)
+                    .build();
+        } catch (Exception e) {
+            log.error("query raffle activity account error, userId:{}, activityId:{}", userActivityAccountRequestDTO.getUserId(), userActivityAccountRequestDTO.getActivityId(), e);
+            return Response.<UserActivityAccountResponseDTO>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();
