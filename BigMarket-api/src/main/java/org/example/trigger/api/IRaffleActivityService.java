@@ -12,7 +12,7 @@ public interface IRaffleActivityService {
 
     Response<ActivityDrawResponseDTO> draw(ActivityDrawRequestDTO activityDrawRequestDTO);
 
-    Response<Boolean> DailySignRebate(String userId);
+    Response<Boolean> dailySignRebate(String userId);
 
     Response<Boolean> isDailySignRebateGet(String userId);
 

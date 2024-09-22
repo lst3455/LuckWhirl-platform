@@ -152,6 +152,8 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         }
 
         /** before raffle filter, go through rule chain */
+        /** note: for current version, even user be caught by certain chain node, it will also go to default chain node */
+        /** in order to subtract the stock amount */
         DefaultLogicChainFactory.StrategyAwardVO strategyChainAwardVO = raffleLogicChain(userId, strategyId);
         if(!DefaultLogicChainFactory.LogicModel.RULE_DEFAULT.getCode().equals(strategyChainAwardVO.getRuleModel())){
             /*return RaffleAwardEntity.builder()

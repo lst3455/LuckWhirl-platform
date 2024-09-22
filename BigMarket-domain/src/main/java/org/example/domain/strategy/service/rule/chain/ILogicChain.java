@@ -6,6 +6,6 @@ public interface ILogicChain extends ILogicChainArmory{
 
     Long logic(String userId, Long strategyId);
 
-    DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId);
+    DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId, Long awardId);
 
 }

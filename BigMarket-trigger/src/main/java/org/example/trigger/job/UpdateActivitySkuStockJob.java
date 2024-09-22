@@ -35,6 +35,5 @@ public class UpdateActivitySkuStockJob {
             log.error("scheduled task，update the sku stock fail", e);
         }
     }
-
 }
 

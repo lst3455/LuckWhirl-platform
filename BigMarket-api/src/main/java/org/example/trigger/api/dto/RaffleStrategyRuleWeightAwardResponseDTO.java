@@ -15,7 +15,7 @@ public class RaffleStrategyRuleWeightAwardResponseDTO {
 
     private Integer ruleWeightCount;
 
-    private Integer UserTotalRaffleCount;
+    private Integer userTotalRaffleCount;
 
     private List<?> strategyAwardList;
 

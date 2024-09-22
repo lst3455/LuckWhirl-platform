@@ -23,8 +23,8 @@ public class DefaultLogicChain extends AbstractLogicChain {
     }
 
     @Override
-    public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId) {
-        Long awardId = iStrategyDispatch.getRandomAwardId(strategyId);
+    public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId, Long awardId) {
+        if (awardId == null) awardId = iStrategyDispatch.getRandomAwardId(strategyId);
         log.info("raffle rule chain - default, userId: {}, strategyId: {}, ruleModel: {}, awardId: {}",userId,strategyId,ruleModel(),awardId);
         return DefaultLogicChainFactory.StrategyAwardVO.builder()
                 .awardId(awardId)

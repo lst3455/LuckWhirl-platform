@@ -144,7 +144,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
     }
 
     /**
-     * query award list to display current UserTotalRaffleCount can get what awardList
+     * query award list to display depend on current UserTotalRaffleCount
      * <a href="http://localhost:8091/api/v1/raffle/strategy/query_raffle_strategy_rule_weight_award_list">/api/v1/raffle/strategy/query_raffle_strategy_rule_weight_award_list</a>
      *
      * @param raffleStrategyRuleWeightAwardRequestDTO
@@ -158,7 +158,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
             if (raffleStrategyRuleWeightAwardRequestDTO.getActivityId() == null || StringUtils.isBlank(raffleStrategyRuleWeightAwardRequestDTO.getUserId())){
                 throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
             }
-            Integer UserTotalRaffleCount = iRaffleActivityAccountQuotaService.queryRaffleActivityAccountPartakeAmount(raffleStrategyRuleWeightAwardRequestDTO.getUserId(),raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
+            Integer userTotalRaffleCount = iRaffleActivityAccountQuotaService.queryRaffleActivityAccountPartakeAmount(raffleStrategyRuleWeightAwardRequestDTO.getUserId(),raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
 
             List<RaffleStrategyRuleWeightAwardResponseDTO> raffleStrategyRuleWeightAwardResponseDTOList = new ArrayList<>();
             List<RuleWeightVO> ruleWeightVOList = iRaffleAwardRule.queryAwardRuleWeightByActivityId(raffleStrategyRuleWeightAwardRequestDTO.getActivityId());
@@ -177,7 +177,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
                 RaffleStrategyRuleWeightAwardResponseDTO raffleStrategyRuleWeightAwardResponseDTO = new RaffleStrategyRuleWeightAwardResponseDTO();
                 raffleStrategyRuleWeightAwardResponseDTO.setRuleWeightCount(ruleWeightVO.getWeight().intValue());
                 raffleStrategyRuleWeightAwardResponseDTO.setStrategyAwardList(strategyAwardList);
-                raffleStrategyRuleWeightAwardResponseDTO.setUserTotalRaffleCount(UserTotalRaffleCount);
+                raffleStrategyRuleWeightAwardResponseDTO.setUserTotalRaffleCount(userTotalRaffleCount);
 
                 raffleStrategyRuleWeightAwardResponseDTOList.add(raffleStrategyRuleWeightAwardResponseDTO);
             }

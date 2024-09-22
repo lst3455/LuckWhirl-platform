@@ -40,7 +40,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
     @Override
     public DefaultLogicChainFactory.StrategyAwardVO raffleLogicChain(String userId, Long strategyId) {
         ILogicChain iLogicChain = defaultLogicChainFactory.openLogicChain(strategyId);
-        return iLogicChain.treeVersionLogic(userId,strategyId);
+        return iLogicChain.treeVersionLogic(userId,strategyId,null);
     }
 
     @Override

@@ -51,18 +51,23 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
     }
 
     @Override
-    public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId) {
+    public DefaultLogicChainFactory.StrategyAwardVO treeVersionLogic(String userId, Long strategyId, Long awardId) {
         log.info("raffle rule chain start - weight, userId: {}, strategyId: {}, ruleModel: {},",userId,strategyId,ruleModel());
         String ruleValue = iStrategyRepository.queryStrategyRuleValue(strategyId, ruleModel());
 
         /** ruleValue sample => 4000:102,103,104,105 5000:102,103,104,105,106 6000:102,103,104,105,106,107 */
         Map<Long, Set<Long>> ruleValueMap = getRuleValueMap(ruleValue,ruleModel());
         /** if ruleValueMap is empty or error in initialization, allow to pass filter engine */
-        if (ruleValueMap == null || ruleValueMap.isEmpty()) return next().treeVersionLogic(userId,strategyId);
+        if (awardId != null) {
+            return next().treeVersionLogic(userId, strategyId, awardId);
+        }
+        else if (ruleValueMap == null || ruleValueMap.isEmpty()) {
+            log.info("raffle rule chain pass - weight, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
+            return next().treeVersionLogic(userId, strategyId, null);
+        }
 
         /** get user raffle times from activity account */
         Long userRaffleCount = iStrategyRepository.queryTotalUserRaffleCount(userId, strategyId);
-
 
         List<Long> ruleValueKeyMap = new ArrayList<>(ruleValueMap.keySet());
         /** binary search a biggest key smaller than userRaffleTimes */
@@ -71,17 +76,14 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
         /** if can find valid key, should be caught by filter engine */
         if (validKey != null) {
             userRaffleCount = validKey;
-            Long awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleCount);
+            awardId = iStrategyDispatch.getRandomAwardId(strategyId, userRaffleCount);
             log.info("raffle rule chain take over - weight, userId: {}, strategyId: {}, ruleModel: {}, awardId:{}",userId,strategyId,ruleModel(),awardId);
-            return DefaultLogicChainFactory.StrategyAwardVO.builder()
-                    .awardId(awardId)
-                    .ruleModel(ruleModel())
-                    .build();
+            return next().treeVersionLogic(userId,strategyId,awardId);
         }
 
         /** if can't find valid key, pass filter engine */
         log.info("raffle rule chain pass - weight, userId: {}, strategyId: {}, ruleModel: {}",userId,strategyId,ruleModel());
-        return next().treeVersionLogic(userId,strategyId);
+        return next().treeVersionLogic(userId,strategyId,null);
     }
 
     @Override
