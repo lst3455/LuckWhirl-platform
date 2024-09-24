@@ -11,4 +11,8 @@ public interface IAwardDao {
     List<Award> queryAwardList();
 
     List<Award> queryAwardListById();
+
+    String queryAwardConfigByAwardId(Long awardId);
+
+    String queryAwardKeyByAwardId(Long awardId);
 }

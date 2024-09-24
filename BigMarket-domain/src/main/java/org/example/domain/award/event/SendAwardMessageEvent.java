@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.checkerframework.checker.units.qual.C;
 import org.example.types.event.BaseEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -42,5 +41,9 @@ public class SendAwardMessageEvent extends BaseEvent<SendAwardMessageEvent.SendA
         private Long awardId;
 
         private String awardTitle;
+
+        private String orderId;
+
+        private String awardConfig;
     }
 }

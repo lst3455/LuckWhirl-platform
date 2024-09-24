@@ -131,6 +131,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             userAwardRecordEntity.setAwardTitle(raffleAwardEntity.getAwardTitle());
             userAwardRecordEntity.setAwardTime(new Date());
             userAwardRecordEntity.setAwardStatus(AwardStatusVO.create);
+            userAwardRecordEntity.setAwardConfig(raffleAwardEntity.getAwardConfig());
             iAwardService.saveUserAwardRecord(userAwardRecordEntity);
             log.info("lucky draw - complete, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId());
             return Response.<ActivityDrawResponseDTO>builder()

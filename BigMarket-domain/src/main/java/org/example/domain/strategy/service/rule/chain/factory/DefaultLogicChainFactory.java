@@ -52,6 +52,8 @@ public class DefaultLogicChainFactory {
         private Long awardId;
         /** get by which rule model */
         private String ruleModel;
+
+        private String ruleValue;
     }
 
 

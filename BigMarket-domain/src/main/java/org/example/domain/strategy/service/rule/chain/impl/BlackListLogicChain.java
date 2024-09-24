@@ -51,7 +51,11 @@ public class BlackListLogicChain extends AbstractLogicChain {
             if (userId.equals(userBlackListId)) {
                 /** take over by rule chain - blacklist */
                 log.info("raffle rule chain take over - blacklist, userId: {}, strategyId: {}, ruleModel: {}, awardId: {}",userId,strategyId,ruleModel(),awardId);
-                return next().treeVersionLogic(userId,strategyId,awardId);
+                return DefaultLogicChainFactory.StrategyAwardVO.builder()
+                        .awardId(awardId)
+                        .ruleModel(ruleModel())
+                        .ruleValue("0.01,1") // set fixed point range
+                        .build();
             }
         }
         /** pass rule chain - blacklist, go to next chain node */

@@ -29,4 +29,7 @@ public class UserAwardRecordEntity {
     private Date awardTime;
     /** award status；create,completed */
     private AwardStatusVO awardStatus;
+
+    /** award config, for delivery point, do not exist in PO */
+    private String awardConfig;
 }

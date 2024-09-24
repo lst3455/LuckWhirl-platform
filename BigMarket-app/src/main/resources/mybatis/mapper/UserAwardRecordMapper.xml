@@ -24,4 +24,10 @@
                  )
     </insert>
 
+    <update id="updateAwardRecordCompletedStatus" parameterType="org.example.infrastructure.persistent.po.UserAwardRecord">
+        update user_award_record set award_status = 'complete'
+        where user_id = #{userId} and order_id = #{orderId} and award_status = 'create'
+    </update>
+
+
 </mapper>

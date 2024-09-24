@@ -7,6 +7,8 @@ import org.example.infrastructure.persistent.po.UserAwardRecord;
 @Mapper
 @DBRouterStrategy(splitTable = true)
 public interface IUserAwardRecordDao {
+
     void insertUserAwardRecord(UserAwardRecord userAwardRecord);
 
+    int updateAwardRecordCompletedStatus(UserAwardRecord userAwardRecord);
 }

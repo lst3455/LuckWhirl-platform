@@ -1,17 +1,21 @@
 package org.example.domain.award.service;
 
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import org.example.domain.award.event.SendAwardMessageEvent;
 import org.example.domain.award.model.aggregate.UserAwardRecordAggregate;
+import org.example.domain.award.model.entity.DeliveryAwardEntity;
 import org.example.domain.award.model.entity.TaskEntity;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.model.vo.TaskStatusVO;
 import org.example.domain.award.repository.IAwardRepository;
+import org.example.domain.award.service.delivery.IDeliveryAward;
 import org.example.types.event.BaseEvent;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
+@Slf4j
 @Service
 public class AwardService implements IAwardService{
 
@@ -21,6 +25,9 @@ public class AwardService implements IAwardService{
     @Resource
     private SendAwardMessageEvent sendAwardMessageEvent;
 
+    @Resource
+    private Map<String, IDeliveryAward> deliveryAwardMap;
+
     @Override
     public void saveUserAwardRecord(UserAwardRecordEntity userAwardRecordEntity) {
         /** build message object */
@@ -28,6 +35,8 @@ public class AwardService implements IAwardService{
                 .userId(userAwardRecordEntity.getUserId())
                 .awardId(userAwardRecordEntity.getAwardId())
                 .awardTitle(userAwardRecordEntity.getAwardTitle())
+                .orderId(userAwardRecordEntity.getOrderId())
+                .awardConfig(userAwardRecordEntity.getAwardConfig())
                 .build();
 
         BaseEvent.EventMessage<SendAwardMessageEvent.SendAwardMessage> sendAwardMessageEventMessage = sendAwardMessageEvent.buildEventMessage(sendAwardMessage);
@@ -46,7 +55,25 @@ public class AwardService implements IAwardService{
                 .build();
 
         iAwardRepository.doSaveUserAwardRecord(userAwardRecordAggregate);
+    }
 
+    @Override
+    public void deliveryAward(DeliveryAwardEntity deliveryAwardEntity) {
+        String awardKey = iAwardRepository.queryAwardKeyByAwardId(deliveryAwardEntity.getAwardId());
+        if (null == awardKey) {
+            log.error("delivery award - awardKey doesn't exist, awardKey:{}", awardKey);
+            return;
+        }
+
+        /** use map to get corresponding deliveryAward method for certain award */
+        IDeliveryAward deliveryAward = deliveryAwardMap.get(awardKey);
+
+        if (null == deliveryAward) {
+            log.error("delivery award - delivery doesn't implement。awardKey:{}", awardKey);
+            throw new RuntimeException("delivery award, award:" + awardKey + "corresponding delivery doesn't implement");
+        }
+        /** delivery award */
+        deliveryAward.deliveryAward(deliveryAwardEntity);
 
     }
 }
