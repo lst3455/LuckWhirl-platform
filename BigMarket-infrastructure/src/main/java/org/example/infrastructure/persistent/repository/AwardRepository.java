@@ -123,7 +123,7 @@ public class AwardRepository implements IAwardRepository {
         userAwardRecord.setUserId(userId);
         userAwardRecord.setOrderId(userAwardRecordEntity.getOrderId());
         userAwardRecord.setAwardStatus(userAwardRecordEntity.getAwardStatus().getCode());
-        /** build award record object */
+        /** build UserPointAccount object */
         UserPointAccount userPointAccount = new UserPointAccount();
         userPointAccount.setUserId(userCreditAwardEntity.getUserId());
         userPointAccount.setTotalAmount(userCreditAwardEntity.getPointAmount());
@@ -142,7 +142,7 @@ public class AwardRepository implements IAwardRepository {
 
                     int updateAwardCount = iUserAwardRecordDao.updateAwardRecordCompletedStatus(userAwardRecord);
                     if (0 == updateAwardCount) {
-                        log.warn("更新中奖记录，重复更新拦截 userId:{} deliveryAwardAggregate:{}", userId, JSON.toJSONString(deliveryAwardAggregate));
+                        log.warn("save user award record - repeated update conflict, userId:{} deliveryAwardAggregate:{}", userId, JSON.toJSONString(deliveryAwardAggregate));
                         status.setRollbackOnly();
                     }
                     return 1;
