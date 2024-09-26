@@ -14,6 +14,7 @@
         <result column="total_amount" property="totalAmount"/>
         <result column="day_amount" property="dayAmount"/>
         <result column="month_amount" property="monthAmount"/>
+        <result column="point_amount" property="pointAmount"/>
         <result column="status" property="status"/>
         <result column="out_business_no" property="outBusinessNo"/>
         <result column="create_time" property="createTime"/>

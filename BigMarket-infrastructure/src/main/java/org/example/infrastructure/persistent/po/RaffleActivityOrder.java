@@ -29,6 +29,8 @@ public class RaffleActivityOrder {
     private Integer dayAmount;
     /** month amount */
     private Integer monthAmount;
+    /** point needed to redeem this sku */
+    private Integer pointAmount;
     /** order status */
     private String status;
     /** avoid duplicate */

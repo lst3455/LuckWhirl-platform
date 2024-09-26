@@ -19,6 +19,8 @@ public class RaffleActivitySku {
     private Integer stockAmount;
     /** stock remain */
     private Integer stockRemain;
+    /** point needed to redeem this sku */
+    private Integer pointAmount;
     /** create time */
     private Date createTime;
     /** update time */

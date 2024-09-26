@@ -9,6 +9,7 @@
         <result column="activity_amount_id" property="activityAmountId"/>
         <result column="stock_amount" property="stockAmount"/>
         <result column="stock_remain" property="stockRemain"/>
+        <result column="point_amount" property="pointAmount"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
