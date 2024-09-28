@@ -16,7 +16,7 @@ public interface IActivityRepository {
 
     ActivityAmountEntity queryActivityAmountByActivityAmountId(Long activityAmountId);
 
-    void doSaveQuotaOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
+    void doSaveNonPayTypeQuotaOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
 
     void storeActivitySkuStockAmount(Long sku, Integer stockAmount);
 
@@ -49,4 +49,8 @@ public interface IActivityRepository {
     ActivityAccountEntity queryActivityAccountEntity(String userId, Long activityId);
 
     Integer queryRaffleActivityAccountPartakeAmount(String userId, Long activityId);
+
+    void doSavePayTypeQuotaOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
+
+    void updateActivityOrder(DeliveryOrderEntity deliveryOrderEntity);
 }

@@ -75,7 +75,6 @@ public class BehaviorRebateService implements IBehaviorRebateService{
         }
 
         iBehaviorRebateRepository.doSaveUserRebateOrder(behaviorEntity.getUserId(), behaviorRebateAggregateList);
-
         return rebateOrderIdList;
     }
 

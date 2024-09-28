@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
 @Data
 @Builder
@@ -23,4 +23,6 @@ public class ActivitySkuEntity {
     private Integer stockAmount;
     /** stock remain */
     private Integer stockRemain;
+    /** point needed to redeem this sku */
+    private BigDecimal pointAmount;
 }

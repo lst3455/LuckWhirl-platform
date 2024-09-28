@@ -4,13 +4,17 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import org.example.domain.activity.model.entity.*;
+import org.example.domain.activity.model.vo.OrderTradeTypeVO;
 import org.example.domain.activity.repository.IActivityRepository;
 import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.example.domain.activity.service.armory.ActivityArmory;
+import org.example.domain.activity.service.quota.policy.ITradePolicy;
 import org.example.domain.activity.service.quota.rule.IActionChain;
 import org.example.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
+
+import java.util.Map;
 
 @Slf4j
 public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActivityAccountQuotaService {
@@ -21,10 +25,13 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
 
     protected ActivityArmory activityArmory;
 
-    public AbstractRaffleActivityAccountQuota(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory, ActivityArmory activityArmory) {
+    protected Map<String, ITradePolicy> tradePolicyMap;
+
+    public AbstractRaffleActivityAccountQuota(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory, ActivityArmory activityArmory, Map<String, ITradePolicy> tradePolicyMap) {
         this.iActivityRepository = iActivityRepository;
         this.defaultActivityChainFactory = defaultActivityChainFactory;
         this.activityArmory = activityArmory;
+        this.tradePolicyMap = tradePolicyMap;
     }
 
     @Override
@@ -64,11 +71,15 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
 
         CreateQuotaOrderAggregate createQuotaOrderAggregate = buildOrderAggregate(activitySkuChargeEntity,activitySkuEntity, activityEntity, activityAmountEntity);
 
-        doSaveQuotaOrder(createQuotaOrderAggregate);
+        /** get the sku trade type */
+        OrderTradeTypeVO orderTradeTypeVO = activitySkuChargeEntity.getOrderTradeTypeVO();
+        ITradePolicy iTradePolicy = tradePolicyMap.get(orderTradeTypeVO.getCode());
+        iTradePolicy.doSaveQuotaOrder(createQuotaOrderAggregate);
 
         return createQuotaOrderAggregate.getActivityOrderEntity().getOrderId();
     }
 
+    @Deprecated
     protected abstract void doSaveQuotaOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
 
     protected abstract CreateQuotaOrderAggregate buildOrderAggregate(ActivitySkuChargeEntity activitySkuChargeEntity, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityAmountEntity activityAmountEntity);

@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -31,5 +32,18 @@ public class UpdateUserPointTest {
                 .outBusinessNo("100009900004")
                 .build();
         iPointUpdateService.createUserPointOrder(tradeEntity);
+    }
+
+    @Test
+    public void test_createUserPointOrder_pay() throws InterruptedException {
+        TradeEntity tradeEntity = TradeEntity.builder()
+                .userId("xiaofuge")
+                .tradeName(TradeNameVO.REBATE)
+                .tradeType(TradeTypeVO.SUBTRACTION)
+                .tradeAmount(new BigDecimal("-2"))
+                .outBusinessNo("700091009120")
+                .build();
+        iPointUpdateService.createUserPointOrder(tradeEntity);
+        new CountDownLatch(1).await();
     }
 }

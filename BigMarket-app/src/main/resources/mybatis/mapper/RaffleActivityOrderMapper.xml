@@ -22,8 +22,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="org.example.infrastructure.persistent.po.RaffleActivityOrder">
-        insert into raffle_activity_order(user_id, sku, activity_id, activity_name, strategy_id, order_id, order_time, total_amount, day_amount, month_amount, status, out_business_no, create_time, update_time)
-        values(#{userId}, #{sku}, #{activityId}, #{activityName}, #{strategyId}, #{orderId}, #{orderTime}, #{totalAmount}, #{dayAmount}, #{monthAmount}, #{status}, #{outBusinessNo}, now(), now())
+        insert into raffle_activity_order(user_id, sku, activity_id, activity_name, strategy_id, order_id, order_time, total_amount, day_amount, month_amount, point_amount, status, out_business_no, create_time, update_time)
+        values(#{userId}, #{sku}, #{activityId}, #{activityName}, #{strategyId}, #{orderId}, #{orderTime}, #{totalAmount}, #{dayAmount}, #{monthAmount}, #{pointAmount}, #{status}, #{outBusinessNo}, now(), now())
     </insert>
 
     <select id="queryRaffleActivityOrderByUserId" parameterType="java.lang.String" resultMap="dataMap">
@@ -31,5 +31,17 @@
         from raffle_activity_order
         where user_id = #{userId}
     </select>
+
+    <select id="queryRaffleActivityOrder" parameterType="org.example.infrastructure.persistent.po.RaffleActivityOrder" resultMap="dataMap">
+        select *
+        from raffle_activity_order
+        where user_id = #{userId} and out_business_no = #{outBusinessNo}
+    </select>
+
+    <update id="updateActivityOrderCompleted" parameterType="org.example.infrastructure.persistent.po.RaffleActivityOrder">
+        update raffle_activity_order set status = 'completed', update_time = now()
+        where user_id = #{userId} and out_business_no = #{outBusinessNo} and status = 'pending'
+    </update>
+
 
 </mapper>

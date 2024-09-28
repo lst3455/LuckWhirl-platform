@@ -1,15 +1,21 @@
 package org.example.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.point.model.aggregate.TradeAggregate;
+import org.example.domain.point.model.entity.TaskEntity;
 import org.example.domain.point.model.entity.UserPointAccountEntity;
 import org.example.domain.point.model.entity.UserPointOrderEntity;
 import org.example.domain.point.repository.IPointRepository;
+import org.example.infrastructure.event.EventPublisher;
+import org.example.infrastructure.persistent.dao.ITaskDao;
 import org.example.infrastructure.persistent.dao.IUserPointAccountDao;
 import org.example.infrastructure.persistent.dao.IUserPointOrderDao;
+import org.example.infrastructure.persistent.po.Task;
 import org.example.infrastructure.persistent.po.UserPointAccount;
 import org.example.infrastructure.persistent.po.UserPointOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -28,6 +34,10 @@ public class PointRepository implements IPointRepository {
     private IDBRouterStrategy idbRouterStrategy;
     @Resource
     private TransactionTemplate transactionTemplate;
+    @Resource
+    private ITaskDao iTaskDao;
+    @Autowired
+    private EventPublisher eventPublisher;
 
 
     @Override
@@ -40,6 +50,7 @@ public class PointRepository implements IPointRepository {
         String userId = tradeAggregate.getUserId();
         UserPointAccountEntity userPointAccountEntity = tradeAggregate.getUserPointAccountEntity();
         UserPointOrderEntity userPointOrderEntity = tradeAggregate.getUserPointOrderEntity();
+        TaskEntity taskEntity = tradeAggregate.getTaskEntity();
 
         /** UserPointAccount po */
         UserPointAccount userPointAccount = new UserPointAccount();
@@ -48,12 +59,20 @@ public class PointRepository implements IPointRepository {
         userPointAccount.setAvailableAmount(userPointAccountEntity.getUpdatedAmount());
         /** UserPointOrder po */
         UserPointOrder userPointOrder = new UserPointOrder();
-        userPointOrder.setUserId(userPointOrderEntity.getUserId());
+        userPointOrder.setUserId(userId);
         userPointOrder.setOrderId(userPointOrderEntity.getOrderId());
         userPointOrder.setTradeName(userPointOrderEntity.getTradeName().getName());
         userPointOrder.setTradeType(userPointOrderEntity.getTradeType().getCode());
         userPointOrder.setTradeAmount(userPointOrderEntity.getTradeAmount());
         userPointOrder.setOutBusinessNo(userPointOrderEntity.getOutBusinessNo());
+
+        Task task = new Task();
+        task.setUserId(userId);
+        task.setTopic(taskEntity.getTopic());
+        task.setMessageId(taskEntity.getMessageId());
+        task.setMessage(JSON.toJSONString(taskEntity.getMessage()));
+        task.setStatus(taskEntity.getStatus().getCode());
+
         try {
             idbRouterStrategy.doRouter(userId);
             transactionTemplate.execute(status -> {
@@ -65,6 +84,7 @@ public class PointRepository implements IPointRepository {
                     }
                     /** insert user point account */
                     iUserPointOrderDao.insertUserPointOrder(userPointOrder);
+                    iTaskDao.insertTask(task);
                     return 1;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
@@ -79,5 +99,14 @@ public class PointRepository implements IPointRepository {
             idbRouterStrategy.clear();
         }
 
+        try {
+            /** send MQ */
+            eventPublisher.publish(task.getTopic(),task.getMessage());
+            iTaskDao.updateTaskSendMessageCompleted(task);
+            log.info("update user point account and record, send MQ success, userId:{}, orderId:{}, topic:{}",userId,userPointOrder.getOrderId(),task.getTopic());
+        }catch (Exception e){
+            log.error("update user point account and record, send MQ success, userId:{}, orderId:{}, topic:{}",userId,userPointOrder.getOrderId(),task.getTopic(),e);
+            iTaskDao.updateTaskSendMessageFail(task);
+        }
     }
 }

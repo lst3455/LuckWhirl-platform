@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.domain.activity.model.vo.OrderStatusVO;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -34,6 +35,8 @@ public class ActivityOrderEntity {
     private Integer dayAmount;
     /** month amount */
     private Integer monthAmount;
+
+    private BigDecimal pointAmount;
     /** order status */
     private OrderStatusVO status;
     /** avoid duplicate */

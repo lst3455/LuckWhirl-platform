@@ -2,6 +2,7 @@ package org.example.infrastructure.persistent.po;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -30,7 +31,7 @@ public class RaffleActivityOrder {
     /** month amount */
     private Integer monthAmount;
     /** point needed to redeem this sku */
-    private Integer pointAmount;
+    private BigDecimal pointAmount;
     /** order status */
     private String status;
     /** avoid duplicate */
