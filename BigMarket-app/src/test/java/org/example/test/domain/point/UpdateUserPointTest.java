@@ -31,7 +31,7 @@ public class UpdateUserPointTest {
                 .tradeAmount(new BigDecimal("-10.91"))
                 .outBusinessNo("100009900004")
                 .build();
-        iPointUpdateService.createUserPointOrder(tradeEntity);
+        iPointUpdateService.createPayTypeUserPointOrder(tradeEntity);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class UpdateUserPointTest {
                 .tradeAmount(new BigDecimal("-2"))
                 .outBusinessNo("700091009120")
                 .build();
-        iPointUpdateService.createUserPointOrder(tradeEntity);
+        iPointUpdateService.createPayTypeUserPointOrder(tradeEntity);
         new CountDownLatch(1).await();
     }
 }

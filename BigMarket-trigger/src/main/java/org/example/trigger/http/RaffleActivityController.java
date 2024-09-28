@@ -304,7 +304,7 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .outBusinessNo(pendingActivityOrderEntity.getOutBusinessNo())
                     .build();
             /** update activity order pending to complete and update activity account*/
-            String orderId = iPointUpdateService.createUserPointOrder(tradeEntity);
+            String orderId = iPointUpdateService.createPayTypeUserPointOrder(tradeEntity);
             log.info("point redeem sku complete, userId:{}, sku:{}, orderId:{}", skuProductRequestDTO.getUserId(), skuProductRequestDTO.getSku(), orderId);
             return Response.<Boolean>builder()
                     .code(ResponseCode.SUCCESS.getCode())
