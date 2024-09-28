@@ -40,11 +40,12 @@ public class SendRebateConsumer {
             }.getType());
             SendRebateMessageEvent.SendRebateMessage rebateMessage = eventMessage.getData();
 
+            ActivitySkuChargeEntity activitySkuChargeEntity;
             switch (rebateMessage.getRebateType()) {
                 case "sku":
                     log.info("listen to sendTaskMessage - sku rebate, topic: {}, message: {}", topic, message);
                     /** create ActivitySkuChargeEntity and save to database */
-                    ActivitySkuChargeEntity activitySkuChargeEntity = new ActivitySkuChargeEntity();
+                    activitySkuChargeEntity = new ActivitySkuChargeEntity();
                     activitySkuChargeEntity.setUserId(rebateMessage.getUserId());
                     activitySkuChargeEntity.setSku(Long.valueOf(rebateMessage.getRebateConfig()));
                     activitySkuChargeEntity.setOutBusinessNo(rebateMessage.getBizId());
@@ -60,7 +61,7 @@ public class SendRebateConsumer {
                             .tradeAmount(new BigDecimal(rebateMessage.getRebateConfig()))
                             .outBusinessNo(rebateMessage.getBizId())
                             .build();
-                    iPointUpdateService.createUserPointOrder(tradeEntity);
+                    iPointUpdateService.createNonPayTypeUserPointOrder(tradeEntity);
                     break;
             }
         } catch (Exception e) {

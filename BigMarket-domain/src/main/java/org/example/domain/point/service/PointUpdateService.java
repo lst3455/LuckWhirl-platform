@@ -24,8 +24,8 @@ public class PointUpdateService implements IPointUpdateService{
     private SendPointMessageEvent sendPointMessageEvent;
 
     @Override
-    public String createUserPointOrder(TradeEntity tradeEntity) {
-        log.info("update user point account point start, userId:{}, tradeName:{}, amount:{}", tradeEntity.getUserId(), tradeEntity.getTradeName(), tradeEntity.getTradeAmount());
+    public String createPayTypeUserPointOrder(TradeEntity tradeEntity) {
+        log.info("update pay type user point account point start, userId:{}, tradeName:{}, amount:{}", tradeEntity.getUserId(), tradeEntity.getTradeName(), tradeEntity.getTradeAmount());
         UserPointAccountEntity userPointAccountEntity = TradeAggregate.createUserPointAccountEntity(
                 tradeEntity.getUserId(),
                 tradeEntity.getTradeAmount());
@@ -53,9 +53,34 @@ public class PointUpdateService implements IPointUpdateService{
                 .taskEntity(taskEntity)
                 .build();
 
-        iPointRepository.doSaveUserCreditTradeOrder(tradeAggregate);
-        log.info("update user point account point complete, userId:{}, orderId:{}", tradeEntity.getUserId(), userPointOrderEntity.getOrderId());
+        iPointRepository.doSavePayTypeUserPointOrder(tradeAggregate);
+        log.info("update pay type user point account point complete, userId:{}, orderId:{}", tradeEntity.getUserId(), userPointOrderEntity.getOrderId());
+        return userPointOrderEntity.getOrderId();
+    }
 
+    @Override
+    public String createNonPayTypeUserPointOrder(TradeEntity tradeEntity) {
+        log.info("update non pay type user point account point start, userId:{}, tradeName:{}, amount:{}", tradeEntity.getUserId(), tradeEntity.getTradeName(), tradeEntity.getTradeAmount());
+        UserPointAccountEntity userPointAccountEntity = TradeAggregate.createUserPointAccountEntity(
+                tradeEntity.getUserId(),
+                tradeEntity.getTradeAmount());
+
+        UserPointOrderEntity userPointOrderEntity = TradeAggregate.createUserPointOrderEntity(
+                tradeEntity.getUserId(),
+                tradeEntity.getTradeName(),
+                tradeEntity.getTradeType(),
+                tradeEntity.getTradeAmount(),
+                tradeEntity.getOutBusinessNo());
+
+        /** build the aggregate object */
+        TradeAggregate tradeAggregate = TradeAggregate.builder()
+                .userId(tradeEntity.getUserId())
+                .userPointAccountEntity(userPointAccountEntity)
+                .userPointOrderEntity(userPointOrderEntity)
+                .build();
+
+        iPointRepository.doSaveNonPayTypeUserPointOrder(tradeAggregate);
+        log.info("update non pay type user point account point complete, userId:{}, orderId:{}", tradeEntity.getUserId(), userPointOrderEntity.getOrderId());
         return userPointOrderEntity.getOrderId();
     }
 

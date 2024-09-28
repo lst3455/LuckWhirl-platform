@@ -15,7 +15,6 @@ import org.example.infrastructure.persistent.dao.IUserPointOrderDao;
 import org.example.infrastructure.persistent.po.Task;
 import org.example.infrastructure.persistent.po.UserPointAccount;
 import org.example.infrastructure.persistent.po.UserPointOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -36,17 +35,11 @@ public class PointRepository implements IPointRepository {
     private TransactionTemplate transactionTemplate;
     @Resource
     private ITaskDao iTaskDao;
-    @Autowired
+    @Resource
     private EventPublisher eventPublisher;
 
-
     @Override
-    public String createUserPointOrder() {
-        return "";
-    }
-
-    @Override
-    public void doSaveUserCreditTradeOrder(TradeAggregate tradeAggregate) {
+    public void doSavePayTypeUserPointOrder(TradeAggregate tradeAggregate) {
         String userId = tradeAggregate.getUserId();
         UserPointAccountEntity userPointAccountEntity = tradeAggregate.getUserPointAccountEntity();
         UserPointOrderEntity userPointOrderEntity = tradeAggregate.getUserPointOrderEntity();
@@ -107,6 +100,52 @@ public class PointRepository implements IPointRepository {
         }catch (Exception e){
             log.error("update user point account and record, send MQ success, userId:{}, orderId:{}, topic:{}",userId,userPointOrder.getOrderId(),task.getTopic(),e);
             iTaskDao.updateTaskSendMessageFail(task);
+        }
+    }
+
+    @Override
+    public void doSaveNonPayTypeUserPointOrder(TradeAggregate tradeAggregate) {
+        String userId = tradeAggregate.getUserId();
+        UserPointAccountEntity userPointAccountEntity = tradeAggregate.getUserPointAccountEntity();
+        UserPointOrderEntity userPointOrderEntity = tradeAggregate.getUserPointOrderEntity();
+
+        /** UserPointAccount po */
+        UserPointAccount userPointAccount = new UserPointAccount();
+        userPointAccount.setUserId(userId);
+        userPointAccount.setTotalAmount(userPointAccountEntity.getUpdatedAmount());
+        userPointAccount.setAvailableAmount(userPointAccountEntity.getUpdatedAmount());
+        /** UserPointOrder po */
+        UserPointOrder userPointOrder = new UserPointOrder();
+        userPointOrder.setUserId(userId);
+        userPointOrder.setOrderId(userPointOrderEntity.getOrderId());
+        userPointOrder.setTradeName(userPointOrderEntity.getTradeName().getName());
+        userPointOrder.setTradeType(userPointOrderEntity.getTradeType().getCode());
+        userPointOrder.setTradeAmount(userPointOrderEntity.getTradeAmount());
+        userPointOrder.setOutBusinessNo(userPointOrderEntity.getOutBusinessNo());
+
+        try {
+            idbRouterStrategy.doRouter(userId);
+            transactionTemplate.execute(status -> {
+                try {
+                    int updateAccountPointAmount = iUserPointAccountDao.updatePointAmount(userPointAccount);
+                    /** update fail, do not have this user account */
+                    if (0 == updateAccountPointAmount) {
+                        iUserPointAccountDao.insertUserPointAccount(userPointAccount);
+                    }
+                    /** insert user point account */
+                    iUserPointOrderDao.insertUserPointOrder(userPointOrder);
+                    return 1;
+                } catch (DuplicateKeyException e) {
+                    status.setRollbackOnly();
+                    log.error("update user point account error - duplicate key conflict, userId:{}, orderId:{}", userId, userPointOrder.getOrderId(),e);
+                } catch (Exception e) {
+                    status.setRollbackOnly();
+                    log.error("update user point account fail, userId:{}, orderId:{}", userId, userPointOrder.getOrderId(),e);
+                }
+                return 1;
+            });
+        } finally {
+            idbRouterStrategy.clear();
         }
     }
 

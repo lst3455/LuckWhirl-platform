@@ -5,9 +5,11 @@ import org.example.domain.point.model.entity.UserPointAccountEntity;
 
 public interface IPointRepository {
 
-    String createUserPointOrder();
 
-    void doSaveUserCreditTradeOrder(TradeAggregate tradeAggregate);
+    void doSavePayTypeUserPointOrder(TradeAggregate tradeAggregate);
+
+    void doSaveNonPayTypeUserPointOrder(TradeAggregate tradeAggregate);
 
     UserPointAccountEntity queryUserPointAccount(String userId);
+
 }
