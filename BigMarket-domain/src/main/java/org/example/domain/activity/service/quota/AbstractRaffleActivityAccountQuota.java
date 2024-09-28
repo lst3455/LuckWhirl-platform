@@ -46,7 +46,7 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
     }
 
     @Override
-    public String createSkuChargeOrder(ActivitySkuChargeEntity activitySkuChargeEntity) {
+    public PendingActivityOrderEntity createSkuChargeOrder(ActivitySkuChargeEntity activitySkuChargeEntity) {
         /** validate the data first */
         String userId = activitySkuChargeEntity.getUserId();
         Long sku = activitySkuChargeEntity.getSku();
@@ -54,6 +54,11 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
         if (userId == null || sku == null || outBusinessNo == null) {
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
+
+        /** check if exist pending activity order */
+        PendingActivityOrderEntity pendingActivityOrderEntity = iActivityRepository.queryPendingActivityOrder(activitySkuChargeEntity);
+        if (pendingActivityOrderEntity != null) return pendingActivityOrderEntity;
+
         /** get sku entity */
         ActivitySkuEntity activitySkuEntity = iActivityRepository.queryActivitySkuBySku(activitySkuChargeEntity.getSku());
         /** armory sku amount */
@@ -76,7 +81,14 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
         ITradePolicy iTradePolicy = tradePolicyMap.get(orderTradeTypeVO.getCode());
         iTradePolicy.doSaveQuotaOrder(createQuotaOrderAggregate);
 
-        return createQuotaOrderAggregate.getActivityOrderEntity().getOrderId();
+        /** convert new create ActivityOrderEntity to PendingActivityOrderEntity to return */
+        ActivityOrderEntity activityOrderEntity = createQuotaOrderAggregate.getActivityOrderEntity();
+        return PendingActivityOrderEntity.builder()
+                .userId(activityOrderEntity.getUserId())
+                .orderId(activityOrderEntity.getOrderId())
+                .outBusinessNo(activityOrderEntity.getOutBusinessNo())
+                .pointAmount(activityOrderEntity.getPointAmount())
+                .build();
     }
 
     @Deprecated

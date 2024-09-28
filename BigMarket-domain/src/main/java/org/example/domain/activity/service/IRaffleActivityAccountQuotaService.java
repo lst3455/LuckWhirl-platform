@@ -6,7 +6,7 @@ public interface IRaffleActivityAccountQuotaService {
 
     ActivityOrderEntity createActivityOrder(ActivityShopCartEntity activityShopCartEntity);
 
-    String createSkuChargeOrder(ActivitySkuChargeEntity activitySkuChargeEntity);
+    PendingActivityOrderEntity createSkuChargeOrder(ActivitySkuChargeEntity activitySkuChargeEntity);
 
     void updateActivityOrder(DeliveryOrderEntity deliveryOrderEntity);
 

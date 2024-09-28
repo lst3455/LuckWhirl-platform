@@ -1,8 +1,10 @@
 package org.example.test.domain.activity;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import org.example.domain.activity.model.entity.ActivitySkuChargeEntity;
+import org.example.domain.activity.model.entity.PendingActivityOrderEntity;
 import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.example.domain.activity.service.armory.ActivityArmory;
 import org.example.types.exception.AppException;
@@ -39,8 +41,8 @@ public class ActivitySkuConsistentTest {
                 activitySkuChargeEntity.setSku(9011L);
                 activitySkuChargeEntity.setUserId("xiaofuge");
                 activitySkuChargeEntity.setOutBusinessNo(RandomStringUtils.randomNumeric(12));
-                String orderId = iRaffleActivityAccountQuotaService.createSkuChargeOrder(activitySkuChargeEntity);
-                log.info("test result: {}",orderId);
+                PendingActivityOrderEntity pendingActivityOrderEntity = iRaffleActivityAccountQuotaService.createSkuChargeOrder(activitySkuChargeEntity);
+                log.info("test result: {}", JSON.toJSONString(pendingActivityOrderEntity));
             }catch (AppException e){
                 log.warn(e.getInfo());
             }

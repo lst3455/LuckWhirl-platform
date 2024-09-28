@@ -25,4 +25,10 @@
         values (#{userId}, #{totalAmount}, #{availableAmount}, #{accountStatus}, now(), now())
     </insert>
 
+    <select id="queryUserPointAccount" parameterType="org.example.infrastructure.persistent.po.UserPointAccount" resultMap="dataMap">
+        select *
+        from user_point_account
+        where user_id = #{userId}
+    </select>
+
 </mapper>

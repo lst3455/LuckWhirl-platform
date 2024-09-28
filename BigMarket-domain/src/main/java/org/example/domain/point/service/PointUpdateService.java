@@ -58,4 +58,9 @@ public class PointUpdateService implements IPointUpdateService{
 
         return userPointOrderEntity.getOrderId();
     }
+
+    @Override
+    public UserPointAccountEntity queryUserPointAccount(String userId) {
+        return iPointRepository.queryUserPointAccount(userId);
+    }
 }

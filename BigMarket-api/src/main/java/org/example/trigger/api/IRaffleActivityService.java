@@ -1,10 +1,10 @@
 package org.example.trigger.api;
 
-import org.example.trigger.api.dto.ActivityDrawRequestDTO;
-import org.example.trigger.api.dto.ActivityDrawResponseDTO;
-import org.example.trigger.api.dto.UserActivityAccountRequestDTO;
-import org.example.trigger.api.dto.UserActivityAccountResponseDTO;
+import org.example.trigger.api.dto.*;
 import org.example.types.model.Response;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public interface IRaffleActivityService {
 
@@ -17,5 +17,11 @@ public interface IRaffleActivityService {
     Response<Boolean> isDailySignRebateGet(String userId);
 
     Response<UserActivityAccountResponseDTO> queryRaffleActivityAccount(UserActivityAccountRequestDTO userActivityAccountRequestDTO);
+
+    Response<Boolean> pointRedeemSku(SkuProductRequestDTO skuProductRequestDTO);
+
+    Response<BigDecimal> queryUserPointAccount(String userId);
+
+    Response<List<SkuProductResponseDTO>> querySkuProductListByActivityId(Long activityId);
 
 }

@@ -43,5 +43,13 @@
         where user_id = #{userId} and out_business_no = #{outBusinessNo} and status = 'pending'
     </update>
 
+    <select id="queryPendingActivityOrder" parameterType="org.example.infrastructure.persistent.po.RaffleActivityOrder" resultMap="dataMap">
+        select *
+        from raffle_activity_order
+        where user_id = #{userId} and sku = #{sku} and status = 'wait_pay' and order_time >= NOW() - INTERVAL 1 MONTH
+        limit 1
+    </select>
+
+
 
 </mapper>

@@ -109,4 +109,20 @@ public class PointRepository implements IPointRepository {
             iTaskDao.updateTaskSendMessageFail(task);
         }
     }
+
+    @Override
+    public UserPointAccountEntity queryUserPointAccount(String userId) {
+        UserPointAccount userPointAccount = new UserPointAccount();
+        userPointAccount.setUserId(userId);
+        try{
+            idbRouterStrategy.doRouter(userId);
+            userPointAccount = iUserPointAccountDao.queryUserPointAccount(userId);
+            return UserPointAccountEntity.builder()
+                    .userId(userId)
+                    .updatedAmount(userPointAccount.getAvailableAmount())
+                    .build();
+        }finally {
+            idbRouterStrategy.clear();
+        }
+    }
 }

@@ -674,4 +674,44 @@ public class ActivityRepository implements IActivityRepository {
             idbRouterStrategy.clear();
         }
     }
+
+    @Override
+    public PendingActivityOrderEntity queryPendingActivityOrder(ActivitySkuChargeEntity activitySkuChargeEntity) {
+        RaffleActivityOrder raffleActivityOrder = new RaffleActivityOrder();
+        raffleActivityOrder.setUserId(activitySkuChargeEntity.getUserId());
+        raffleActivityOrder.setSku(activitySkuChargeEntity.getSku());
+        raffleActivityOrder = iRaffleActivityOrderDao.queryPendingActivityOrder(raffleActivityOrder);
+
+        if(raffleActivityOrder == null) return null;
+        return PendingActivityOrderEntity.builder()
+                .userId(raffleActivityOrder.getUserId())
+                .orderId(raffleActivityOrder.getOrderId())
+                .outBusinessNo(raffleActivityOrder.getOutBusinessNo())
+                .pointAmount(raffleActivityOrder.getPointAmount())
+                .build();
+    }
+
+    @Override
+    public List<SkuProductEntity> querySkuProductEntityListByActivityId(Long activityId) {
+        List<RaffleActivitySku> raffleActivitySkuList = iRaffleActivitySkuDao.queryRaffleActivitySkuByActivityId(activityId);
+        List<SkuProductEntity> skuProductEntityList = new ArrayList<>(raffleActivitySkuList.size());
+        for (RaffleActivitySku raffleActivitySku : raffleActivitySkuList) {
+            RaffleActivityAmount raffleActivityAmount = iRaffleActivityAmountDao.queryRaffleActivityAmountByActivityAmountId(raffleActivitySku.getActivityAmountId());
+            SkuProductEntity.ActivityAmount activityAmount = new SkuProductEntity.ActivityAmount();
+            activityAmount.setTotalAmount(raffleActivityAmount.getTotalAmount());
+            activityAmount.setMonthAmount(raffleActivityAmount.getMonthAmount());
+            activityAmount.setDayAmount(raffleActivityAmount.getDayAmount());
+
+            skuProductEntityList.add(SkuProductEntity.builder()
+                    .sku(raffleActivitySku.getSku())
+                    .activityId(raffleActivitySku.getActivityId())
+                    .activityAmountId(raffleActivitySku.getActivityAmountId())
+                    .stockAmount(raffleActivitySku.getStockAmount())
+                    .stockRemain(raffleActivitySku.getStockRemain())
+                    .pointAmount(raffleActivitySku.getPointAmount())
+                    .activityAmount(activityAmount)
+                    .build());
+        }
+        return skuProductEntityList;
+    }
 }

@@ -2,15 +2,22 @@ package org.example.trigger.http;
 
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.example.domain.activity.model.entity.ActivityAccountEntity;
-import org.example.domain.activity.model.entity.UserRaffleOrderEntity;
+import org.example.domain.activity.model.entity.*;
+import org.example.domain.activity.model.vo.OrderTradeTypeVO;
 import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.example.domain.activity.service.IRaffleActivityPartakeService;
+import org.example.domain.activity.service.IRaffleActivitySkuProductService;
 import org.example.domain.activity.service.armory.IActivityArmory;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.model.vo.AwardStatusVO;
 import org.example.domain.award.service.IAwardService;
+import org.example.domain.point.model.entity.TradeEntity;
+import org.example.domain.point.model.entity.UserPointAccountEntity;
+import org.example.domain.point.model.vo.TradeNameVO;
+import org.example.domain.point.model.vo.TradeTypeVO;
+import org.example.domain.point.service.IPointUpdateService;
 import org.example.domain.rebate.model.entity.BehaviorEntity;
 import org.example.domain.rebate.model.entity.BehaviorRebateOrderEntity;
 import org.example.domain.rebate.model.vo.BehaviorTypeVO;
@@ -20,17 +27,16 @@ import org.example.domain.strategy.model.entity.RaffleFactorEntity;
 import org.example.domain.strategy.service.IRaffleStrategy;
 import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.trigger.api.IRaffleActivityService;
-import org.example.trigger.api.dto.ActivityDrawRequestDTO;
-import org.example.trigger.api.dto.ActivityDrawResponseDTO;
-import org.example.trigger.api.dto.UserActivityAccountRequestDTO;
-import org.example.trigger.api.dto.UserActivityAccountResponseDTO;
+import org.example.trigger.api.dto.*;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 import org.example.types.model.Response;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -62,6 +68,12 @@ public class RaffleActivityController implements IRaffleActivityService {
 
     @Resource
     private IBehaviorRebateService iBehaviorRebateService;
+
+    @Resource
+    private IPointUpdateService iPointUpdateService;
+
+    @Resource
+    private IRaffleActivitySkuProductService iRaffleActivitySkuProductService;
 
     /**
      * armory the raffle activity sku and strategy into cache
@@ -258,6 +270,127 @@ public class RaffleActivityController implements IRaffleActivityService {
         } catch (Exception e) {
             log.error("query raffle activity account error, userId:{}, activityId:{}", userActivityAccountRequestDTO.getUserId(), userActivityAccountRequestDTO.getActivityId(), e);
             return Response.<UserActivityAccountResponseDTO>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * user use point to redeem sku to charge draw amount
+     * <a href="http://localhost:8091/api/v1/raffle/activity/point_redeem_sku">/api/v1/raffle/activity/point_redeem_sku</a>
+     *
+     * @param skuProductRequestDTO
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "point_redeem_sku", method = RequestMethod.POST)
+    public Response<Boolean> pointRedeemSku(@RequestBody SkuProductRequestDTO skuProductRequestDTO) {
+        try {
+            log.info("point redeem sku start, userId:{}, sku:{}", skuProductRequestDTO.getUserId(), skuProductRequestDTO.getSku());
+            /** create activity order pending */
+            ActivitySkuChargeEntity activitySkuChargeEntity = new ActivitySkuChargeEntity();
+            activitySkuChargeEntity.setSku(skuProductRequestDTO.getSku());
+            activitySkuChargeEntity.setUserId(skuProductRequestDTO.getUserId());
+            activitySkuChargeEntity.setOutBusinessNo(RandomStringUtils.randomNumeric(12));
+            activitySkuChargeEntity.setOrderTradeTypeVO(OrderTradeTypeVO.pay_trade);
+            PendingActivityOrderEntity pendingActivityOrderEntity = iRaffleActivityAccountQuotaService.createSkuChargeOrder(activitySkuChargeEntity);
+
+            TradeEntity tradeEntity = TradeEntity.builder()
+                    .userId(skuProductRequestDTO.getUserId())
+                    .tradeName(TradeNameVO.REBATE)
+                    .tradeType(TradeTypeVO.SUBTRACTION)
+                    .tradeAmount(pendingActivityOrderEntity.getPointAmount().negate())
+                    .outBusinessNo(pendingActivityOrderEntity.getOutBusinessNo())
+                    .build();
+            /** update activity order pending to complete and update activity account*/
+            String orderId = iPointUpdateService.createUserPointOrder(tradeEntity);
+            log.info("point redeem sku complete, userId:{}, sku:{}, orderId:{}", skuProductRequestDTO.getUserId(), skuProductRequestDTO.getSku(), orderId);
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(true)
+                    .build();
+        } catch (Exception e) {
+            log.error("point redeem sku error, userId:{}", skuProductRequestDTO.getUserId(), e);
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * query user point account
+     * <a href="http://localhost:8091/api/v1/raffle/activity/query_user_point_account">/api/v1/raffle/activity/query_user_point_account</a>
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "query_user_point_account", method = RequestMethod.POST)
+    public Response<BigDecimal> queryUserPointAccount(@RequestParam String userId) {
+        try {
+            log.info("query user point account start, userId:{}", userId);
+            UserPointAccountEntity userPointAccountEntity = iPointUpdateService.queryUserPointAccount(userId);
+
+            log.info("query user point account complete, userId:{}", userId);
+            return Response.<BigDecimal>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(userPointAccountEntity.getUpdatedAmount())
+                    .build();
+        } catch (Exception e) {
+            log.error("query user point account complete, userId:{}", userId, e);
+            return Response.<BigDecimal>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * query sku product list by activityId
+     * <a href="http://localhost:8091/api/v1/raffle/activity/query_sku_product_list_by_activityId">/api/v1/raffle/activity/query_sku_product_list_by_activityId</a>
+     *
+     * @param activityId
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "query_sku_product_list_by_activityId", method = RequestMethod.POST)
+    public Response<List<SkuProductResponseDTO>> querySkuProductListByActivityId(@RequestParam Long activityId) {
+        try {
+            log.info("query sku product list by activityId start, activityId:{}", activityId);
+            if (activityId == null){
+                throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
+            }
+            List<SkuProductEntity> skuProductEntityList = iRaffleActivitySkuProductService.querySkuProductEntityListByActivityId(activityId);
+            List<SkuProductResponseDTO> skuProductResponseDTOList = new ArrayList<>(skuProductEntityList.size());
+            for (SkuProductEntity skuProductEntity : skuProductEntityList) {
+                SkuProductResponseDTO.ActivityAmount activityAmount = new SkuProductResponseDTO.ActivityAmount();
+                activityAmount.setTotalAmount(skuProductEntity.getActivityAmount().getTotalAmount());
+                activityAmount.setMonthAmount(skuProductEntity.getActivityAmount().getMonthAmount());
+                activityAmount.setDayAmount(skuProductEntity.getActivityAmount().getDayAmount());
+
+                SkuProductResponseDTO skuProductResponseDTO = new SkuProductResponseDTO();
+                skuProductResponseDTO.setSku(skuProductEntity.getSku());
+                skuProductResponseDTO.setActivityId(skuProductEntity.getActivityId());
+                skuProductResponseDTO.setActivityAmountId(skuProductEntity.getActivityAmountId());
+                skuProductResponseDTO.setStockAmount(skuProductEntity.getStockAmount());
+                skuProductResponseDTO.setStockRemain(skuProductEntity.getStockRemain());
+                skuProductResponseDTO.setPointAmount(skuProductEntity.getPointAmount());
+                skuProductResponseDTO.setActivityAmount(activityAmount);
+                skuProductResponseDTOList.add(skuProductResponseDTO);
+            }
+            log.info("query sku product list by activityId complete, activityId:{}", activityId);
+            return Response.<List<SkuProductResponseDTO>>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(skuProductResponseDTOList)
+                    .build();
+        } catch (Exception e) {
+            log.error("query sku product list by activityId error, activityId:{}", activityId, e);
+            return Response.<List<SkuProductResponseDTO>>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();
