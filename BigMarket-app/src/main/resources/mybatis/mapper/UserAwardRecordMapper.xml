@@ -32,7 +32,7 @@
     <select id="queryUserAwardRecordList" parameterType="org.example.infrastructure.persistent.po.UserAwardRecord" resultMap="dataMap">
         SELECT *
         FROM user_award_record
-        WHERE user_id = #{userId} and activity_id = #{activity_id}
+        WHERE user_id = #{userId} and activity_id = #{activityId}
     </select>
 
 </mapper>

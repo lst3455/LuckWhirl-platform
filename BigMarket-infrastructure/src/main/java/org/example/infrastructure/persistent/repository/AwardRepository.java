@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -78,31 +79,31 @@ public class AwardRepository implements IAwardRepository {
         try {
             idbRouterStrategy.doRouter(userId);
             transactionTemplate.execute(status -> {
-                try{
+                try {
                     iTaskDao.insertTask(task);
                     iUserAwardRecordDao.insertUserAwardRecord(userAwardRecord);
 
                     int amount = iUserRaffleOrderDao.updateUserRaffleOrderStatusUsed(userRaffleOrder);
-                    if (amount != 1){
+                    if (amount != 1) {
                         status.setRollbackOnly();
                         log.error("save user award record - update userRaffleOrder fail, userId: {}, activityId: {}, awardId: {}", userId, activityId, awardId);
-                        throw new AppException(ResponseCode.ACTIVITY_RAFFLE_ORDER_ERROR.getCode(),ResponseCode.ACTIVITY_RAFFLE_ORDER_ERROR.getInfo());
+                        throw new AppException(ResponseCode.ACTIVITY_RAFFLE_ORDER_ERROR.getCode(), ResponseCode.ACTIVITY_RAFFLE_ORDER_ERROR.getInfo());
                     }
                     return 1;
-                }catch (DuplicateKeyException e){
+                } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.error("save user award record - unique key conflict, userId: {}, activityId: {}, awardId: {}", userId, activityId, awardId, e);
-                    throw new AppException(ResponseCode.INDEX_DUPLICATE.getCode(),e);
+                    throw new AppException(ResponseCode.INDEX_DUPLICATE.getCode(), e);
                 }
             });
         } finally {
             idbRouterStrategy.clear();
         }
         /** send the MQ message */
-        try{
-            eventPublisher.publish(task.getTopic(),task.getMessage());
+        try {
+            eventPublisher.publish(task.getTopic(), task.getMessage());
             iTaskDao.updateTaskSendMessageCompleted(task);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("save user award record - send MQ message fail userId: {} topic: {}", userId, task.getTopic());
             iTaskDao.updateTaskSendMessageFail(task);
         }
@@ -169,6 +170,25 @@ public class AwardRepository implements IAwardRepository {
     public List<UserAwardRecordEntity> queryUserAwardRecordList(UserAwardRecordEntity userAwardRecordEntity) {
         UserAwardRecord userAwardRecord = new UserAwardRecord();
         userAwardRecord.setUserId(userAwardRecordEntity.getUserId());
-        return iUserAwardRecordDao.queryUserAwardRecordList(userAwardRecord);
+        userAwardRecord.setActivityId(userAwardRecordEntity.getActivityId());
+        try {
+            idbRouterStrategy.doRouter(userAwardRecord.getUserId());
+            List<UserAwardRecord> userAwardRecordList = iUserAwardRecordDao.queryUserAwardRecordList(userAwardRecord);
+            List<UserAwardRecordEntity> userAwardRecordEntityList = new ArrayList<>();
+            for (UserAwardRecord userAwardRecordInList : userAwardRecordList) {
+                userAwardRecordEntityList.add(UserAwardRecordEntity.builder()
+                        .userId(userAwardRecordInList.getUserId())
+                        .activityId(userAwardRecordInList.getActivityId())
+                        .strategyId(userAwardRecordInList.getStrategyId())
+                        .orderId(userAwardRecordInList.getOrderId())
+                        .awardId(userAwardRecordInList.getAwardId())
+                        .awardTitle(userAwardRecordInList.getAwardTitle())
+                        .awardTime(userAwardRecordInList.getAwardTime())
+                        .build());
+            }
+            return userAwardRecordEntityList;
+        } finally {
+            idbRouterStrategy.clear();
+        }
     }
 }

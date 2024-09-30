@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,5 +12,5 @@ import java.util.Date;
 public class UserAwardRecordResponseDTO {
     private String userId;
     private String awardTitle;
-    private Date awardTime;
+    private String awardTime;
 }
