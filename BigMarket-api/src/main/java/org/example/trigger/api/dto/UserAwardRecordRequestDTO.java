@@ -1,17 +1,15 @@
-package org.example.domain.point.model.entity;
+package org.example.trigger.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserPointAccountEntity {
+@NoArgsConstructor
+public class UserAwardRecordRequestDTO {
     private String userId;
-    private BigDecimal availableAmount;
+    private Long activityId;
 }

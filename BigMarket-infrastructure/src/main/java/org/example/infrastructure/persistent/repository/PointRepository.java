@@ -3,6 +3,7 @@ package org.example.infrastructure.persistent.repository;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.example.domain.award.model.vo.AccountStatusVO;
 import org.example.domain.point.model.aggregate.TradeAggregate;
 import org.example.domain.point.model.entity.TaskEntity;
 import org.example.domain.point.model.entity.UserPointAccountEntity;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 @Slf4j
 @Repository
@@ -45,11 +47,14 @@ public class PointRepository implements IPointRepository {
         UserPointOrderEntity userPointOrderEntity = tradeAggregate.getUserPointOrderEntity();
         TaskEntity taskEntity = tradeAggregate.getTaskEntity();
 
+        if (userPointAccountEntity == null || userPointOrderEntity == null) return;
+
         /** UserPointAccount po */
         UserPointAccount userPointAccount = new UserPointAccount();
         userPointAccount.setUserId(userId);
-        userPointAccount.setTotalAmount(userPointAccountEntity.getUpdatedAmount());
-        userPointAccount.setAvailableAmount(userPointAccountEntity.getUpdatedAmount());
+        userPointAccount.setTotalAmount(userPointAccountEntity.getAvailableAmount());
+        userPointAccount.setAvailableAmount(userPointAccountEntity.getAvailableAmount());
+        userPointAccount.setAccountStatus(AccountStatusVO.open.getCode());
         /** UserPointOrder po */
         UserPointOrder userPointOrder = new UserPointOrder();
         userPointOrder.setUserId(userId);
@@ -109,11 +114,14 @@ public class PointRepository implements IPointRepository {
         UserPointAccountEntity userPointAccountEntity = tradeAggregate.getUserPointAccountEntity();
         UserPointOrderEntity userPointOrderEntity = tradeAggregate.getUserPointOrderEntity();
 
+        if (userPointAccountEntity == null || userPointOrderEntity == null) return;
+
         /** UserPointAccount po */
         UserPointAccount userPointAccount = new UserPointAccount();
         userPointAccount.setUserId(userId);
-        userPointAccount.setTotalAmount(userPointAccountEntity.getUpdatedAmount());
-        userPointAccount.setAvailableAmount(userPointAccountEntity.getUpdatedAmount());
+        userPointAccount.setTotalAmount(userPointAccountEntity.getAvailableAmount());
+        userPointAccount.setAvailableAmount(userPointAccountEntity.getAvailableAmount());
+        userPointAccount.setAccountStatus(AccountStatusVO.open.getCode());
         /** UserPointOrder po */
         UserPointOrder userPointOrder = new UserPointOrder();
         userPointOrder.setUserId(userId);
@@ -158,7 +166,7 @@ public class PointRepository implements IPointRepository {
             userPointAccount = iUserPointAccountDao.queryUserPointAccount(userId);
             return UserPointAccountEntity.builder()
                     .userId(userId)
-                    .updatedAmount(userPointAccount.getAvailableAmount())
+                    .availableAmount(userPointAccount == null? BigDecimal.ZERO : userPointAccount.getAvailableAmount())
                     .build();
         }finally {
             idbRouterStrategy.clear();

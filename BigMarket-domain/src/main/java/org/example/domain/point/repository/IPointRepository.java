@@ -12,4 +12,5 @@ public interface IPointRepository {
 
     UserPointAccountEntity queryUserPointAccount(String userId);
 
+
 }

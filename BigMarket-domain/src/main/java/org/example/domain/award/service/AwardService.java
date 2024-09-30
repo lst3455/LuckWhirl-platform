@@ -13,6 +13,7 @@ import org.example.types.event.BaseEvent;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -70,10 +71,16 @@ public class AwardService implements IAwardService{
 
         if (null == deliveryAward) {
             log.error("delivery award - delivery doesn't implement。awardKey:{}", awardKey);
-            throw new RuntimeException("delivery award, award:" + awardKey + "corresponding delivery doesn't implement");
+            /*throw new RuntimeException("delivery award, award:" + awardKey + "corresponding delivery doesn't implement");*/
+            return;
         }
         /** delivery award */
         deliveryAward.deliveryAward(deliveryAwardEntity);
 
+    }
+
+    @Override
+    public List<UserAwardRecordEntity> queryUserAwardRecordList(UserAwardRecordEntity userAwardRecordEntity) {
+        return iAwardRepository.queryUserAwardRecordList(userAwardRecordEntity);
     }
 }

@@ -26,10 +26,10 @@ public class TradeAggregate {
     private UserPointAccountEntity userPointAccountEntity;
     private TaskEntity taskEntity;
 
-    public static UserPointAccountEntity createUserPointAccountEntity(String userId, BigDecimal updatedAmount) {
+    public static UserPointAccountEntity createUserPointAccountEntity(String userId, BigDecimal availableAmount) {
         return UserPointAccountEntity.builder()
                 .userId(userId)
-                .updatedAmount(updatedAmount)
+                .availableAmount(availableAmount)
                 .build();
     }
 

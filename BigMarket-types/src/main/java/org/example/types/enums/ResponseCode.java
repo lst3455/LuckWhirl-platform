@@ -23,8 +23,8 @@ public enum ResponseCode {
     ACCOUNT_QUOTA_ERROR("ERR_BIZ_006","account amount insufficient"),
     ACCOUNT_MONTH_QUOTA_ERROR("ERR_BIZ_007","account month amount insufficient"),
     ACCOUNT_DAY_QUOTA_ERROR("ERR_BIZ_008","account day amount insufficient"),
-    ACTIVITY_RAFFLE_ORDER_ERROR("ERR_BIZ_009","user raffle order has been used" )
-    ;
+    ACTIVITY_RAFFLE_ORDER_ERROR("ERR_BIZ_009","user raffle order has been used" ),
+    USER_POINT_ACCOUNT_NO_ENOUGH("ERR_BIZ_009","user point account not enough" );
 
 
     private String code;

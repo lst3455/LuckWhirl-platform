@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @Repository
@@ -162,5 +163,12 @@ public class AwardRepository implements IAwardRepository {
     @Override
     public String queryAwardKeyByAwardId(Long awardId) {
         return iAwardDao.queryAwardKeyByAwardId(awardId);
+    }
+
+    @Override
+    public List<UserAwardRecordEntity> queryUserAwardRecordList(UserAwardRecordEntity userAwardRecordEntity) {
+        UserAwardRecord userAwardRecord = new UserAwardRecord();
+        userAwardRecord.setUserId(userAwardRecordEntity.getUserId());
+        return iUserAwardRecordDao.queryUserAwardRecordList(userAwardRecord);
     }
 }

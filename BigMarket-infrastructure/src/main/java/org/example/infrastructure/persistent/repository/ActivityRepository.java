@@ -607,6 +607,8 @@ public class ActivityRepository implements IActivityRepository {
         raffleActivityOrder.setOutBusinessNo(deliveryOrderEntity.getOutBusinessNo());
         raffleActivityOrder = iRaffleActivityOrderDao.queryRaffleActivityOrder(raffleActivityOrder);
 
+        if (raffleActivityOrder == null) return;
+
         /** create RaffleActivityAccount object to store */
         RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
         raffleActivityAccount.setUserId(raffleActivityOrder.getUserId());

@@ -2,6 +2,9 @@ package org.example.domain.award.repository;
 
 import org.example.domain.award.model.aggregate.DeliveryAwardAggregate;
 import org.example.domain.award.model.aggregate.UserAwardRecordAggregate;
+import org.example.domain.award.model.entity.UserAwardRecordEntity;
+
+import java.util.List;
 
 public interface IAwardRepository {
     void doSaveUserAwardRecord(UserAwardRecordAggregate userAwardRecordAggregate);
@@ -11,4 +14,6 @@ public interface IAwardRepository {
     void doSaveDeliveryAwardAggregate(DeliveryAwardAggregate deliveryAwardAggregate);
 
     String queryAwardKeyByAwardId(Long awardId);
+
+    List<UserAwardRecordEntity> queryUserAwardRecordList(UserAwardRecordEntity userAwardRecordEntity);
 }

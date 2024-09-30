@@ -11,9 +11,12 @@ import org.example.domain.activity.service.armory.ActivityArmory;
 import org.example.domain.activity.service.quota.policy.ITradePolicy;
 import org.example.domain.activity.service.quota.rule.IActionChain;
 import org.example.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
+import org.example.domain.point.model.entity.UserPointAccountEntity;
+import org.example.domain.point.repository.IPointRepository;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Slf4j
@@ -27,11 +30,14 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
 
     protected Map<String, ITradePolicy> tradePolicyMap;
 
-    public AbstractRaffleActivityAccountQuota(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory, ActivityArmory activityArmory, Map<String, ITradePolicy> tradePolicyMap) {
+    protected IPointRepository iPointRepository;
+
+    public AbstractRaffleActivityAccountQuota(IActivityRepository iActivityRepository, DefaultActivityChainFactory defaultActivityChainFactory, ActivityArmory activityArmory, Map<String, ITradePolicy> tradePolicyMap, IPointRepository iPointRepository) {
         this.iActivityRepository = iActivityRepository;
         this.defaultActivityChainFactory = defaultActivityChainFactory;
         this.activityArmory = activityArmory;
         this.tradePolicyMap = tradePolicyMap;
+        this.iPointRepository = iPointRepository;
     }
 
     @Override
@@ -66,6 +72,15 @@ public abstract class AbstractRaffleActivityAccountQuota implements IRaffleActiv
         ActivityEntity activityEntity = iActivityRepository.queryRaffleActivityByActivityId(activitySkuEntity.getActivityId());
         ActivityAmountEntity activityAmountEntity = iActivityRepository.queryActivityAmountByActivityAmountId(activitySkuEntity.getActivityAmountId());
         log.info("query result: {}, {}, {}", JSON.toJSONString(activitySkuEntity),JSON.toJSONString(activityEntity),JSON.toJSONString(activityAmountEntity));
+
+        /** check available point */
+        if (OrderTradeTypeVO.pay_trade.equals(activitySkuChargeEntity.getOrderTradeTypeVO())){
+            UserPointAccountEntity userPointAccountEntity = iPointRepository.queryUserPointAccount(userId);
+            BigDecimal availablePoint = userPointAccountEntity.getAvailableAmount();
+            if (availablePoint.compareTo(activitySkuEntity.getPointAmount()) < 0) {
+                throw new AppException(ResponseCode.USER_POINT_ACCOUNT_NO_ENOUGH.getCode(), ResponseCode.USER_POINT_ACCOUNT_NO_ENOUGH.getInfo());
+            }
+        }
 
         /** open the activity chain */
         IActionChain iActionChain = defaultActivityChainFactory.openActionChain();

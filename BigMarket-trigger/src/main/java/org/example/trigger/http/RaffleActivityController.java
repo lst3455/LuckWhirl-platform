@@ -338,7 +338,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             return Response.<BigDecimal>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
-                    .data(userPointAccountEntity.getUpdatedAmount())
+                    .data(userPointAccountEntity.getAvailableAmount())
                     .build();
         } catch (Exception e) {
             log.error("query user point account complete, userId:{}", userId, e);
