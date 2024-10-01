@@ -1,6 +1,22 @@
-## LuckWhirl platform
+## <p style="text-align: center;">LuckWhirl platform</p>
 
-This project took more than half a year in total from requirement analysis, architecture learning and design, and coding implementation. So is a robust and comprehensive marketing platform featuring functionalities such as **point accounts, daily sign-in rewards, virtual product exchanges, marketing lotteries, lottery unlocking, weighting systems, blacklists, and tiered lottery mechanisms.**
+The project took more than half a year from demand analysis, architecture learning and design to coding implementation, and went through three versions of iterations.
+
+![49ad75071e9b8345f62c81e36c717cc](docs\readme\v1.jpg)
+
+<p style="text-align: center;">​																								**Version 1.0**
+
+![16167f9b7d92c33e463042de5bcab96](docs\readme\v2.jpg)
+
+<p style="text-align: center;">​																								**Version 2.0**
+
+![725362590c2a863a31972010eab1c99](docs\readme\v3.jpg)
+
+<p style="text-align: center;">​																								**Version 3.0**
+
+
+
+So is a robust and comprehensive marketing platform featuring functionalities such as **point accounts, daily sign-in rewards, virtual product exchanges, marketing lotteries, lottery unlocking, weighting systems, blacklists, and tiered lottery mechanisms.**
 
 It is an end-to-end project covering product management, requirement analysis, frontend and backend development, and DevOps practices. From architecture design to coding implementation and deployment, the system handles real-world scenarios, providing a seamless experience across both consumer-facing and operational workflows.
 
@@ -49,7 +65,6 @@ The system is divided into three main modules:
 3. **Check-in Rebates and Points Redemption Module**: Manages user interactions for daily sign-in, rebate rewards, and virtual product redemptions.
 
 Finally is a diagram of the **Inventory Control Mechanism**, ensures smooth management and tracking of product stock throughout the marketing activities.
-
 
 <img src="docs\readme\luckWhirl workflow.png" style="zoom: 33%;" />
 
