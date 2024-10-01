@@ -2,17 +2,17 @@
 
 The project took more than half a year from demand analysis, architecture learning and design to coding implementation, and went through three versions of iterations.
 
-![49ad75071e9b8345f62c81e36c717cc](docs\readme\v1.jpg)
+<img src="docs\readme\v1.jpg" style="zoom: 33%;" />
 
-<p style="text-align: center;">​																								**Version 1.0**
+<p style="text-align: center;">**Version 1.0**</p>																						
 
-![16167f9b7d92c33e463042de5bcab96](docs\readme\v2.jpg)
+<img src="docs\readme\v2.jpg" style="zoom: 33%;" />
 
-<p style="text-align: center;">​																								**Version 2.0**
+<p style="text-align: center;">**Version 2.0**</p>																	
 
-![725362590c2a863a31972010eab1c99](docs\readme\v3.jpg)
+<img src="docs\readme\v3.jpg" style="zoom: 33%;" />
 
-<p style="text-align: center;">​																								**Version 3.0**
+<p style="text-align: center;">**Version 3.0**</p>																						
 
 
 
