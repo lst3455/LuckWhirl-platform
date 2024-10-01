@@ -1,18 +1,18 @@
-## <p style="text-align: center;">LuckWhirl platform</p>
+## <div align="center">LuckWhirl platform</div>
 
 The project took more than half a year from demand analysis, architecture learning and design to coding implementation, and went through three versions of iterations.
 
 <img src="docs\readme\v1.jpg" style="zoom: 33%;" />
 
-<p style="text-align: center;">**Version 1.0**</p>																						
+<div align="center">Version 1.0</div>																						
 
 <img src="docs\readme\v2.jpg" style="zoom: 33%;" />
 
-<p style="text-align: center;">**Version 2.0**</p>																	
+<div align="center">Version 2.0</div>																	
 
 <img src="docs\readme\v3.jpg" style="zoom: 33%;" />
 
-<p style="text-align: center;">**Version 3.0**</p>																						
+<div align="center">Version 3.0</div>																						
 
 
 
