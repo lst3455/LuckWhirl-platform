@@ -1,6 +1,6 @@
 ## <div align="center">LuckWhirl platform</div>
 
-The project took more than half a year from demand analysis, architecture learning and design to coding implementation, and went through three versions of iterations.
+The project took more than half a year from requirement analysis, architecture learning and design to coding implementation, and went through three versions of iterations.
 
 <div align="center">[Version 1.0]</div>
 <img src="docs\readme\v1.jpg" style="zoom: 33%;" />	
