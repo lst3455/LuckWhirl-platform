@@ -49,5 +49,5 @@ The system is divided into three main modules:
 
 
 
-<img src="D:\Java\BigMarket\docs\readme\luckWhirl workflow.png" style="zoom: 33%;" />
+<img src="docs\readme\luckWhirl workflow.png" style="zoom: 33%;" />
 
