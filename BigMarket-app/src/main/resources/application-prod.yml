@@ -19,8 +19,8 @@ spring:
   rabbitmq:
     addresses: 8.219.99.73
     port: 5672
-    username: admin
-    password: admin
+    username: Linst
+    password: 13860433455Wabb
     listener:
       simple:
         prefetch: 1 # 每次投递n个消息，消费完在投递n个
