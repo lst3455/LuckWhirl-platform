@@ -17,6 +17,9 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+CREATE database if NOT EXISTS `big-market` default character set utf8mb4;
+use `big-market`;
+
 -- ----------------------------
 -- Table structure for award
 -- ----------------------------

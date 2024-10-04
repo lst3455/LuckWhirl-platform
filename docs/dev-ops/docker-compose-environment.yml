@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       TZ: Asia/Singapore
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 13860433455Wabb
     networks:
       - my-network
     depends_on:
@@ -43,7 +43,7 @@ services:
     environment:
       - PMA_HOST=mysql
       - PMA_PORT=3306
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=13860433455Wabb
     depends_on:
       mysql:
         condition: service_healthy
@@ -80,8 +80,8 @@ services:
       - 8081:8081
     environment:
       - REDIS_HOSTS=local:redis:6379
-      - HTTP_USER=admin
-      - HTTP_PASSWORD=admin
+      - HTTP_USER=Linst
+      - HTTP_PASSWORD=13860433455Wabb
       - LANG=C.UTF-8
       - LANGUAGE=C.UTF-8
       - LC_ALL=C.UTF-8
