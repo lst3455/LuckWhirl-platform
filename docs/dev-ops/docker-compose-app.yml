@@ -1,24 +1,55 @@
 version: '3.8'
 # 命令执行 docker-compose -f docker-compose-app.yml up -d
 services:
-  big-market-back-app:
+  big-market-app:
     image: linsitian/big-market-back-app:3.0
     container_name: big-market-back-app
     restart: always
     ports:
       - "8091:8091"
     environment:
-      - TZ=Asia/Singapore
+      - TZ=PRC
       - SERVER_PORT=8091
       - APP_CONFIG_API_VERSION=v1
       - APP_CONFIG_CROSS_ORIGIN=*
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=13860433455Wabb
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/big-market?serverTimezone=UTC&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Singapore
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
-      - SPRING_HIKARI_POOL_NAME=Retail_HikariCP
+      # Database configurations
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DBCOUNT=2
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_TBCOUNT=4
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DEFAULT=db00
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_ROUTERKEY=userId
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_LIST=db01,db02
+      # db00 configuration
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_URL=jdbc:mysql://mysql:3306/big-market?serverTimezone=UTC&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Singapore
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_USERNAME=root
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_PASSWORD=13860433455Wabb
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_POOL_NAME=Retail_HikariCP
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_MINIMUM_IDLE=15
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_IDLE_TIMEOUT=180000
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_MAXIMUM_POOL_SIZE=25
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_AUTO_COMMIT=true
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_MAX_LIFETIME=1800000
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_CONNECTION_TIMEOUT=30000
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_CONNECTION_TEST_QUERY=SELECT 1
+      # db01 configuration
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB01_URL=jdbc:mysql://mysql:3306/big-market-01?serverTimezone=UTC&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Singapore
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB01_USERNAME=root
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB01_PASSWORD=13860433455Wabb
+      # db02 configuration
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB02_URL=jdbc:mysql://mysql:3306/big-market-02?serverTimezone=UTC&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Singapore
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB02_USERNAME=root
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB02_PASSWORD=13860433455Wabb
       - REDIS_SDK_CONFIG_HOST=redis
       - REDIS_SDK_CONFIG_PORT=6379
+      # RabbitMQ
+      - SPRING_RABBITMQ_ADDRESSES=8.219.99.73
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=admin
+      - SPRING_RABBITMQ_PASSWORD=admin
+      - SPRING_RABBITMQ_LISTENER_SIMPLE_PREFETCH=1
+      - SPRING_RABBITMQ_TOPIC_ACTIVITY_SKU_STOCK_ZERO=activity_sku_stock_zero
+      - SPRING_RABBITMQ_TOPIC_SEND_AWARD=send_award
+      - SPRING_RABBITMQ_TOPIC_SEND_REBATE=send_rebate
+      - SPRING_RABBITMQ_TOPIC_UPDATE_POINT_SUCCESS=update_point_success
     volumes:
       - ./log:/data/log
     networks:
@@ -35,10 +66,7 @@ services:
     networks:
       - my-network
     ports:
-      - 3000:3000
-    environment:
-      - API_HOST_URL=http://192.168.1.65:8091
-      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - 80:3000
     healthcheck:
       test: [ "CMD", "wget", "--spider", "-q", "http://0.0.0.0:3000/" ]
       interval: 1m
