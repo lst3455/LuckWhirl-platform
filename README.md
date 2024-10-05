@@ -1,5 +1,5 @@
 ## <div align="center">LuckWhirl platform</div>
-
+<div align="center">Experience URL: http://8.219.99.73/login</div>
 The project took more than half a year from requirement analysis, architecture learning and design to coding implementation, and went through three versions of iterations.
 
 <div align="center">[Version 1.0]</div>
