@@ -4,14 +4,16 @@
 
 The project took more than half a year from requirement analysis, architecture learning, and design to coding implementation, and went through three versions of iterations.
 
-<div align="center">**[Version 1.0]**</div>
+---
+
 <div align="center"><img src="docs/readme/v1.jpg" style="zoom: 33%;" /></div>
+<div align="center">Version 1.0</div>
 
-<div align="center">**[Version 2.0]**</div>
 <div align="center"><img src="docs/readme/v2.jpg" style="zoom: 33%;" /></div>
+<div align="center">Version 2.0</div>
 
-<div align="center">**[Version 3.0]**</div>
 <div align="center"><img src="docs/readme/v3.jpg" style="zoom: 33%;" /></div>
+<div align="center">Version 3.0</div>
 
 ---
 
