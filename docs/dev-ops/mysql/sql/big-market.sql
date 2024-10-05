@@ -324,7 +324,7 @@ INSERT INTO `strategy_rule` VALUES (9, 10002, 105, 2, 'rule_lock', '10', 'unlock
 INSERT INTO `strategy_rule` VALUES (10, 10002, 106, 2, 'rule_lock', '20', 'unlock after 20 raffle', '2024-08-01 22:42:14', '2024-08-01 22:42:14');
 INSERT INTO `strategy_rule` VALUES (11, 10003, 105, 2, 'rule_lock', '10', 'unlock after 10 raffle', '2024-08-02 19:29:47', '2024-08-02 19:29:47');
 INSERT INTO `strategy_rule` VALUES (12, 10003, 106, 2, 'rule_lock', '20', 'unlock after 20 raffle', '2024-08-02 19:30:08', '2024-08-02 19:30:08');
-INSERT INTO `strategy_rule` VALUES (15, 10004, NULL, 1, 'rule_weight', '5:101,102,103,104,105 10:101,103,104,105,106 15:101,104,105,106,107', 'base on raffle times to assmble award', '2024-08-08 17:07:34', '2024-10-02 20:25:28');
+INSERT INTO `strategy_rule` VALUES (15, 10004, NULL, 1, 'rule_weight', '5:101,102,103,104,105 10:101,103,104,105,106 15:103,104,105,106,107', 'base on raffle times to assmble award', '2024-08-08 17:07:34', '2024-10-02 20:25:28');
 INSERT INTO `strategy_rule` VALUES (16, 10004, NULL, 1, 'rule_blacklist', '101:user001,user002,user003', 'blacklist, only draw award id = 100', '2024-08-08 17:08:13', '2024-09-24 23:15:33');
 INSERT INTO `strategy_rule` VALUES (17, 10001, 105, 2, 'rule_lucky', '1,40', 'lucky award, random point 1:50', '2024-08-14 21:12:19', '2024-08-23 19:41:27');
 INSERT INTO `strategy_rule` VALUES (18, 10001, 106, 2, 'rule_lucky', '1,50', 'lucky award, random point 1:60', '2024-08-14 21:15:44', '2024-08-23 19:41:30');
