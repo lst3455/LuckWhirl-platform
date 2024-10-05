@@ -28,7 +28,7 @@ Key Features:
 
 5. **Message queues are used to decouple the prize distribution process, preventing the lottery chain from becoming too long. To ensure successful MQ message sending, prize distribution messages are written to a task table, with scheduled tasks scanning the table for MQ message compensation.**
 
-Key technologies:
+Key Technologies:
 
 1. **Frontend:**
 
