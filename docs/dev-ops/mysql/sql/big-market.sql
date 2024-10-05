@@ -11,7 +11,7 @@
  Target Server Version : 50744
  File Encoding         : 65001
 
- Date: 05/10/2024 15:26:09
+ Date: 05/10/2024 16:53:41
 */
 
 SET NAMES utf8mb4;
@@ -25,20 +25,20 @@ use `big-market`;
 -- ----------------------------
 DROP TABLE IF EXISTS `award`;
 CREATE TABLE `award`  (
-                          `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increasing id',
-                          `award_id` int(11) NOT NULL COMMENT 'award id',
-                          `award_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award key',
-                          `award_config` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award config',
-                          `award_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award describe',
-                          `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
-                          `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
-                          PRIMARY KEY (`id`) USING BTREE
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increasing id',
+  `award_id` int(11) NOT NULL COMMENT 'award id',
+  `award_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award key',
+  `award_config` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award config',
+  `award_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award describe',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of award
 -- ----------------------------
-INSERT INTO `award` VALUES (1, 101, 'user_point_random', '1,100', 'user point', '2024-07-08 21:05:15', '2024-07-08 21:05:15');
+INSERT INTO `award` VALUES (1, 101, 'user_point_random', '200,400', 'user point', '2024-07-08 21:05:15', '2024-10-05 16:52:55');
 INSERT INTO `award` VALUES (2, 102, 'voucher', '5', 'voucher', '2024-07-08 21:06:04', '2024-10-05 14:52:31');
 INSERT INTO `award` VALUES (3, 103, 'voucher', '10', 'voucher', '2024-07-08 21:07:10', '2024-10-05 14:52:32');
 INSERT INTO `award` VALUES (4, 104, 'voucher', '20', 'voucher', '2024-07-08 21:07:27', '2024-10-05 14:52:33');
@@ -52,16 +52,16 @@ INSERT INTO `award` VALUES (8, 108, 'ultimate_reward', '', 'ultimate reward', '2
 -- ----------------------------
 DROP TABLE IF EXISTS `daily_behavior_rebate`;
 CREATE TABLE `daily_behavior_rebate`  (
-                                          `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-                                          `behavior_type` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '行为类型（sign 签到、openai_pay 支付）',
-                                          `rebate_desc` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '返利描述',
-                                          `rebate_type` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '返利类型（sku 活动库存充值商品、integral 用户活动积分）',
-                                          `rebate_config` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '返利配置',
-                                          `status` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '状态（open 开启、close 关闭）',
-                                          `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                          `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-                                          PRIMARY KEY (`id`) USING BTREE,
-                                          INDEX `idx_behavior_type`(`behavior_type`) USING BTREE
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `behavior_type` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '行为类型（sign 签到、openai_pay 支付）',
+  `rebate_desc` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '返利描述',
+  `rebate_type` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '返利类型（sku 活动库存充值商品、integral 用户活动积分）',
+  `rebate_config` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '返利配置',
+  `status` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '状态（open 开启、close 关闭）',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_behavior_type`(`behavior_type`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日常行为返利活动配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -75,20 +75,20 @@ INSERT INTO `daily_behavior_rebate` VALUES (2, 'sign', '签到返利-积分', 'p
 -- ----------------------------
 DROP TABLE IF EXISTS `raffle_activity`;
 CREATE TABLE `raffle_activity`  (
-                                    `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-                                    `activity_id` bigint(12) NOT NULL COMMENT '活动ID',
-                                    `activity_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '活动名称',
-                                    `activity_desc` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '活动描述',
-                                    `begin_date_time` datetime NOT NULL COMMENT '开始时间',
-                                    `end_date_time` datetime NOT NULL COMMENT '结束时间',
-                                    `strategy_id` bigint(8) NOT NULL COMMENT '抽奖策略ID',
-                                    `status` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'create' COMMENT '活动状态',
-                                    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-                                    PRIMARY KEY (`id`) USING BTREE,
-                                    UNIQUE INDEX `uq_activity_id`(`activity_id`) USING BTREE,
-                                    INDEX `idx_begin_date_time`(`begin_date_time`) USING BTREE,
-                                    INDEX `idx_end_date_time`(`end_date_time`) USING BTREE
+  `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `activity_id` bigint(12) NOT NULL COMMENT '活动ID',
+  `activity_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '活动名称',
+  `activity_desc` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '活动描述',
+  `begin_date_time` datetime NOT NULL COMMENT '开始时间',
+  `end_date_time` datetime NOT NULL COMMENT '结束时间',
+  `strategy_id` bigint(8) NOT NULL COMMENT '抽奖策略ID',
+  `status` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'create' COMMENT '活动状态',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uq_activity_id`(`activity_id`) USING BTREE,
+  INDEX `idx_begin_date_time`(`begin_date_time`) USING BTREE,
+  INDEX `idx_end_date_time`(`end_date_time`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '抽奖活动表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -101,15 +101,15 @@ INSERT INTO `raffle_activity` VALUES (1, 100301, 'test', 'test', '2024-08-01 10:
 -- ----------------------------
 DROP TABLE IF EXISTS `raffle_activity_amount`;
 CREATE TABLE `raffle_activity_amount`  (
-                                           `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increasing id',
-                                           `activity_amount_id` bigint(12) NOT NULL COMMENT 'id for times of attending activity',
-                                           `total_amount` int(8) NOT NULL COMMENT 'total count',
-                                           `day_amount` int(8) NOT NULL COMMENT 'day count',
-                                           `month_amount` int(8) NOT NULL COMMENT 'month count',
-                                           `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
-                                           `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
-                                           PRIMARY KEY (`id`) USING BTREE,
-                                           UNIQUE INDEX `uq_activity_count_id`(`activity_amount_id`) USING BTREE
+  `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increasing id',
+  `activity_amount_id` bigint(12) NOT NULL COMMENT 'id for times of attending activity',
+  `total_amount` int(8) NOT NULL COMMENT 'total count',
+  `day_amount` int(8) NOT NULL COMMENT 'day count',
+  `month_amount` int(8) NOT NULL COMMENT 'month count',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uq_activity_count_id`(`activity_amount_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'raffle activity count table' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -125,18 +125,18 @@ INSERT INTO `raffle_activity_amount` VALUES (4, 11104, 5, 5, 5, '2024-09-29 15:1
 -- ----------------------------
 DROP TABLE IF EXISTS `raffle_activity_sku`;
 CREATE TABLE `raffle_activity_sku`  (
-                                        `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-                                        `sku` bigint(12) NOT NULL COMMENT '商品sku - 把每一个组合当做一个商品',
-                                        `activity_id` bigint(12) NOT NULL COMMENT '活动ID',
-                                        `activity_amount_id` bigint(12) NOT NULL COMMENT '活动个人参与次数ID',
-                                        `stock_amount` int(11) NOT NULL COMMENT '商品库存',
-                                        `stock_remain` int(11) NOT NULL COMMENT '剩余库存',
-                                        `point_amount` decimal(11, 0) NOT NULL COMMENT '兑换所需积分',
-                                        `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                        `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-                                        PRIMARY KEY (`id`) USING BTREE,
-                                        UNIQUE INDEX `uq_sku`(`sku`) USING BTREE,
-                                        INDEX `idx_activity_id_activity_amount_id`(`activity_id`, `activity_amount_id`) USING BTREE
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `sku` bigint(12) NOT NULL COMMENT '商品sku - 把每一个组合当做一个商品',
+  `activity_id` bigint(12) NOT NULL COMMENT '活动ID',
+  `activity_amount_id` bigint(12) NOT NULL COMMENT '活动个人参与次数ID',
+  `stock_amount` int(11) NOT NULL COMMENT '商品库存',
+  `stock_remain` int(11) NOT NULL COMMENT '剩余库存',
+  `point_amount` decimal(11, 0) NOT NULL COMMENT '兑换所需积分',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uq_sku`(`sku`) USING BTREE,
+  INDEX `idx_activity_id_activity_amount_id`(`activity_id`, `activity_amount_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -152,14 +152,14 @@ INSERT INTO `raffle_activity_sku` VALUES (5, 9014, 100301, 11104, 50000, 50000, 
 -- ----------------------------
 DROP TABLE IF EXISTS `rule_tree`;
 CREATE TABLE `rule_tree`  (
-                              `id` int(11) NOT NULL AUTO_INCREMENT,
-                              `tree_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                              `tree_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                              `tree_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-                              `tree_root_node_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                              `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                              `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                              PRIMARY KEY (`id`) USING BTREE
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tree_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `tree_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `tree_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `tree_root_node_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -174,14 +174,14 @@ INSERT INTO `rule_tree` VALUES (3, 'tree_03', 'rule tree 03', 'rule tree', 'rule
 -- ----------------------------
 DROP TABLE IF EXISTS `rule_tree_node`;
 CREATE TABLE `rule_tree_node`  (
-                                   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                                   `tree_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                                   `rule_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                                   `rule_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
-                                   `rule_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-                                   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                   PRIMARY KEY (`id`) USING BTREE
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tree_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `rule_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `rule_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `rule_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -202,15 +202,15 @@ INSERT INTO `rule_tree_node` VALUES (9, 'tree_03', 'rule_stock', 'stock control 
 -- ----------------------------
 DROP TABLE IF EXISTS `rule_tree_node_line`;
 CREATE TABLE `rule_tree_node_line`  (
-                                        `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                                        `tree_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                                        `rule_node_from` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                                        `rule_node_to` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-                                        `rule_limit_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                                        `rule_limit_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                                        `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                        `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                        PRIMARY KEY (`id`) USING BTREE
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tree_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `rule_node_from` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `rule_node_to` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `rule_limit_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `rule_limit_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -234,13 +234,13 @@ INSERT INTO `rule_tree_node_line` VALUES (12, 'tree_03', 'rule_stock', '', 'EQUA
 -- ----------------------------
 DROP TABLE IF EXISTS `strategy`;
 CREATE TABLE `strategy`  (
-                             `strategy_id` int(8) NOT NULL COMMENT 'raffle strategy',
-                             `id` int(255) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increase id',
-                             `strategy_desc` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'describe of raffle strategy',
-                             `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
-                             `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
-                             `rule_models` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'rule models',
-                             PRIMARY KEY (`id`) USING BTREE
+  `strategy_id` int(8) NOT NULL COMMENT 'raffle strategy',
+  `id` int(255) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increase id',
+  `strategy_desc` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'describe of raffle strategy',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+  `rule_models` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'rule models',
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -256,19 +256,19 @@ INSERT INTO `strategy` VALUES (10004, 4, 'test_rule_tree', '2024-08-08 16:19:29'
 -- ----------------------------
 DROP TABLE IF EXISTS `strategy_award`;
 CREATE TABLE `strategy_award`  (
-                                   `id` int(255) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increase key',
-                                   `strategy_id` int(8) NOT NULL COMMENT 'raffle strategy id',
-                                   `award_id` int(11) NOT NULL COMMENT 'award id',
-                                   `award_title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award title',
-                                   `award_subtitle` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'award subtitle',
-                                   `award_amount` int(11) NOT NULL COMMENT 'award amount',
-                                   `award_remain` int(11) NOT NULL COMMENT 'award remain amount',
-                                   `award_rate` decimal(64, 4) NOT NULL COMMENT 'award rate',
-                                   `sort` int(11) NOT NULL COMMENT 'sort',
-                                   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
-                                   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
-                                   `rule_model` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'rule model',
-                                   PRIMARY KEY (`id`) USING BTREE
+  `id` int(255) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increase key',
+  `strategy_id` int(8) NOT NULL COMMENT 'raffle strategy id',
+  `award_id` int(11) NOT NULL COMMENT 'award id',
+  `award_title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'award title',
+  `award_subtitle` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'award subtitle',
+  `award_amount` int(11) NOT NULL COMMENT 'award amount',
+  `award_remain` int(11) NOT NULL COMMENT 'award remain amount',
+  `award_rate` decimal(64, 4) NOT NULL COMMENT 'award rate',
+  `sort` int(11) NOT NULL COMMENT 'sort',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+  `rule_model` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'rule model',
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -299,16 +299,16 @@ INSERT INTO `strategy_award` VALUES (19, 10004, 108, 'ultimate reward', NULL, 10
 -- ----------------------------
 DROP TABLE IF EXISTS `strategy_rule`;
 CREATE TABLE `strategy_rule`  (
-                                  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increase id',
-                                  `strategy_id` int(8) NOT NULL COMMENT 'raflfe strategy id',
-                                  `award_id` int(11) NULL DEFAULT NULL COMMENT 'award id',
-                                  `rule_type` int(11) NOT NULL COMMENT 'rule type(1. raffle rule 2. award rule)',
-                                  `rule_model` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'rule type (rule_lock)',
-                                  `rule_value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'proportion of rule',
-                                  `rule_desc` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'rule describe',
-                                  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
-                                  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
-                                  PRIMARY KEY (`id`) USING BTREE
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto increase id',
+  `strategy_id` int(8) NOT NULL COMMENT 'raflfe strategy id',
+  `award_id` int(11) NULL DEFAULT NULL COMMENT 'award id',
+  `rule_type` int(11) NOT NULL COMMENT 'rule type(1. raffle rule 2. award rule)',
+  `rule_model` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'rule type (rule_lock)',
+  `rule_value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'proportion of rule',
+  `rule_desc` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'rule describe',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
