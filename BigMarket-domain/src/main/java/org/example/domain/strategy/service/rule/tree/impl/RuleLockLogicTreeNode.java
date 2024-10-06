@@ -29,7 +29,7 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
             throw new RuntimeException("inside RuleLockLogicTreeNode ruleValue: " + ruleValue + " config error");
         }
         /** get today user raffle count */
-        Long userRaffleCount = iStrategyRepository.queryTodayUserRaffleCount(userId,strategyId);
+        Long userRaffleCount = iStrategyRepository.queryTotalUserRaffleCount(userId,strategyId); // query total userRaffleCount
         log.info("inside RuleLockLogicTreeNode, userId:{}, strategyId:{}, ruleModel:{}, userRaffleCount:{}",userId, strategyId, ruleValue, userRaffleCount);
 
         /** userRaffleTimes greater than the lock config value */

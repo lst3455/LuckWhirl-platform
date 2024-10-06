@@ -534,8 +534,8 @@ public class ActivityRepository implements IActivityRepository {
 
         if (raffleActivityAccountDay == null) {
             /** means do not have day account, just use total amount, day amount can pass to next day */
-            activityAccountEntity.setDayAmount(raffleActivityAccount.getDayAmount());
-            activityAccountEntity.setDayRemain(raffleActivityAccount.getDayRemain()); // todo need to check if should be getDayAmount()
+            activityAccountEntity.setDayAmount(0);  // this strategy is for day refresh, the draw chance clear everyday
+            activityAccountEntity.setDayRemain(0); // this strategy is for day refresh, the draw chance clear everyday
         } else {
             activityAccountEntity.setDayAmount(raffleActivityAccountDay.getDayAmount());
             activityAccountEntity.setDayRemain(raffleActivityAccountDay.getDayRemain());
