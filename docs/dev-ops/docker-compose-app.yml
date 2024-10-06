@@ -12,7 +12,7 @@ services:
       - SERVER_PORT=8091
       - APP_CONFIG_API_VERSION=v1
       - APP_CONFIG_CROSS_ORIGIN=*
-      # Database configurations
+      # Database configuration
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DBCOUNT=2
       - MINI_DB_ROUTER_JDBC_DATASOURCE_TBCOUNT=4
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DEFAULT=db00
