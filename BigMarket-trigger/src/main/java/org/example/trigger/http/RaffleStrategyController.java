@@ -111,7 +111,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
             /** query ruleValue of rule_lock tree node */
             Map<String,Integer> ruleLockAmountMap = iRaffleAwardRule.queryRuleTreeLockNodeValueByTreeIds(treeIds);
             /** query user raffle amount */
-            Integer dayPartakeAmount = iRaffleActivityAccountQuotaService.queryRaffleActivityAccountDayPartakeAmount(raffleAwardListRequestDTO.getUserId(),raffleAwardListRequestDTO.getActivityId());
+            Integer totalPartakeAmount = iRaffleActivityAccountQuotaService.queryRaffleActivityAccountPartakeAmount(raffleAwardListRequestDTO.getUserId(),raffleAwardListRequestDTO.getActivityId());
             /** create raffleAwardListResponseDTOList */
             List<RaffleAwardListResponseDTO> raffleAwardListResponseDTOList = new ArrayList<>();
             for (StrategyAwardEntity strategyAward : strategyAwardEntityList) {
@@ -122,8 +122,8 @@ public class RaffleStrategyController implements IRaffleStrategyService {
                         .awardSubtitle(strategyAward.getAwardSubtitle())
                         .sort(strategyAward.getSort())
                         .awardUnlockAmount(ruleLockAmount)
-                        .isUnlock(dayPartakeAmount >= ruleLockAmount)
-                        .awardUnlockRemain(dayPartakeAmount >= ruleLockAmount? 0 : ruleLockAmount - dayPartakeAmount)
+                        .isUnlock(totalPartakeAmount >= ruleLockAmount)
+                        .awardUnlockRemain(totalPartakeAmount >= ruleLockAmount? 0 : ruleLockAmount - totalPartakeAmount)
                         .build());
             }
 
