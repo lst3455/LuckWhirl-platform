@@ -29,6 +29,7 @@ import org.example.domain.strategy.service.IRaffleStrategy;
 import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.trigger.api.IRaffleActivityService;
 import org.example.trigger.api.dto.*;
+import org.example.types.annotation.DCCValue;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 import org.example.types.model.Response;
@@ -77,6 +78,9 @@ public class RaffleActivityController implements IRaffleActivityService {
     @Resource
     private IRaffleActivitySkuProductService iRaffleActivitySkuProductService;
 
+    @DCCValue("degradeSwitch:open")
+    private String degradeSwitch;
+
     /**
      * armory the raffle activity sku and strategy into cache
      * <a href="http://localhost:8091/api/v1/raffle/activity/activity_armory">/api/v1/raffle/activity/activity_armory</a>
@@ -122,6 +126,15 @@ public class RaffleActivityController implements IRaffleActivityService {
     public Response<ActivityDrawResponseDTO> draw(@RequestBody ActivityDrawRequestDTO activityDrawRequestDTO) {
         try {
             log.info("lucky draw - start, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId());
+            /** for dynamic config control */
+            if ("close".equals(degradeSwitch)){
+                log.info("lucky draw - degrade switch, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId());
+                return Response.<ActivityDrawResponseDTO>builder()
+                        .code(ResponseCode.DEGRADE_SWITCH.getCode())
+                        .info(ResponseCode.DEGRADE_SWITCH.getInfo())
+                        .build();
+            }
+
             /** first check parameter */
             if (StringUtils.isBlank(activityDrawRequestDTO.getUserId()) || activityDrawRequestDTO.getActivityId() == null) {
                 throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());

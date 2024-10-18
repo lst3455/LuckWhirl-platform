@@ -177,6 +177,12 @@
                 <version>2.1.0</version>
             </dependency>
 
+            <!--zookeeper-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+                <version>3.1.4</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
