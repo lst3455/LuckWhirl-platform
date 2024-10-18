@@ -1,6 +1,7 @@
 package org.example.trigger.http;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.service.IAwardService;
 import org.example.trigger.api.IRaffleAwardService;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController()
 @CrossOrigin("${app.config.cross-origin}")
 @RequestMapping("/api/${app.config.api-version}/raffle/award")
+@DubboService(version = "1.0")
 public class RaffleAwardController implements IRaffleAwardService {
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.example.domain.activity.model.entity.*;
 import org.example.domain.activity.model.vo.OrderTradeTypeVO;
 import org.example.domain.activity.service.IRaffleActivityAccountQuotaService;
@@ -44,6 +45,7 @@ import java.util.List;
 @RestController()
 @CrossOrigin("${app.config.cross-origin}")
 @RequestMapping("/api/${app.config.api-version}/raffle/activity")
+@DubboService(version = "1.0")
 public class RaffleActivityController implements IRaffleActivityService {
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");

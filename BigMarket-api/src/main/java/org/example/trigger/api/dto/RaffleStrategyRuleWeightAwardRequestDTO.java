@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RaffleStrategyRuleWeightAwardRequestDTO {
+public class RaffleStrategyRuleWeightAwardRequestDTO implements Serializable {
 
     private Long activityId;
 

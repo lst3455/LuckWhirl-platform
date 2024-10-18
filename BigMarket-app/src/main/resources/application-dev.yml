@@ -83,7 +83,7 @@ mini-db-router:
       list: db01,db02
       db00:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/big-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://127.0.0.1:13306/big-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
         password: 123456
         type-class-name: com.zaxxer.hikari.HikariDataSource
@@ -98,7 +98,7 @@ mini-db-router:
           connection-test-query: SELECT 1
       db01:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/big-market-01?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://127.0.0.1:13306/big-market-01?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
         password: 123456
         type-class-name: com.zaxxer.hikari.HikariDataSource
@@ -113,7 +113,7 @@ mini-db-router:
           connection-test-query: SELECT 1
       db02:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/big-market-02?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://127.0.0.1:13306/big-market-02?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
         password: 123456
         type-class-name: com.zaxxer.hikari.HikariDataSource
@@ -147,6 +147,21 @@ redis:
       retry-interval: 1000
       ping-interval: 60000
       keep-alive: true
+
+# dubbo
+dubbo:
+  application:
+    name: big-market
+    version: 1.0
+  registry:
+    id: nacos-registry
+    address: nacos://127.0.0.1:8848
+  protocol:
+    name: dubbo
+    port: -1
+  scan:
+    base-packages: cn.bugstack.trigger.api
+
 
 # 日志
 logging:
