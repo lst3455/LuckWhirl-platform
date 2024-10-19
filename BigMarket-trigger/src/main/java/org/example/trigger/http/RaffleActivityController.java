@@ -1,6 +1,8 @@
 package org.example.trigger.http;
 
 import com.alibaba.fastjson2.JSON;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +32,7 @@ import org.example.domain.strategy.service.armory.IStrategyArmory;
 import org.example.trigger.api.IRaffleActivityService;
 import org.example.trigger.api.dto.*;
 import org.example.types.annotation.DCCValue;
+import org.example.types.annotation.RateLimitAccessInterceptor;
 import org.example.types.enums.ResponseCode;
 import org.example.types.exception.AppException;
 import org.example.types.model.Response;
@@ -123,11 +126,16 @@ public class RaffleActivityController implements IRaffleActivityService {
      */
     @Override
     @RequestMapping(value = "draw", method = RequestMethod.POST)
+    @RateLimitAccessInterceptor(key = "userId", feedbackMethod = "drawRateLimitError", permitPerSecond = 60, blackListCount = 5)
+    @HystrixCommand(commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "150")
+    }, fallbackMethod = "drawHystrixError"
+    )
     public Response<ActivityDrawResponseDTO> draw(@RequestBody ActivityDrawRequestDTO activityDrawRequestDTO) {
         try {
             log.info("lucky draw - start, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId());
             /** for dynamic config control */
-            if ("close".equals(degradeSwitch)){
+            if ("open".equals(degradeSwitch)){
                 log.info("lucky draw - degrade switch, userId:{}, activityId:{}", activityDrawRequestDTO.getUserId(), activityDrawRequestDTO.getActivityId());
                 return Response.<ActivityDrawResponseDTO>builder()
                         .code(ResponseCode.DEGRADE_SWITCH.getCode())
@@ -184,6 +192,25 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .build();
         }
     }
+
+    public Response<ActivityDrawResponseDTO> drawRateLimitError(@RequestBody ActivityDrawRequestDTO request) {
+        log.info("lucky draw - reach rate limit, please try after 1 min, userId:{} activityId:{}", request.getUserId(), request.getActivityId());
+        return Response.<ActivityDrawResponseDTO>builder()
+                .code(ResponseCode.RATE_LIMIT.getCode())
+                .info(ResponseCode.RATE_LIMIT.getInfo())
+                .build();
+    }
+
+    public Response<ActivityDrawResponseDTO> drawHystrixError(@RequestBody ActivityDrawRequestDTO request) {
+        log.info("lucky draw - timeout, please try later, userId:{} activityId:{}", request.getUserId(), request.getActivityId());
+        return Response.<ActivityDrawResponseDTO>builder()
+                .code(ResponseCode.HYSTRIX.getCode())
+                .info(ResponseCode.HYSTRIX.getInfo())
+                .build();
+    }
+
+
+
 
     /**
      * do daily sign in, get rebate

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.CuratorCache;
 import org.example.types.annotation.DCCValue;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
@@ -44,9 +46,13 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
                     Object objectBean = dccObjectMap.get(dccValuePath);
                     if (null == objectBean) return;
                     try {
+                        Class<?> objectBeanClass = objectBean.getClass();
+                        if (AopUtils.isAopProxy(objectBeanClass)) {
+                            objectBeanClass = AopUtils.getTargetClass(objectBean);
+                        }
                         // 1. The getDeclaredField method is used to retrieve all declared fields in the specified class, including private, protected, and public fields.
                         // 2. The getField method is used to retrieve public fields in the specified class, meaning it can only access fields with the public access modifier.
-                        Field field = objectBean.getClass().getDeclaredField(dccValuePath.substring(dccValuePath.lastIndexOf("/") + 1));
+                        Field field = objectBeanClass.getDeclaredField(dccValuePath.substring(dccValuePath.lastIndexOf("/") + 1));
                         field.setAccessible(true);
                         field.set(objectBean, new String(data.getData()));
                         field.setAccessible(false);
@@ -64,8 +70,16 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        Class<?> beanClass = bean.getClass();
-        Field[] fields = beanClass.getDeclaredFields();
+        Class<?> targertBeanClass = bean.getClass();
+        Object targertBeanObejct = bean;
+
+        if (AopUtils.isAopProxy(bean)){
+            targertBeanClass = AopUtils.getTargetClass(bean);
+            targertBeanObejct = AopProxyUtils.getSingletonTarget(bean);
+        }
+
+        Field[] fields = targertBeanClass.getDeclaredFields();
+
         for (Field field : fields) {
             if (!field.isAnnotationPresent(DCCValue.class)) {
                 continue;
@@ -89,7 +103,7 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
                     curatorFramework.create().creatingParentsIfNeeded().forPath(keyPath);
                     if (StringUtils.isNotBlank(defaultValue)) {
                         field.setAccessible(true);
-                        field.set(bean, defaultValue);
+                        field.set(targertBeanObejct, defaultValue);
                         field.setAccessible(false);
                     }
                     log.info("DCC node listener - create node: {}", keyPath);
@@ -98,7 +112,7 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
                     String configValue = new String(curatorFramework.getData().forPath(keyPath));
                     if (StringUtils.isNotBlank(configValue)) {
                         field.setAccessible(true);
-                        field.set(bean, configValue);
+                        field.set(targertBeanObejct, configValue);
                         field.setAccessible(false);
                         log.info("DCC node listener - set configuration: {} {} {}", keyPath, field.getName(), configValue);
                     }
@@ -107,8 +121,8 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
                 throw new RuntimeException(e);
             }
 
-            // store in map, for future to get bean
-            dccObjectMap.put(BASE_CONFIG_PATH_CONFIG.concat("/").concat(key), bean);
+            // store in map, for future to get targertBeanObejct
+            dccObjectMap.put(BASE_CONFIG_PATH_CONFIG.concat("/").concat(key), targertBeanObejct);
         }
         return bean;
     }

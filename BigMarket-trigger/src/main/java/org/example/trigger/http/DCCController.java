@@ -36,6 +36,7 @@ public class DCCController implements IDCCService {
     /**
      * update config
      * <a href="http://localhost:8091/api/v1/raffle/dcc/update_config">/api/v1/raffle/dcc/update_config?key=degradeSwitch&value=open</a>
+     * <a href="http://localhost:8091/api/v1/raffle/dcc/update_config">/api/v1/raffle/dcc/update_config?key=rateLimitSwitch&value=open</a>
      * @param key
      * @param value
      * @return
