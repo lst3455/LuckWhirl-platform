@@ -34,7 +34,6 @@ public class RateLimitAOP {
 
     private final Cache<String, Long> blackList = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build();
 
-
     @Pointcut("@annotation(org.example.types.annotation.RateLimitAccessInterceptor)")
     public void aopNode(){
 
