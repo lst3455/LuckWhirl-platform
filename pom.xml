@@ -145,9 +145,9 @@
             </dependency>
             <!-- https://mvnrepository.com/artifact/cn.bugstack.middleware/db-router-spring-boot-starter -->
             <dependency>
-                <groupId>cn.bugstack.middleware</groupId>
+                <groupId>plus.gaga.middleware</groupId>
                 <artifactId>db-router-spring-boot-starter</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.jeasy</groupId>
