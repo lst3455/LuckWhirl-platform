@@ -15,11 +15,16 @@ The project took more than half a year from requirement analysis, architecture l
 <div align="center"><img src="docs/readme/v3.jpg" style="zoom: 33%;" /></div>
 <div align="center">Version 3.0</div>
 
+<div align="center"><img src="docs/readme/v4.png" style="zoom: 33%;" /></div>
+<div align="center">Version 3.1</div>
+
 ---
 
 **LuckWhirl** is a robust and comprehensive marketing platform featuring functionalities such as **point accounts, daily sign-in rewards, virtual product exchanges, marketing lotteries, lottery unlocking, weighting systems, blacklists, and tiered lottery mechanisms.** It is an end-to-end project covering product management, requirement analysis, frontend and backend development, and DevOps practices. From architecture design to coding implementation and deployment, the system handles real-world scenarios, providing a seamless experience across both consumer-facing and operational workflows.
 
-**The project is deployed on a 2-core 4GB cloud server. After launching, it is stress tested using JMeter, capable of supporting a single-machine throughput of 800 TPS (transactions per second), with a lottery interface response time of around 40 milliseconds.**
+This system is Designed with a **distributed architecture, Dubbo provides RPC interfaces, with Nacos serving as the service registry.** The scheduling and management of timed tasks across multiple machine instances are handled by XXL-JOB, utilizing distributed locks to compete for resources. Data from sharded databases is synchronized through Canal, which captures binlog logs and aggregates them in Elasticsearch for querying.
+
+**Currently, it's deployed on a 2-core 4GB cloud server. After launching, it is stress tested using JMeter, capable of supporting a single-machine throughput of 800 TPS (transactions per second), with a lottery interface response time of around 40 milliseconds.**
 
 ---
 
@@ -55,7 +60,10 @@ The project took more than half a year from requirement analysis, architecture l
    - Sharding-JDBC
    - Redis
    - MySQL
-   - JMeter
+   - Dubbo
+   - Nacos
+   - XXL-JOB
+   - Zookeeper
 
 - **DevOps**:
    - Git
