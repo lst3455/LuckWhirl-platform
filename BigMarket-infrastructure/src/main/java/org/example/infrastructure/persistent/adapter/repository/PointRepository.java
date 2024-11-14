@@ -1,4 +1,4 @@
-package org.example.infrastructure.persistent.repository;
+package org.example.infrastructure.persistent.adapter.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.alibaba.fastjson2.JSON;

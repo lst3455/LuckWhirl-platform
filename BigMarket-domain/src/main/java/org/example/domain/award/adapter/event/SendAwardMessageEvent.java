@@ -1,4 +1,4 @@
-package org.example.domain.award.event;
+package org.example.domain.award.adapter.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

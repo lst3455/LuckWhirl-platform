@@ -1,13 +1,13 @@
 package org.example.domain.award.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.domain.award.event.SendAwardMessageEvent;
+import org.example.domain.award.adapter.event.SendAwardMessageEvent;
 import org.example.domain.award.model.aggregate.UserAwardRecordAggregate;
 import org.example.domain.award.model.entity.DeliveryAwardEntity;
 import org.example.domain.award.model.entity.TaskEntity;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.model.vo.TaskStatusVO;
-import org.example.domain.award.repository.IAwardRepository;
+import org.example.domain.award.adapter.repository.IAwardRepository;
 import org.example.domain.award.service.delivery.IDeliveryAward;
 import org.example.types.event.BaseEvent;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class AwardService implements IAwardService{
     }
 
     @Override
-    public void deliveryAward(DeliveryAwardEntity deliveryAwardEntity) {
+    public void deliveryAward(DeliveryAwardEntity deliveryAwardEntity) throws Exception {
         String awardKey = iAwardRepository.queryAwardKeyByAwardId(deliveryAwardEntity.getAwardId());
         if (null == awardKey) {
             log.error("delivery award - awardKey doesn't exist, awardKey:{}", awardKey);

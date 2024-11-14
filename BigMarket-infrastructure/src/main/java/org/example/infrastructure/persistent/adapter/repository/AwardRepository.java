@@ -1,4 +1,4 @@
-package org.example.infrastructure.persistent.repository;
+package org.example.infrastructure.persistent.adapter.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.alibaba.fastjson.JSON;
@@ -9,7 +9,7 @@ import org.example.domain.award.model.entity.TaskEntity;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.model.entity.UserPointAwardEntity;
 import org.example.domain.award.model.vo.AccountStatusVO;
-import org.example.domain.award.repository.IAwardRepository;
+import org.example.domain.award.adapter.repository.IAwardRepository;
 import org.example.infrastructure.event.EventPublisher;
 import org.example.infrastructure.persistent.dao.*;
 import org.example.infrastructure.persistent.po.Task;

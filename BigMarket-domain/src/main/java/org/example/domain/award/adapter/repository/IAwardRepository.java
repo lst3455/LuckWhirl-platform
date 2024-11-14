@@ -1,4 +1,4 @@
-package org.example.domain.award.repository;
+package org.example.domain.award.adapter.repository;
 
 import org.example.domain.award.model.aggregate.DeliveryAwardAggregate;
 import org.example.domain.award.model.aggregate.UserAwardRecordAggregate;
