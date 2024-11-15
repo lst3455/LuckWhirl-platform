@@ -3,7 +3,8 @@ package org.example.trigger.api;
 
 import org.example.trigger.api.dto.RebateRequestDTO;
 import org.example.trigger.api.request.Request;
-import org.example.types.model.Response;
+import org.example.trigger.api.response.Response;
+
 
 /**
  * @author Fuzhengwei bugstack.cn @小傅哥

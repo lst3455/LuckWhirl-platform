@@ -160,7 +160,7 @@ dubbo:
     name: dubbo
     port: -1
   scan:
-    base-packages: cn.bugstack.trigger.api
+    base-packages: org.example.trigger.api
 
 zookeeper:
   sdk:

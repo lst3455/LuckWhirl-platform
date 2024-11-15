@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum BehaviorTypeVO {
 
     SIGN("sign", "daily sign in"),
-//    OPENAI_PAY("openai_pay", "openai pay"),
+    CHATBOT("chatbot", "complete rebate task"),
     ;
 
     private final String code;
