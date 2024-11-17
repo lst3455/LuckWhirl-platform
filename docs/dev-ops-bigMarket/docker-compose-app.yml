@@ -21,7 +21,7 @@ services:
       # db00 configuration
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_URL=jdbc:mysql://mysql:3306/big-market?serverTimezone=UTC&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Singapore
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_USERNAME=root
-      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_PASSWORD=13860433455Wabb
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_PASSWORD=123456
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_POOL_NAME=Retail_HikariCP
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_MINIMUM_IDLE=15
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB00_IDLE_TIMEOUT=180000
@@ -33,11 +33,11 @@ services:
       # db01 configuration
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB01_URL=jdbc:mysql://mysql:3306/big-market-01?serverTimezone=UTC&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Singapore
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB01_USERNAME=root
-      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB01_PASSWORD=13860433455Wabb
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB01_PASSWORD=123456
       # db02 configuration
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB02_URL=jdbc:mysql://mysql:3306/big-market-02?serverTimezone=UTC&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Singapore
       - MINI_DB_ROUTER_JDBC_DATASOURCE_DB02_USERNAME=root
-      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB02_PASSWORD=13860433455Wabb
+      - MINI_DB_ROUTER_JDBC_DATASOURCE_DB02_PASSWORD=123456
       - REDIS_SDK_CONFIG_HOST=redis
       - REDIS_SDK_CONFIG_PORT=6379
       # RabbitMQ
