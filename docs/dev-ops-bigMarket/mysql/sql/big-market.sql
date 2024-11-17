@@ -77,7 +77,7 @@ CREATE TABLE `daily_behavior_rebate`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_behavior_type` (`behavior_type`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 3
+  AUTO_INCREMENT = 5
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '日常行为返利活动配置'
   ROW_FORMAT = DYNAMIC;
@@ -89,6 +89,8 @@ INSERT INTO `daily_behavior_rebate`
 VALUES (1, 'sign', '签到返利-sku额度', 'sku', '9011', 'open', '2024-04-30 09:32:46', '2024-04-30 18:05:23');
 INSERT INTO `daily_behavior_rebate`
 VALUES (2, 'sign', '签到返利-积分', 'point', '30', 'open', '2024-04-30 09:32:46', '2024-09-28 22:28:21');
+INSERT INTO `daily_behavior_rebate`
+VALUES (4, 'chatbot', 'chatbot rebate-point', 'point', '10', 'open', '2024-11-15 11:14:59', '2024-11-15 11:14:59');
 
 -- ----------------------------
 -- Table structure for raffle_activity
@@ -184,11 +186,11 @@ CREATE TABLE `raffle_activity_sku`
 -- Records of raffle_activity_sku
 -- ----------------------------
 INSERT INTO `raffle_activity_sku`
-VALUES (1, 9011, 100301, 11101, 50000, 50000, 100, '2024-03-16 11:41:09', '2024-11-14 23:07:17');
+VALUES (1, 9011, 100301, 11101, 50000, 50000, 100, '2024-03-16 11:41:09', '2024-11-15 16:08:21');
 INSERT INTO `raffle_activity_sku`
 VALUES (3, 9012, 100301, 11102, 50000, 50000, 300, '2024-09-29 14:52:55', '2024-10-02 20:22:35');
 INSERT INTO `raffle_activity_sku`
-VALUES (4, 9013, 100301, 11103, 50000, 50000, 10, '2024-09-29 15:13:14', '2024-10-05 15:12:55');
+VALUES (4, 9013, 100301, 11103, 50000, 50000, 3, '2024-09-29 15:13:14', '2024-11-15 11:14:01');
 INSERT INTO `raffle_activity_sku`
 VALUES (5, 9014, 100301, 11104, 50000, 50000, 50, '2024-09-29 15:13:37', '2024-10-02 20:22:44');
 
@@ -411,14 +413,14 @@ INSERT INTO `strategy_award`
 VALUES (13, 10004, 106, '10 chatbot use chance', NULL, 10000, 10000, 0.0600, 5, '2024-08-08 16:18:31',
         '2024-11-14 23:05:23', 'tree_02');
 INSERT INTO `strategy_award`
-VALUES (14, 10004, 101, 'few random point', NULL, 80000, 80000, 0.5000, 0, '2024-07-03 21:04:54', '2024-11-14 23:03:57',
+VALUES (14, 10004, 101, 'few random point', NULL, 80000, 80000, 0.5000, 0, '2024-07-03 21:04:54', '2024-11-15 16:08:33',
         'tree_01');
 INSERT INTO `strategy_award`
 VALUES (15, 10004, 102, 'more random point', NULL, 50000, 50000, 0.1100, 1, '2024-07-03 21:06:05',
         '2024-11-14 23:06:42', 'tree_01');
 INSERT INTO `strategy_award`
 VALUES (16, 10004, 103, '1 chatbot use chance', NULL, 20000, 20000, 0.1000, 2, '2024-07-03 21:06:35',
-        '2024-11-14 23:02:58', 'tree_01');
+        '2024-11-15 16:08:36', 'tree_01');
 INSERT INTO `strategy_award`
 VALUES (17, 10004, 104, '3 chatbot use chance', NULL, 20000, 20000, 0.0900, 3, '2024-07-03 21:07:22',
         '2024-11-14 23:06:45', 'tree_01');
