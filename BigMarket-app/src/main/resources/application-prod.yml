@@ -148,8 +148,42 @@ redis:
       ping-interval: 60000
       keep-alive: true
 
+# dubbo
+dubbo:
+  application:
+    name: big-market
+    version: 1.0
+  registry:
+    id: nacos-registry
+    address: nacos://127.0.0.1:8848
+  protocol:
+    name: dubbo
+    port: -1
+  scan:
+    base-packages: org.example.trigger.api
+
+zookeeper:
+  sdk:
+    config:
+      connect-string: 127.0.0.1:2181
+      base-sleep-time-ms: 1000
+      max-retries: 3
+      session-timeout-ms: 18000
+      connection-timeout-ms: 30000
+
 # 日志
 logging:
   level:
     root: info
   config: classpath:logback-spring.xml
+
+
+# 外部接口调用配置
+gateway:
+  config:
+    # 状态；true = 开启、false 关闭
+    enable: true
+    apiHost: http://127.0.0.1:8090
+    # big-market 大营销接口调用配置
+    big-market-appId: big-market
+    big-market-appToken: 6ec604541f8b1ce4a

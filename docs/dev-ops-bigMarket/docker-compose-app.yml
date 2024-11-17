@@ -66,12 +66,7 @@ services:
     networks:
       - my-network
     ports:
-      - 80:3000
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://0.0.0.0:3000/" ]
-      interval: 1m
-      timeout: 10s
-      retries: 3
+      - "3001:3001"
 
 networks:
   my-network:
