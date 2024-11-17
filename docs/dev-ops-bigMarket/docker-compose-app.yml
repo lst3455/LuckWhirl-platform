@@ -50,6 +50,7 @@ services:
       - SPRING_RABBITMQ_TOPIC_SEND_AWARD=send_award
       - SPRING_RABBITMQ_TOPIC_SEND_REBATE=send_rebate
       - SPRING_RABBITMQ_TOPIC_UPDATE_POINT_SUCCESS=update_point_success
+      - ZOOKEEPER_SDK_CONFIG_ENABLE=false
     volumes:
       - ./log:/data/log
     networks:
