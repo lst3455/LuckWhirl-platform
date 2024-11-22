@@ -3,6 +3,7 @@ version: '3.9'
 services:
   # 注册中心 https://github.com/nacos-group/nacos-docker - 其他配置可参考(集群)
   # http://127.0.0.1:8848/nacos 【账号：nacos 密码：nacos】
+  # http://8.219.99.73:8848/nacos 【账号：nacos 密码：nacos】
   nacos:
     image: nacos/nacos-server:v2.2.3-slim
     container_name: nacos
@@ -18,7 +19,7 @@ services:
       - MYSQL_SERVICE_DB_NAME=nacos-config
       - MYSQL_SERVICE_PORT=3306
       - MYSQL_SERVICE_USER=root
-      - MYSQL_SERVICE_PASSWORD=123456
+      - MYSQL_SERVICE_PASSWORD=13860433455wabb!
       - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true
       - NACOS_AUTH_IDENTITY_KEY=2222
       - NACOS_AUTH_IDENTITY_VALUE=2xxx
@@ -36,7 +37,7 @@ services:
     restart: always
     environment:
       TZ: Asia/Singapore
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 13860433455wabb!
     networks:
       - my-network
     depends_on:
@@ -72,7 +73,7 @@ services:
     environment:
       - PMA_HOST=mysql
       - PMA_PORT=3306
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=13860433455wabb!
     depends_on:
       mysql:
         condition: service_healthy
@@ -110,7 +111,7 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
       - HTTP_USER=admin
-      - HTTP_PASSWORD=admin
+      - HTTP_PASSWORD=13860433455wabb!
       - LANG=C.UTF-8
       - LANGUAGE=C.UTF-8
       - LC_ALL=C.UTF-8
@@ -132,7 +133,7 @@ services:
       - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_DEFAULT_PASS: 13860433455wabb!
     command: rabbitmq-server
     volumes:
       - ./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
