@@ -425,10 +425,10 @@ INSERT INTO `strategy_award`
 VALUES (17, 10004, 104, '3 chatbot use chance', NULL, 20000, 20000, 0.0900, 3, '2024-07-03 21:07:22',
         '2024-11-14 23:06:45', 'tree_01');
 INSERT INTO `strategy_award`
-VALUES (18, 10004, 107, '50 chatbot use chance', NULL, 10000, 10000, 0.0400, 6, '2024-07-14 16:12:39',
+VALUES (18, 10004, 107, '20 chatbot use chance', NULL, 10000, 10000, 0.0400, 6, '2024-07-14 16:12:39',
         '2024-11-14 23:05:27', 'tree_03');
 INSERT INTO `strategy_award`
-VALUES (19, 10004, 108, '100 chatbot use chance', NULL, 10000, 10000, 0.0200, 7, '2024-08-23 22:12:41',
+VALUES (19, 10004, 108, '30 chatbot use chance', NULL, 10000, 10000, 0.0200, 7, '2024-08-23 22:12:41',
         '2024-11-14 23:05:30', 'tree_03');
 
 -- ----------------------------
