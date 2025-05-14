@@ -2,4 +2,4 @@ spring:
   config:
     name: BigMarket-app
   profiles:
-    active: prod
+    active: cloud
