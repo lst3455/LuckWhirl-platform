@@ -17,7 +17,7 @@ app:
 # Spring 配置；rabbitmq
 spring:
   rabbitmq:
-    addresses: 8.219.99.73
+    addresses: localhost
     port: 5672
     username: admin
     password: admin
@@ -83,7 +83,7 @@ mini-db-router:
       list: db01,db02
       db00:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.219.99.73:13306/big-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://localhost:13306/big-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
         password: admin
         type-class-name: com.zaxxer.hikari.HikariDataSource
@@ -98,7 +98,7 @@ mini-db-router:
           connection-test-query: SELECT 1
       db01:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.219.99.73:13306/big-market-01?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://localhost:13306/big-market-01?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
         password: admin
         type-class-name: com.zaxxer.hikari.HikariDataSource
@@ -113,7 +113,7 @@ mini-db-router:
           connection-test-query: SELECT 1
       db02:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.219.99.73:13306/big-market-02?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://localhost:13306/big-market-02?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
         password: admin
         type-class-name: com.zaxxer.hikari.HikariDataSource
@@ -137,7 +137,7 @@ mybatis:
 redis:
   sdk:
     config:
-      host: 8.219.99.73
+      host: localhost
       port: 16379
       pool-size: 10
       min-idle-size: 5
@@ -155,7 +155,7 @@ dubbo:
     version: 1.0
   registry:
     id: nacos-registry
-    address: nacos://8.219.99.73:8848
+    address: nacos://localhost:8848
   protocol:
     name: dubbo
     port: -1
@@ -165,7 +165,7 @@ dubbo:
 zookeeper:
   sdk:
     config:
-      connect-string: 8.219.99.73:2181
+      connect-string: localhost:2181
       base-sleep-time-ms: 1000
       max-retries: 3
       session-timeout-ms: 18000
@@ -183,7 +183,7 @@ gateway:
   config:
     # 状态；true = 开启、false 关闭
     enable: true
-    apiHost: http://8.219.99.73:8090
+    apiHost: http://localhost:8090
     # big-market 大营销接口调用配置
     big-market-appId: big-market
     big-market-appToken: 6ec604541f8b1ce4a
