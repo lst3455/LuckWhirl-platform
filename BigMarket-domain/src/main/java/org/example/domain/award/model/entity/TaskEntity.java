@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.domain.award.event.SendAwardMessageEvent;
+import org.example.domain.award.adapter.event.SendAwardMessageEvent;
 import org.example.domain.award.model.vo.TaskStatusVO;
 import org.example.types.event.BaseEvent;
 

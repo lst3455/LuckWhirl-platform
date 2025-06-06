@@ -9,7 +9,7 @@ public interface IAwardService {
 
     void saveUserAwardRecord(UserAwardRecordEntity userAwardRecordEntity);
 
-    void deliveryAward(DeliveryAwardEntity deliveryAwardEntity);
+    void deliveryAward(DeliveryAwardEntity deliveryAwardEntity) throws Exception;
 
     List<UserAwardRecordEntity> queryUserAwardRecordList(UserAwardRecordEntity userAwardRecordEntity);
 }

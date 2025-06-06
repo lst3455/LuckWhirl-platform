@@ -17,6 +17,8 @@ public enum ResponseCode {
     DEGRADE_SWITCH("0005","degrade switch"),
     RATE_LIMIT("0006", "access deny, reach rate limit"),
     HYSTRIX("0007", "connect timeout"),
+    GATEWAY_ERROR("0008", "chatbot api call fail"),
+    APP_TOKEN_ERROR("0009", "api access fail"),
     STRATEGY_RULE_WEIGHT_IS_NULL("ERR_BIZ_001","business abnormal, strategy rule exist but doesn't complete configuration"),
     UN_ASSEMBLED_STRATEGY_ARMORY("ERR_BIZ_002", "raffle strategy armory has not done yet, please use IStrategyArmory to armory"),
     ACTIVITY_STATE_ERROR("ERR_BIZ_003", "activity dose not open"),

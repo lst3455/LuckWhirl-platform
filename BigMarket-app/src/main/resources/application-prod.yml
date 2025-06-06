@@ -17,7 +17,7 @@ app:
 # Spring 配置；rabbitmq
 spring:
   rabbitmq:
-    addresses: 8.219.99.73
+    addresses: localhost
     port: 5672
     username: admin
     password: admin
@@ -83,9 +83,9 @@ mini-db-router:
       list: db01,db02
       db00:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.219.99.73:3306/big-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://localhost:13306/big-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
-        password: 13860433455Wabb
+        password: admin
         type-class-name: com.zaxxer.hikari.HikariDataSource
         pool:
           pool-name: Retail_HikariCP
@@ -98,9 +98,9 @@ mini-db-router:
           connection-test-query: SELECT 1
       db01:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.219.99.73:3306/big-market-01?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://localhost:13306/big-market-01?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
-        password: 13860433455Wabb
+        password: admin
         type-class-name: com.zaxxer.hikari.HikariDataSource
         pool:
           pool-name: Retail_HikariCP
@@ -113,9 +113,9 @@ mini-db-router:
           connection-test-query: SELECT 1
       db02:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.219.99.73:3306/big-market-02?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
+        url: jdbc:mysql://localhost:13306/big-market-02?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false
         username: root
-        password: 13860433455Wabb
+        password: admin
         type-class-name: com.zaxxer.hikari.HikariDataSource
         pool:
           pool-name: Retail_HikariCP
@@ -137,7 +137,7 @@ mybatis:
 redis:
   sdk:
     config:
-      host: 8.219.99.73
+      host: localhost
       port: 16379
       pool-size: 10
       min-idle-size: 5
@@ -148,8 +148,42 @@ redis:
       ping-interval: 60000
       keep-alive: true
 
+# dubbo
+dubbo:
+  application:
+    name: big-market
+    version: 1.0
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
+  protocol:
+    name: dubbo
+    port: -1
+  scan:
+    base-packages: org.example.trigger.api
+
+zookeeper:
+  sdk:
+    config:
+      connect-string: localhost:2181
+      base-sleep-time-ms: 1000
+      max-retries: 3
+      session-timeout-ms: 18000
+      connection-timeout-ms: 30000
+
 # 日志
 logging:
   level:
     root: info
   config: classpath:logback-spring.xml
+
+
+# 外部接口调用配置
+gateway:
+  config:
+    # 状态；true = 开启、false 关闭
+    enable: true
+    apiHost: http://localhost:8090
+    # big-market 大营销接口调用配置
+    big-market-appId: big-market
+    big-market-appToken: 6ec604541f8b1ce4a

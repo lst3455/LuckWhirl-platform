@@ -6,7 +6,7 @@ import org.example.domain.award.model.entity.DeliveryAwardEntity;
 import org.example.domain.award.model.entity.UserAwardRecordEntity;
 import org.example.domain.award.model.entity.UserPointAwardEntity;
 import org.example.domain.award.model.vo.AwardStatusVO;
-import org.example.domain.award.repository.IAwardRepository;
+import org.example.domain.award.adapter.repository.IAwardRepository;
 import org.example.domain.award.service.delivery.IDeliveryAward;
 import org.example.types.common.Constants;
 import org.springframework.stereotype.Component;
