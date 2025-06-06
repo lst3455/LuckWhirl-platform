@@ -20,7 +20,6 @@
 <div align="center"><img src="docs/readme/p3.png" style="zoom: 33%;" /></div>
 <div align="center">Version 3.2</div>
 
----
 
 **LuckWhirl** is a robust and comprehensive marketing platform featuring functionalities such as **point accounts, daily sign-in rewards, virtual product exchanges, marketing lotteries, lottery unlocking, weighting systems, blacklists, and tiered lottery mechanisms.** It is an end-to-end project covering product management, requirement analysis, frontend and backend development, and DevOps practices. From architecture design to coding implementation and deployment, the system handles real-world scenarios, providing a seamless experience across both consumer-facing and operational workflows.
 
@@ -28,7 +27,6 @@ This system is Designed with a **distributed architecture, Dubbo provides RPC in
 
 **Currently, it's deployed on a 2-core 4GB cloud server. After launching, it is stress tested using JMeter, capable of supporting a single-machine throughput of 800 TPS (transactions per second), with a lottery interface response time of around 40 milliseconds.**
 
----
 
 ### Key Features:
 
@@ -47,7 +45,6 @@ This system is Designed with a **distributed architecture, Dubbo provides RPC in
 
 5. **Message Queue for Prize Distribution**: Message queues are used to decouple the prize distribution process, preventing the lottery chain from becoming too long. To ensure successful MQ message sending, prize distribution messages are written to a task table, with scheduled tasks scanning the table for MQ message compensation.
 
----
 
 ### Key Technologies:
 
@@ -75,7 +72,6 @@ This system is Designed with a **distributed architecture, Dubbo provides RPC in
    - DDD (Domain-Driven Design)
    - Factory Pattern, Strategy Pattern, Template Pattern, Composite Pattern
 
----
 
 ### System Modules:
 
@@ -85,7 +81,6 @@ This system is Designed with a **distributed architecture, Dubbo provides RPC in
 
 3. **Check-in Rebates and Points Redemption Module**: Manages user interactions for daily sign-in, rebate rewards, and virtual product redemptions.
 
----
 
 ### Inventory Control Mechanism:
 
