@@ -2,7 +2,6 @@
 
 ### <div align="center">[Try Here](http://linst-yyds.top:3000)</div>
 
----
 
 <div align="center"><img src="docs/readme/v1.jpg" style="zoom: 33%;" /></div>
 <div align="center">Version 1.0</div>
