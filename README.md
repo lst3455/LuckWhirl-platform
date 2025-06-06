@@ -1,8 +1,6 @@
 ## <div align="center">LuckWhirl Platform</div>
 
-<div align="center">Try here: http://linst-yyds.top:3001/login</div>
-
-The project took more than half a year from requirement analysis, architecture learning, and design to coding implementation, and went through three versions of iterations.
+### <div align="center">[Try Here](http://linst-yyds.top:3000)</div>
 
 ---
 
@@ -17,6 +15,10 @@ The project took more than half a year from requirement analysis, architecture l
 
 <div align="center"><img src="docs/readme/v4.png" style="zoom: 33%;" /></div>
 <div align="center">Version 3.1</div>
+
+<div align="center"><img src="docs/readme/p1.png" style="zoom: 33%;" /></div>
+<div align="center"><img src="docs/readme/p3.png" style="zoom: 33%;" /></div>
+<div align="center">Version 3.2</div>
 
 ---
 
