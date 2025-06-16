@@ -1,6 +1,6 @@
 ## <div align="center">LuckWhirl Platform</div>
 
-### <div align="center">[Try Here](http://linst-yyds.top:3000)</div>
+### <div align="center">[Try Here](http://chatbot.linst-yyds.top/)</div>
 
 
 <div align="center"><img src="docs/readme/v1.jpg" style="zoom: 33%;" /></div>
