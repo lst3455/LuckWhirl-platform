@@ -2,6 +2,8 @@
 
 ### <div align="center">[Try Here](http://chatbot.linst-yyds.top/)</div>
 
+**LuckWhirl** is a robust and comprehensive marketing platform featuring functionalities such as **point accounts, daily sign-in rewards, virtual product exchanges, marketing lotteries, lottery unlocking, weighting systems, blacklists, and tiered lottery mechanisms.** It is an end-to-end project covering product management, requirement analysis, frontend and backend development, and DevOps practices. From architecture design to coding implementation and deployment, the system handles real-world scenarios, providing a seamless experience across both consumer-facing and operational workflows.
+
 
 <div align="center"><img src="docs/readme/v1.jpg" style="zoom: 33%;" /></div>
 <div align="center">Version 1.0</div>
@@ -19,8 +21,6 @@
 <div align="center"><img src="docs/readme/p3.png" style="zoom: 33%;" /></div>
 <div align="center">Version 3.2</div>
 
-
-**LuckWhirl** is a robust and comprehensive marketing platform featuring functionalities such as **point accounts, daily sign-in rewards, virtual product exchanges, marketing lotteries, lottery unlocking, weighting systems, blacklists, and tiered lottery mechanisms.** It is an end-to-end project covering product management, requirement analysis, frontend and backend development, and DevOps practices. From architecture design to coding implementation and deployment, the system handles real-world scenarios, providing a seamless experience across both consumer-facing and operational workflows.
 
 This system is Designed with a **distributed architecture, Dubbo provides RPC interfaces, with Nacos serving as the service registry.** The scheduling and management of timed tasks across multiple machine instances are handled by XXL-JOB, utilizing distributed locks to compete for resources. Data from sharded databases is synchronized through Canal, which captures binlog logs and aggregates them in Elasticsearch for querying.
 
