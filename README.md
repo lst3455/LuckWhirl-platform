@@ -1,6 +1,6 @@
 ## <div align="center">LuckWhirl Platform</div>
 
-### <div align="center">[Try Here](http://chatbot.linst-yyds.top/)</div>
+### <div align="center">[Try Here](http://aihub.linst-yyds.top/)</div>
 
 **LuckWhirl** is a robust and comprehensive marketing platform featuring functionalities such as **point accounts, daily sign-in rewards, virtual product exchanges, marketing lotteries, lottery unlocking, weighting systems, blacklists, and tiered lottery mechanisms.** It is an end-to-end project covering product management, requirement analysis, frontend and backend development, and DevOps practices. From architecture design to coding implementation and deployment, the system handles real-world scenarios, providing a seamless experience across both consumer-facing and operational workflows.
 
